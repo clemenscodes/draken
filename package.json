@@ -2,7 +2,9 @@
   "name": "draken",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "fmt": "cargo fmt --all"
+  },
   "private": true,
   "devDependencies": {
     "@monodon/rust": "^1.3.2",

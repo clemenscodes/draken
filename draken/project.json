@@ -41,7 +41,7 @@
         "target-dir": "dist/target/draken"
       }
     },
-    "run": {
+    "start": {
       "executor": "@monodon/rust:run",
       "outputs": [
         "{options.target-dir}"

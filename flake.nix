@@ -35,7 +35,7 @@
           inherit system overlays;
         };
         rustToolchain = (pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml).override {
-          extensions = ["rust-src" "cargo" "rustc" "clippy"];
+          extensions = ["rust-src" "clippy"];
         };
         nativeBuildInputs = with pkgs; [rustToolchain pkg-config];
         buildInputs = with pkgs; [
