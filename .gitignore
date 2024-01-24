@@ -2,6 +2,7 @@ dist
 tmp
 node_modules
 coverage
+.direnv
 .nx/cache
 .idea
 .vscode/*
