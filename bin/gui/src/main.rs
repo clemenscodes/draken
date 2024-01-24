@@ -1,7 +1,7 @@
 use gtk::prelude::*;
 use gtk::{glib, Application, ApplicationWindow};
 
-const APP_ID: &str = "draken";
+const APP_ID: &str = "draken gui";
 
 fn build_ui(app: &Application) {
     let window = ApplicationWindow::builder()
