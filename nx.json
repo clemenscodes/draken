@@ -11,5 +11,8 @@
     "lint": {
       "cache": true
     }
-  }
+  },
+  "plugins": [
+    "@monodon/rust"
+  ]
 }
