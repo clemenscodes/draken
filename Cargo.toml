@@ -2,13 +2,13 @@
 [workspace]
 resolver = '2'
 members = [
+	'bin/gui',
 	'bin/draken',
 	'lib/view',
 	'lib/controller',
 	'lib/model',
-	'lib/engine',
-	'bin/gui',
 	'lib/api',
+	'lib/engine',
 ]
 
 [profile.release]

@@ -3,12 +3,12 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(name = env!("CARGO_PKG_NAME"))]
 #[command(author, version, about, long_about = None)]
-struct Cli {
+struct UniversalChessInterface {
     #[arg(short, long)]
     fen: Option<String>,
 }
 
 fn main() {
-    let cli = Cli::parse();
-    println!("fen: {:?}", cli.fen.as_deref());
+    let uci = UniversalChessInterface::parse();
+    println!("fen: {:?}", uci.fen.as_deref());
 }

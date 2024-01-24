@@ -1,8 +1,6 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
+use api::*;
+use gtk::Application;
+
+pub fn get_app(app_id: &str) -> Application {
+    Application::builder().application_id(app_id).build()
 }

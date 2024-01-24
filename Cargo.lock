@@ -156,17 +156,24 @@ checksum = "acbf1af155f9b9ef647e42cdc158db4b64a1b61f743629225fde6f3e0be2a7c7"
 [[package]]
 name = "controller"
 version = "0.1.0"
+dependencies = [
+ "api",
+]
 
 [[package]]
 name = "draken"
 version = "0.0.1"
 dependencies = [
  "clap",
+ "engine",
 ]
 
 [[package]]
 name = "engine"
 version = "0.1.0"
+dependencies = [
+ "api",
+]
 
 [[package]]
 name = "equivalent"
@@ -507,7 +514,11 @@ dependencies = [
 name = "gui"
 version = "0.1.0"
 dependencies = [
+ "controller",
+ "draken",
  "gtk4",
+ "model",
+ "view",
 ]
 
 [[package]]
@@ -556,6 +567,10 @@ dependencies = [
 [[package]]
 name = "model"
 version = "0.1.0"
+dependencies = [
+ "api",
+ "engine",
+]
 
 [[package]]
 name = "once_cell"
@@ -866,6 +881,11 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 [[package]]
 name = "view"
 version = "0.1.0"
+dependencies = [
+ "api",
+ "controller",
+ "gtk4",
+]
 
 [[package]]
 name = "winapi"

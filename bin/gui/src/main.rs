@@ -1,18 +1,18 @@
 use gtk::prelude::*;
 use gtk::{glib, Application, ApplicationWindow};
 
-const APP_ID: &str = "org.gtk_rs.HelloWorld2";
-
-fn main() -> glib::ExitCode {
-    let app = Application::builder().application_id(APP_ID).build();
-    app.connect_activate(build_ui);
-    app.run()
-}
+const APP_ID: &str = "draken";
 
 fn build_ui(app: &Application) {
     let window = ApplicationWindow::builder()
         .application(app)
-        .title("My GTK App")
+        .title(APP_ID)
         .build();
     window.present();
+}
+
+fn main() -> glib::ExitCode {
+    let app = view::get_app(APP_ID);
+    app.connect_activate(build_ui);
+    app.run()
 }
