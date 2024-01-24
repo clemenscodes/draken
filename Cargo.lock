@@ -516,7 +516,6 @@ version = "0.1.0"
 dependencies = [
  "controller",
  "draken",
- "gtk4",
  "model",
  "view",
 ]
