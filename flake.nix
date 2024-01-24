@@ -22,6 +22,8 @@
             openssl
             pkg-config
             rust-bin.stable.latest.default
+            nodejs_20
+            corepack_20
           ];
         };
       }
