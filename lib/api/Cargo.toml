@@ -1,8 +1,6 @@
 [package]
-name = "engine"
+name = "api"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
-api = { path = "../api" }
