@@ -3,7 +3,9 @@ name = "draken"
 version = "0.0.1"
 edition = "2021"
 authors = ["Clemens Horn <me@clemenshorn.com>"]
-about = "Plays chess"
+description = "Plays chess"
+readme = "bin/draken/README.md"
+repository = "https://github.com/clemenscodes/draken/"
 
 [dependencies]
 
