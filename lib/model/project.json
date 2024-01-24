@@ -1,46 +1,40 @@
 {
-  "name": "model",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "lib/model/src",
-  "targets": {
-    "build": {
-      "executor": "@monodon/rust:build",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/model"
-      },
-      "configurations": {
-        "production": {
-          "release": true
+    "name": "model",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "lib/model/src",
+    "targets": {
+        "build": {
+            "executor": "@monodon/rust:build",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/lib/model"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "test": {
+            "executor": "@monodon/rust:test",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/lib/model"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "lint": {
+            "executor": "@monodon/rust:lint",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/lib/model"
+            }
         }
-      }
     },
-    "test": {
-      "executor": "@monodon/rust:test",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/model"
-      },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
-    },
-    "lint": {
-      "executor": "@monodon/rust:lint",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/model"
-      }
-    }
-  },
-  "tags": []
+    "tags": []
 }

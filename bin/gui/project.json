@@ -1,60 +1,52 @@
 {
-  "name": "gui",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application",
-  "sourceRoot": "bin/gui/src",
-  "targets": {
-    "build": {
-      "executor": "@monodon/rust:build",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/gui"
-      },
-      "configurations": {
-        "production": {
-          "release": true
+    "name": "gui",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "bin/gui/src",
+    "targets": {
+        "build": {
+            "executor": "@monodon/rust:build",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/bin/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "test": {
+            "executor": "@monodon/rust:test",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/bin/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "lint": {
+            "executor": "@monodon/rust:lint",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/bin/gui"
+            }
+        },
+        "run": {
+            "executor": "@monodon/rust:run",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/bin/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
         }
-      }
     },
-    "test": {
-      "executor": "@monodon/rust:test",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/gui"
-      },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
-    },
-    "lint": {
-      "executor": "@monodon/rust:lint",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/gui"
-      }
-    },
-    "run": {
-      "executor": "@monodon/rust:run",
-      "outputs": [
-        "{options.target-dir}"
-      ],
-      "options": {
-        "target-dir": "dist/target/gui"
-      },
-      "configurations": {
-        "production": {
-          "release": true
-        }
-      }
-    }
-  },
-  "tags": []
+    "tags": []
 }
