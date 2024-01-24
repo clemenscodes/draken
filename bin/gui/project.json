@@ -35,7 +35,7 @@
                 "target-dir": "dist/target/bin/gui"
             }
         },
-        "run": {
+        "start": {
             "executor": "@monodon/rust:run",
             "outputs": ["{options.target-dir}"],
             "options": {

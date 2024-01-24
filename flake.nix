@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs = {
-       url = "github:NixOS/nixpkgs/nixos-unstable";
+      url = "github:NixOS/nixpkgs/nixos-unstable";
     };
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -43,6 +43,8 @@
           rust-analyzer
           nodejs_20
           corepack_20
+          gtk4
+          glib.dev
         ];
       in
         with pkgs; {
