@@ -1,18 +1,11 @@
-mod controller;
-mod model;
-mod view;
-
-use controller::*;
-use model::*;
-use view::*;
+use controller::ChessController;
+use model::ChessModel;
+use view::ChessView;
 
 fn main() {
     let model = ChessModel::new();
-    let mut view = ChessView::new();
-    let mut controller = ChessController::new();
-    controller.set_view(view.clone());
-    controller.set_model(Some(model.clone()));
-    view.set_controller(controller.clone());
+    let view = ChessView::new();
+    let controller = ChessController::new();
     println!("{model:#?}");
     println!("{controller:#?}");
     println!("{view:#?}");
