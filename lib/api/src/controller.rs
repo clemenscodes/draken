@@ -1,4 +1,4 @@
-use crate::{moves::Move, ForsythEdwardsNotation, Game, Square};
+use crate::{ForsythEdwardsNotation, Game, Square};
 
 pub trait Controller: Game + ForsythEdwardsNotation {
     fn handle_mouse_pressed();
@@ -11,5 +11,5 @@ pub trait Controller: Game + ForsythEdwardsNotation {
     fn get_source() -> Square;
     fn get_destination() -> Square;
     fn get_dragged_square() -> Square;
-    fn get_legal_moves() -> Vec<Move>;
+    fn get_legal_moves() -> Vec<(Square, Square)>;
 }

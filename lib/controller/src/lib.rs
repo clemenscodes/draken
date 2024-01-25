@@ -1,4 +1,4 @@
-use api::{Controller, ForsythEdwardsNotation, Game, Move};
+use api::{Controller, ForsythEdwardsNotation, Game, Square};
 
 #[derive(Debug, Clone)]
 pub struct ChessController {}
@@ -50,7 +50,7 @@ impl Controller for ChessController {
         todo!()
     }
 
-    fn get_legal_moves() -> Vec<Move> {
+    fn get_legal_moves() -> Vec<(Square, Square)> {
         todo!()
     }
 }

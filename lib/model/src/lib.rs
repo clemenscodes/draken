@@ -1,4 +1,6 @@
-use api::{ForsythEdwardsNotation, Game, Model};
+mod board;
+
+use api::{ForsythEdwardsNotation, Game, Model, Square};
 
 #[derive(Debug, Clone)]
 pub struct ChessModel {}
@@ -14,7 +16,7 @@ impl Model for ChessModel {
         todo!()
     }
 
-    fn get_legal_moves(square: api::Square) -> Vec<api::Move> {
+    fn get_legal_moves(square: api::Square) -> Vec<(Square, Square)> {
         todo!()
     }
 

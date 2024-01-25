@@ -1,4 +1,3 @@
-mod board;
 mod controller;
 mod fen;
 mod game;
@@ -9,7 +8,6 @@ mod square;
 mod state;
 mod view;
 
-pub use board::Board;
 pub use controller::Controller;
 pub use fen::ForsythEdwardsNotation;
 pub use game::Game;
