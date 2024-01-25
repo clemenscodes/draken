@@ -76,9 +76,29 @@ const SQUARES: [Square; NUM_SQUARES] = [
     A4, B4, C4, D4, E4, F4, G4, H4, A5, B5, C5, D5, E5, F5, G5, H5, A6, B6, C6, D6, E6, F6, G6, H6,
     A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8,
 ];
+impl From<usize> for Square {
+    fn from(index: usize) -> Self {
+        assert!(index < 64, "Invalid index for square array");
+        SQUARES[index]
+    }
+}
 
 impl From<u32> for Square {
     fn from(index: u32) -> Self {
+        assert!(index < 64, "Invalid index for square array");
+        SQUARES[index as usize]
+    }
+}
+
+impl From<u16> for Square {
+    fn from(index: u16) -> Self {
+        assert!(index < 64, "Invalid index for square array");
+        SQUARES[index as usize]
+    }
+}
+
+impl From<u8> for Square {
+    fn from(index: u8) -> Self {
         assert!(index < 64, "Invalid index for square array");
         SQUARES[index as usize]
     }
@@ -142,15 +162,33 @@ mod tests {
     }
 
     #[test]
-    fn test_square_from_index() {
-        assert_eq!(crate::Square::A1, crate::Square::from(0));
-        assert_eq!(crate::Square::H8, crate::Square::from(63));
+    fn test_square_from_usize() {
+        assert_eq!(crate::Square::A1, crate::Square::from(0 as usize));
+        assert_eq!(crate::Square::H8, crate::Square::from(63 as usize));
+    }
+
+    #[test]
+    fn test_square_from_u32() {
+        assert_eq!(crate::Square::A1, crate::Square::from(0 as u32));
+        assert_eq!(crate::Square::H8, crate::Square::from(63 as u32));
+    }
+
+    #[test]
+    fn test_square_from_u16() {
+        assert_eq!(crate::Square::A1, crate::Square::from(0 as u16));
+        assert_eq!(crate::Square::H8, crate::Square::from(63 as u16));
+    }
+
+    #[test]
+    fn test_square_from_u8() {
+        assert_eq!(crate::Square::A1, crate::Square::from(0 as u8));
+        assert_eq!(crate::Square::H8, crate::Square::from(63 as u8));
     }
 
     #[test]
     #[should_panic(expected = "Invalid index for square array")]
     fn test_square_from_invalid_index() {
         std::panic::set_hook(Box::new(|_| {}));
-        let _ = crate::Square::from(100);
+        let _ = crate::Square::from(100 as usize);
     }
 }
