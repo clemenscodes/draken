@@ -90,12 +90,54 @@ impl Into<usize> for Square {
     }
 }
 
+impl Into<u32> for Square {
+    fn into(self) -> u32 {
+        *&self as u32
+    }
+}
+
+impl Into<u16> for Square {
+    fn into(self) -> u16 {
+        *&self as u16
+    }
+}
+
+impl Into<u8> for Square {
+    fn into(self) -> u8 {
+        *&self as u8
+    }
+}
+
 mod tests {
     #[test]
-    fn test_square_into_index() {
+    fn test_square_into_index_usize() {
         let index: usize = crate::Square::A1.into();
         assert_eq!(index, 0);
         let index: usize = crate::Square::H8.into();
+        assert_eq!(index, 63);
+    }
+
+    #[test]
+    fn test_square_into_index_u32() {
+        let index: u32 = crate::Square::A1.into();
+        assert_eq!(index, 0);
+        let index: u32 = crate::Square::H8.into();
+        assert_eq!(index, 63);
+    }
+
+    #[test]
+    fn test_square_into_index_u16() {
+        let index: u16 = crate::Square::A1.into();
+        assert_eq!(index, 0);
+        let index: u16 = crate::Square::H8.into();
+        assert_eq!(index, 63);
+    }
+
+    #[test]
+    fn test_square_into_index_u8() {
+        let index: u8 = crate::Square::A1.into();
+        assert_eq!(index, 0);
+        let index: u8 = crate::Square::H8.into();
         assert_eq!(index, 63);
     }
 
