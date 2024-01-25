@@ -1,4 +1,6 @@
+mod bitboard;
 mod board;
+mod offsets;
 
 use api::{ForsythEdwardsNotation, Game, Model, Square};
 
