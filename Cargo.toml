@@ -9,6 +9,7 @@ members = [
 	'lib/model',
 	'lib/api',
 	'lib/engine',
+	'lib/uci',
 ]
 
 [profile.release]
