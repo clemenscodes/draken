@@ -170,10 +170,14 @@ impl Debug for Bitboard {
     }
 }
 
-#[test]
-fn test_print_bitboard_default() {
-    let bitboard = Bitboard::default();
-    let expected = "\
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_print_bitboard_default() {
+        let bitboard = Bitboard::default();
+        let expected = "\
     00000000\n\
     00000000\n\
     00000000\n\
@@ -183,13 +187,13 @@ fn test_print_bitboard_default() {
     00000000\n\
     00000000\n\
     ";
-    assert_eq!(expected, bitboard.to_string());
-}
+        assert_eq!(expected, bitboard.to_string());
+    }
 
-#[test]
-fn test_print_bitboard_max() {
-    let bitboard = Bitboard::new(u64::MAX);
-    let expected = "\
+    #[test]
+    fn test_print_bitboard_max() {
+        let bitboard = Bitboard::new(u64::MAX);
+        let expected = "\
     11111111\n\
     11111111\n\
     11111111\n\
@@ -199,11 +203,12 @@ fn test_print_bitboard_max() {
     11111111\n\
     11111111\n\
     ";
-    assert_eq!(expected, bitboard.to_string());
-}
+        assert_eq!(expected, bitboard.to_string());
+    }
 
-#[test]
-fn test_get_single_bits() {
-    let bit = Bitboard::get_single_bit(2);
-    println!("{bit:#?}");
+    #[test]
+    fn test_get_single_bits() {
+        let bit = Bitboard::get_single_bit(2);
+        println!("{bit:#?}");
+    }
 }

@@ -154,73 +154,78 @@ impl Into<u8> for Square {
     }
 }
 
-#[test]
-fn test_square_into_index_usize() {
-    let index: usize = A1.into();
-    assert_eq!(index, 0);
-    let index: usize = H8.into();
-    assert_eq!(index, 63);
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[test]
-fn test_square_into_index_u32() {
-    let index: u32 = A1.into();
-    assert_eq!(index, 0);
-    let index: u32 = H8.into();
-    assert_eq!(index, 63);
-}
+    #[test]
+    fn test_square_into_index_usize() {
+        let index: usize = A1.into();
+        assert_eq!(index, 0);
+        let index: usize = H8.into();
+        assert_eq!(index, 63);
+    }
 
-#[test]
-fn test_square_into_index_u16() {
-    let index: u16 = A1.into();
-    assert_eq!(index, 0);
-    let index: u16 = H8.into();
-    assert_eq!(index, 63);
-}
+    #[test]
+    fn test_square_into_index_u32() {
+        let index: u32 = A1.into();
+        assert_eq!(index, 0);
+        let index: u32 = H8.into();
+        assert_eq!(index, 63);
+    }
 
-#[test]
-fn test_square_into_index_u8() {
-    let index: u8 = A1.into();
-    assert_eq!(index, 0);
-    let index: u8 = H8.into();
-    assert_eq!(index, 63);
-}
+    #[test]
+    fn test_square_into_index_u16() {
+        let index: u16 = A1.into();
+        assert_eq!(index, 0);
+        let index: u16 = H8.into();
+        assert_eq!(index, 63);
+    }
 
-#[test]
-fn test_square_from_usize() {
-    assert_eq!(A1, Square::from(0 as usize));
-    assert_eq!(H8, Square::from(63 as usize));
-}
+    #[test]
+    fn test_square_into_index_u8() {
+        let index: u8 = A1.into();
+        assert_eq!(index, 0);
+        let index: u8 = H8.into();
+        assert_eq!(index, 63);
+    }
 
-#[test]
-fn test_square_from_u32() {
-    assert_eq!(A1, Square::from(0 as u32));
-    assert_eq!(H8, Square::from(63 as u32));
-}
+    #[test]
+    fn test_square_from_usize() {
+        assert_eq!(A1, Square::from(0 as usize));
+        assert_eq!(H8, Square::from(63 as usize));
+    }
 
-#[test]
-fn test_square_from_u16() {
-    assert_eq!(A1, Square::from(0 as u16));
-    assert_eq!(H8, Square::from(63 as u16));
-}
+    #[test]
+    fn test_square_from_u32() {
+        assert_eq!(A1, Square::from(0 as u32));
+        assert_eq!(H8, Square::from(63 as u32));
+    }
 
-#[test]
-fn test_square_from_u8() {
-    assert_eq!(A1, Square::from(0 as u8));
-    assert_eq!(H8, Square::from(63 as u8));
-}
+    #[test]
+    fn test_square_from_u16() {
+        assert_eq!(A1, Square::from(0 as u16));
+        assert_eq!(H8, Square::from(63 as u16));
+    }
 
-#[test]
-#[should_panic(expected = "Invalid index for square array")]
-fn test_square_from_invalid_index() {
-    std::panic::set_hook(Box::new(|_| {}));
-    let _ = Square::from(100 as usize);
-}
+    #[test]
+    fn test_square_from_u8() {
+        assert_eq!(A1, Square::from(0 as u8));
+        assert_eq!(H8, Square::from(63 as u8));
+    }
 
-#[test]
-fn test_square_from_rank_file() {
-    let square = Square::from_rank_file(0, 0);
-    assert_eq!(square, Square::A1);
-    let square = Square::from_rank_file(7, 7);
-    assert_eq!(square, Square::H8);
+    #[test]
+    #[should_panic(expected = "Invalid index for square array")]
+    fn test_square_from_invalid_index() {
+        std::panic::set_hook(Box::new(|_| {}));
+        let _ = Square::from(100 as usize);
+    }
+
+    #[test]
+    fn test_square_from_rank_file() {
+        let square = Square::from_rank_file(0, 0);
+        assert_eq!(square, A1);
+        let square = Square::from_rank_file(7, 7);
+        assert_eq!(square, H8);
+    }
 }
