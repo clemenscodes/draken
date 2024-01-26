@@ -4,15 +4,15 @@ use std::ops::{
     Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Shl,
     ShlAssign, Shr, ShrAssign, Sub, SubAssign,
 };
-use std::sync::{LazyLock, Mutex};
+use std::sync::LazyLock;
 
-static SINGLE_BITS: LazyLock<Mutex<[Bitboard; u64::BITS as usize]>> = LazyLock::new(|| {
+static SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| {
     let mut single_bits = [Bitboard::default(); u64::BITS as usize];
     Square::iterate_square_indices(|rank, file| {
         let index: usize = Square::from_rank_file_to_index(rank, file);
         single_bits[index] = Bitboard::new(1u64 << index);
     });
-    Mutex::new(single_bits)
+    single_bits
 });
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -132,10 +132,7 @@ impl ShrAssign<usize> for Bitboard {
 
 pub trait BitboardExt {
     fn get_single_bit(index: usize) -> Bitboard {
-        SINGLE_BITS
-            .lock()
-            .map(|boards| boards[index].to_owned())
-            .unwrap()
+        SINGLE_BITS[index]
     }
     fn check_bit(bitboard: Bitboard, index: usize) -> bool {
         (bitboard & Bitboard::get_single_bit(index)).bits != 0
@@ -178,15 +175,15 @@ mod tests {
     fn test_print_bitboard_default() {
         let bitboard = Bitboard::default();
         let expected = "\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    00000000\n\
-    ";
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
         assert_eq!(expected, bitboard.to_string());
     }
 
@@ -194,15 +191,15 @@ mod tests {
     fn test_print_bitboard_max() {
         let bitboard = Bitboard::new(u64::MAX);
         let expected = "\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    11111111\n\
-    ";
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            ";
         assert_eq!(expected, bitboard.to_string());
     }
 
