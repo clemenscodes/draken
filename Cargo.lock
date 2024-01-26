@@ -164,8 +164,8 @@ dependencies = [
 name = "draken"
 version = "0.0.1"
 dependencies = [
- "clap",
  "engine",
+ "uci",
 ]
 
 [[package]]
@@ -514,9 +514,9 @@ dependencies = [
 name = "gui"
 version = "0.1.0"
 dependencies = [
+ "api",
  "controller",
  "draken",
- "gtk4",
  "model",
  "view",
 ]
@@ -855,6 +855,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "uci"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -883,7 +890,6 @@ name = "view"
 version = "0.1.0"
 dependencies = [
  "api",
- "controller",
  "gtk4",
 ]
 

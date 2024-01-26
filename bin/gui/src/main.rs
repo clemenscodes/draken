@@ -1,18 +1,12 @@
-use gtk::prelude::*;
-use gtk::{glib, Application, ApplicationWindow};
+use controller::ChessController;
+use model::ChessModel;
+use view::ChessView;
 
-const APP_ID: &str = "draken";
-
-fn build_ui(app: &Application) {
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title(APP_ID)
-        .build();
-    window.present();
-}
-
-fn main() -> glib::ExitCode {
-    let app = view::get_app(APP_ID);
-    app.connect_activate(build_ui);
-    app.run()
+fn main() {
+    let model = ChessModel::new();
+    let view = ChessView::new();
+    let controller = ChessController::new();
+    println!("{model:#?}");
+    println!("{controller:#?}");
+    println!("{view:#?}");
 }

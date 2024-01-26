@@ -6,5 +6,4 @@ edition = "2021"
 [dependencies]
 
 api = { path = "../api" }
-controller = { path = "../controller" }
 gtk = { version = "0.7.3", package = "gtk4", features = ["v4_12"] }

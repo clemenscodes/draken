@@ -1,14 +1,14 @@
 {
-    "name": "engine",
+    "name": "uci",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "library",
-    "sourceRoot": "lib/engine/src",
+    "sourceRoot": "lib/uci/src",
     "targets": {
         "build": {
             "executor": "@monodon/rust:build",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/lib/engine"
+                "target-dir": "dist/target/lib/uci"
             },
             "configurations": {
                 "production": {
@@ -20,7 +20,7 @@
             "executor": "@monodon/rust:test",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/lib/engine"
+                "target-dir": "dist/target/lib/uci"
             },
             "configurations": {
                 "production": {
@@ -32,7 +32,7 @@
             "executor": "@monodon/rust:lint",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/lib/engine"
+                "target-dir": "dist/target/lib/uci"
             }
         }
     },
