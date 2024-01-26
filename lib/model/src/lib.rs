@@ -1,3 +1,4 @@
+#![feature(lazy_cell)]
 mod bitboard;
 mod board;
 mod offsets;
