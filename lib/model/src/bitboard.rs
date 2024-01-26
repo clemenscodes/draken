@@ -1,12 +1,10 @@
 use api::{Square, SquareExt};
 use std::fmt::{Debug, Display};
-use std::ops::{BitAnd, BitAndAssign};
+use std::ops::{
+    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Shl,
+    ShlAssign, Shr, ShrAssign, Sub, SubAssign,
+};
 use std::sync::{LazyLock, Mutex};
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Bitboard {
-    pub bits: u64,
-}
 
 static SINGLE_BITS: LazyLock<Mutex<[Bitboard; u64::BITS as usize]>> = LazyLock::new(|| {
     let mut single_bits = [Bitboard::new_empty(); u64::BITS as usize];
@@ -29,12 +27,43 @@ pub trait BitboardExt {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Bitboard {
+    pub bits: u64,
+}
+
 impl Bitboard {
     fn new(bits: u64) -> Self {
         Bitboard { bits }
     }
     fn new_empty() -> Self {
         Bitboard { bits: 0 }
+    }
+}
+
+impl Add for Bitboard {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        Bitboard::new(self.bits + rhs.bits)
+    }
+}
+
+impl AddAssign for Bitboard {
+    fn add_assign(&mut self, rhs: Self) {
+        self.bits += rhs.bits;
+    }
+}
+
+impl Sub for Bitboard {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self {
+        Bitboard::new(self.bits - rhs.bits)
+    }
+}
+
+impl SubAssign for Bitboard {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.bits -= rhs.bits;
     }
 }
 
@@ -47,7 +76,66 @@ impl BitAnd for Bitboard {
 
 impl BitAndAssign for Bitboard {
     fn bitand_assign(&mut self, rhs: Self) {
-        self.bits = (*self & rhs).bits;
+        self.bits &= rhs.bits;
+    }
+}
+
+impl BitOr for Bitboard {
+    type Output = Self;
+    fn bitor(self, rhs: Self) -> Self {
+        Bitboard::new(self.bits | rhs.bits)
+    }
+}
+
+impl BitOrAssign for Bitboard {
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.bits |= rhs.bits;
+    }
+}
+
+impl BitXor for Bitboard {
+    type Output = Self;
+    fn bitxor(self, rhs: Self) -> Self {
+        Bitboard::new(self.bits ^ rhs.bits)
+    }
+}
+
+impl BitXorAssign for Bitboard {
+    fn bitxor_assign(&mut self, rhs: Self) {
+        self.bits ^= rhs.bits;
+    }
+}
+
+impl Not for Bitboard {
+    type Output = Self;
+    fn not(self) -> Self {
+        Bitboard::new(!self.bits)
+    }
+}
+
+impl Shl<usize> for Bitboard {
+    type Output = Self;
+    fn shl(self, rhs: usize) -> Self {
+        Bitboard::new(self.bits << rhs)
+    }
+}
+
+impl ShlAssign<usize> for Bitboard {
+    fn shl_assign(&mut self, rhs: usize) {
+        self.bits <<= rhs;
+    }
+}
+
+impl Shr<usize> for Bitboard {
+    type Output = Self;
+    fn shr(self, rhs: usize) -> Self {
+        Bitboard::new(self.bits >> rhs)
+    }
+}
+
+impl ShrAssign<usize> for Bitboard {
+    fn shr_assign(&mut self, rhs: usize) {
+        self.bits >>= rhs;
     }
 }
 
