@@ -12,12 +12,9 @@ const NUM_BITS: usize = 64;
 
 static SINGLE_BITS: LazyLock<Mutex<[Bitboard; NUM_BITS]>> = LazyLock::new(|| {
     let mut single_bits = [Bitboard::new_empty(); NUM_BITS];
-    for rank in (0..8).rev() {
-        for file in 0..8 {
-            let index: usize = Square::from_rank_file(rank, file).into();
-            single_bits[index] = Bitboard::new(1u64 << index);
-        }
-    }
+    Square::iterate_square_indices(|_rank, _file, index| {
+        single_bits[index] = Bitboard::new(1u64 << index);
+    });
     Mutex::new(single_bits)
 });
 
@@ -50,15 +47,14 @@ impl BitboardExt for Bitboard {}
 
 impl Display for Bitboard {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for rank in (0..8).rev() {
-            for file in 0..8 {
-                let index: usize = Square::from_rank_file(rank, file).into();
-                let mask = Bitboard::get_single_bit(index);
-                let intersection = if (*self & mask).bits != 0 { "1" } else { "0" };
-                write!(f, "{intersection}")?;
+        Square::iterate_square_indices(|_rank, file, index| {
+            let mask = Bitboard::get_single_bit(index);
+            let intersection = if (*self & mask).bits != 0 { "1" } else { "0" };
+            write!(f, "{intersection}").unwrap();
+            if file == 7 {
+                writeln!(f).unwrap();
             }
-            writeln!(f)?;
-        }
+        });
         Ok(())
     }
 }
