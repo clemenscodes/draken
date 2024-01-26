@@ -1,6 +1,6 @@
 use api::{Square, SquareExt};
 use std::fmt::{Debug, Display};
-use std::ops::BitAnd;
+use std::ops::{BitAnd, BitAndAssign};
 use std::sync::{LazyLock, Mutex};
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -8,11 +8,10 @@ pub struct Bitboard {
     pub bits: u64,
 }
 
-const NUM_BITS: usize = 64;
-
-static SINGLE_BITS: LazyLock<Mutex<[Bitboard; NUM_BITS]>> = LazyLock::new(|| {
-    let mut single_bits = [Bitboard::new_empty(); NUM_BITS];
-    Square::iterate_square_indices(|_rank, _file, index| {
+static SINGLE_BITS: LazyLock<Mutex<[Bitboard; u64::BITS as usize]>> = LazyLock::new(|| {
+    let mut single_bits = [Bitboard::new_empty(); u64::BITS as usize];
+    Square::iterate_square_indices(|rank, file| {
+        let index: usize = Square::from_rank_file_to_index(rank, file);
         single_bits[index] = Bitboard::new(1u64 << index);
     });
     Mutex::new(single_bits)
@@ -25,21 +24,30 @@ pub trait BitboardExt {
             .map(|boards| boards[index].to_owned())
             .unwrap()
     }
+    fn check_bit(bitboard: Bitboard, index: usize) -> bool {
+        (bitboard & Bitboard::get_single_bit(index)).bits != 0
+    }
 }
 
 impl Bitboard {
-    fn new_empty() -> Self {
-        Bitboard { bits: 0 }
-    }
     fn new(bits: u64) -> Self {
         Bitboard { bits }
+    }
+    fn new_empty() -> Self {
+        Bitboard { bits: 0 }
     }
 }
 
 impl BitAnd for Bitboard {
-    type Output = Bitboard;
-    fn bitand(self, rhs: Self) -> Self::Output {
+    type Output = Self;
+    fn bitand(self, rhs: Self) -> Self {
         Bitboard::new(self.bits & rhs.bits)
+    }
+}
+
+impl BitAndAssign for Bitboard {
+    fn bitand_assign(&mut self, rhs: Self) {
+        self.bits = (*self & rhs).bits;
     }
 }
 
@@ -47,7 +55,8 @@ impl BitboardExt for Bitboard {}
 
 impl Display for Bitboard {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        Square::iterate_square_indices(|_rank, file, index| {
+        Square::iterate_square_indices(|rank, file| {
+            let index: usize = Square::from_rank_file_to_index(rank, file);
             let mask = Bitboard::get_single_bit(index);
             let intersection = if (*self & mask).bits != 0 { "1" } else { "0" };
             write!(f, "{intersection}").unwrap();

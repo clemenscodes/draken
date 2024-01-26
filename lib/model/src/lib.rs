@@ -1,4 +1,5 @@
 #![feature(lazy_cell)]
+#![feature(associated_type_defaults)]
 mod bitboard;
 mod board;
 mod offsets;

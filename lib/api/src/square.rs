@@ -82,7 +82,7 @@ const SQUARES: [Square; NUM_SQUARES] = [
 pub trait SquareExt {
     fn from_rank_file(rank: usize, file: usize) -> Square {
         assert!(rank < NUM_RANKS, "Invalid rank number");
-        assert!(file < NUM_RANKS, "Invalid rank number");
+        assert!(file < NUM_FILES, "Invalid file number");
         Square::from(Square::from_rank_file_to_index(rank, file))
     }
     fn from_rank_file_to_index(rank: usize, file: usize) -> usize {
@@ -90,12 +90,11 @@ pub trait SquareExt {
     }
     fn iterate_square_indices<F>(mut callback: F)
     where
-        F: FnMut(usize, usize, usize),
+        F: FnMut(usize, usize),
     {
         for rank in (0..8).rev() {
             for file in 0..8 {
-                let index: usize = Square::from_rank_file_to_index(rank, file);
-                callback(rank, file, index);
+                callback(rank, file);
             }
         }
     }
