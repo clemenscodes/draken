@@ -7,25 +7,13 @@ use std::ops::{
 use std::sync::{LazyLock, Mutex};
 
 static SINGLE_BITS: LazyLock<Mutex<[Bitboard; u64::BITS as usize]>> = LazyLock::new(|| {
-    let mut single_bits = [Bitboard::new_empty(); u64::BITS as usize];
+    let mut single_bits = [Bitboard::default(); u64::BITS as usize];
     Square::iterate_square_indices(|rank, file| {
         let index: usize = Square::from_rank_file_to_index(rank, file);
         single_bits[index] = Bitboard::new(1u64 << index);
     });
     Mutex::new(single_bits)
 });
-
-pub trait BitboardExt {
-    fn get_single_bit(index: usize) -> Bitboard {
-        SINGLE_BITS
-            .lock()
-            .map(|boards| boards[index].to_owned())
-            .unwrap()
-    }
-    fn check_bit(bitboard: Bitboard, index: usize) -> bool {
-        (bitboard & Bitboard::get_single_bit(index)).bits != 0
-    }
-}
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Bitboard {
@@ -36,7 +24,10 @@ impl Bitboard {
     fn new(bits: u64) -> Self {
         Bitboard { bits }
     }
-    fn new_empty() -> Self {
+}
+
+impl Default for Bitboard {
+    fn default() -> Self {
         Bitboard { bits: 0 }
     }
 }
@@ -139,7 +130,24 @@ impl ShrAssign<usize> for Bitboard {
     }
 }
 
-impl BitboardExt for Bitboard {}
+pub trait BitboardExt {
+    fn get_single_bit(index: usize) -> Bitboard {
+        SINGLE_BITS
+            .lock()
+            .map(|boards| boards[index].to_owned())
+            .unwrap()
+    }
+    fn check_bit(bitboard: Bitboard, index: usize) -> bool {
+        (bitboard & Bitboard::get_single_bit(index)).bits != 0
+    }
+    fn self_check_bit(&self, index: usize) -> bool;
+}
+
+impl BitboardExt for Bitboard {
+    fn self_check_bit(&self, index: usize) -> bool {
+        Bitboard::check_bit(*self, index)
+    }
+}
 
 impl Display for Bitboard {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -160,6 +168,38 @@ impl Debug for Bitboard {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
     }
+}
+
+#[test]
+fn test_print_bitboard_default() {
+    let bitboard = Bitboard::default();
+    let expected = "\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    00000000\n\
+    ";
+    assert_eq!(expected, bitboard.to_string());
+}
+
+#[test]
+fn test_print_bitboard_max() {
+    let bitboard = Bitboard::new(u64::MAX);
+    let expected = "\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    11111111\n\
+    ";
+    assert_eq!(expected, bitboard.to_string());
 }
 
 #[test]
