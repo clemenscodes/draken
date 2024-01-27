@@ -107,26 +107,26 @@ impl Not for Bitboard {
 impl Shl<usize> for Bitboard {
     type Output = Self;
     fn shl(self, rhs: usize) -> Self {
-        Bitboard::new(self.bits << rhs)
+        Bitboard::new(self.bits.wrapping_shl(rhs as u32))
     }
 }
 
 impl ShlAssign<usize> for Bitboard {
     fn shl_assign(&mut self, rhs: usize) {
-        self.bits <<= rhs;
+        self.bits = self.bits.wrapping_shl(rhs as u32);
     }
 }
 
 impl Shr<usize> for Bitboard {
     type Output = Self;
     fn shr(self, rhs: usize) -> Self {
-        Bitboard::new(self.bits >> rhs)
+        Bitboard::new(self.bits.wrapping_shr(rhs as u32))
     }
 }
 
 impl ShrAssign<usize> for Bitboard {
     fn shr_assign(&mut self, rhs: usize) {
-        self.bits >>= rhs;
+        self.bits = self.bits.wrapping_shr(rhs as u32);
     }
 }
 
@@ -140,6 +140,9 @@ pub trait BitboardExt {
     fn set_bit(bitboard: Bitboard, index: usize) -> Bitboard {
         bitboard | Bitboard::get_single_bit(index)
     }
+    fn unset_bit(bitboard: Bitboard, index: usize) -> Bitboard {
+        Bitboard::set_bit(bitboard, index) ^ Bitboard::get_single_bit(index)
+    }
     fn merge_many(bitboards: Vec<Bitboard>) -> Bitboard {
         bitboards
             .iter()
@@ -148,10 +151,19 @@ pub trait BitboardExt {
     fn overlap(lhs: Bitboard, rhs: Bitboard) -> bool {
         (lhs & rhs).bits != 0
     }
+    fn shift(bitboard: Bitboard, steps: i8) -> Bitboard {
+        let abs_steps = steps.abs() as u32;
+        if steps < 0 {
+            return bitboard >> abs_steps as usize;
+        }
+        bitboard << abs_steps as usize
+    }
     fn self_check_bit(&self, index: usize) -> bool;
     fn self_set_bit(&mut self, bitboard: Bitboard, index: usize);
+    fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize);
     fn self_merge_many(&mut self, bitboards: Vec<Bitboard>);
     fn self_overlap(&self, rhs: Bitboard) -> bool;
+    fn self_not(&mut self);
 }
 
 impl BitboardExt for Bitboard {
@@ -166,6 +178,12 @@ impl BitboardExt for Bitboard {
     }
     fn self_overlap(&self, rhs: Bitboard) -> bool {
         Bitboard::overlap(*self, rhs)
+    }
+    fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize) {
+        self.bits = Bitboard::unset_bit(bitboard, index).bits;
+    }
+    fn self_not(&mut self) {
+        self.bits = !(self).bits;
     }
 }
 
@@ -440,6 +458,23 @@ mod tests {
     }
 
     #[test]
+    fn test_self_not() {
+        let mut a = Bitboard::get_single_bit(0);
+        a.self_not();
+        let expected = "\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            01111111\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
     fn test_bitboard_shl() {
         let a = Bitboard::get_single_bit(0);
         let b = a << 60;
@@ -642,5 +677,68 @@ mod tests {
         let bitboard = Bitboard::get_single_bit(2);
         let result = bitboard.self_overlap(Bitboard::get_single_bit(3));
         assert!(!result);
+    }
+
+    #[test]
+    fn test_unset_bit() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 2;
+        let result = Bitboard::unset_bit(bitboard, index);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
+        assert_eq!(expected, result.to_string());
+    }
+
+    #[test]
+    fn test_shift_left() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let steps = 3;
+        let result = Bitboard::shift(bitboard, steps);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000100\n\
+            ";
+        assert_eq!(expected, result.to_string());
+    }
+
+    #[test]
+    fn test_shift_right() {
+        let bitboard = Bitboard::get_single_bit(4);
+        let steps = -3;
+        let result = Bitboard::shift(bitboard, steps);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            01000000\n\
+            ";
+        assert_eq!(expected, result.to_string());
+    }
+
+    #[test]
+    fn test_shift_wrap() {
+        let bitboard = Bitboard::get_single_bit(0);
+        let result = Bitboard::shift(bitboard, 64);
+        assert_eq!(bitboard, result);
+        let result = Bitboard::shift(bitboard, -64);
+        assert_eq!(bitboard, result);
     }
 }
