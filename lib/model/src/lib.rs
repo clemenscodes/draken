@@ -4,6 +4,7 @@ mod bitboard;
 mod board;
 mod fen;
 mod moves;
+mod pieces;
 
 use api::{ForsythEdwardsNotation, Game, Model, Square};
 
