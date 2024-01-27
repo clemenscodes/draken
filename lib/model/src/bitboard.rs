@@ -17,12 +17,16 @@ static SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| 
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Bitboard {
-    pub bits: u64,
+    bits: u64,
 }
 
 impl Bitboard {
     fn new(bits: u64) -> Self {
         Bitboard { bits }
+    }
+
+    pub fn bits(&self) -> u64 {
+        self.bits
     }
 }
 

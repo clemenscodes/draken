@@ -9,3 +9,7 @@ pub enum Bishop {
     Black(BlackBishop),
     White(WhiteBishop),
 }
+
+pub trait BishopExt {}
+
+impl BishopExt for Bishop {}
