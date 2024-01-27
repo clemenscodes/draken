@@ -28,7 +28,7 @@ impl Bitboard {
 
 impl Default for Bitboard {
     fn default() -> Self {
-        Bitboard { bits: 0 }
+        Bitboard { bits: u64::MIN }
     }
 }
 
@@ -205,7 +205,310 @@ mod tests {
 
     #[test]
     fn test_get_single_bits() {
-        let bit = Bitboard::get_single_bit(2);
-        println!("{bit:#?}");
+        let bitboard = Bitboard::get_single_bit(2);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00100000\n\
+            ";
+        assert_eq!(expected, bitboard.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_add() {
+        let a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        let c = a + b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, c.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_add_assign() {
+        let mut a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        a += b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_sub() {
+        let a = Bitboard::get_single_bit(2);
+        let b = Bitboard::get_single_bit(1);
+        let c = a - b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            01000000\n\
+            ";
+        assert_eq!(expected, c.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_sub_assign() {
+        let mut a = Bitboard::get_single_bit(2);
+        let b = Bitboard::get_single_bit(1);
+        a -= b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            01000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitand() {
+        let a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        let c = a & b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
+        assert_eq!(expected, c.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitand_assign() {
+        let mut a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        a &= b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitor() {
+        let a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        let c = a | b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, c.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitor_assign() {
+        let mut a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        a |= b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitxor() {
+        let a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        let c = a ^ b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, c.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_bitxor_assign() {
+        let mut a = Bitboard::get_single_bit(0);
+        let b = Bitboard::get_single_bit(1);
+        a ^= b;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_not() {
+        let a = Bitboard::get_single_bit(0);
+        let b = !a;
+        let expected = "\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            01111111\n\
+            ";
+        assert_eq!(expected, b.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_shl() {
+        let a = Bitboard::get_single_bit(0);
+        let b = a << 60;
+        let expected = "\
+            00001000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
+        assert_eq!(expected, b.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_shl_assign() {
+        let mut a = Bitboard::get_single_bit(0);
+        a <<= 60;
+        let expected = "\
+            00001000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_shr() {
+        let a = Bitboard::get_single_bit(63);
+        let b = a >> 60;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00010000\n\
+            ";
+        assert_eq!(expected, b.to_string());
+    }
+
+    #[test]
+    fn test_bitboard_shr_assign() {
+        let mut a = Bitboard::get_single_bit(63);
+        a >>= 60;
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00010000\n\
+            ";
+        assert_eq!(expected, a.to_string());
+    }
+
+    #[test]
+    fn test_check_bit_true() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 2;
+        assert!(Bitboard::check_bit(bitboard, index));
+    }
+
+    #[test]
+    fn test_check_bit_false() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 3;
+        assert!(!Bitboard::check_bit(bitboard, index));
+    }
+
+    #[test]
+    fn test_self_check_bit_true() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 2;
+        assert!(bitboard.self_check_bit(index));
+    }
+
+    #[test]
+    fn test_self_check_bit_false() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 3;
+        assert!(!bitboard.self_check_bit(index));
     }
 }
