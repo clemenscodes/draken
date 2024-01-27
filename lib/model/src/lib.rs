@@ -2,8 +2,8 @@
 #![feature(associated_type_defaults)]
 mod bitboard;
 mod board;
+mod fen;
 mod moves;
-mod offsets;
 
 use api::{ForsythEdwardsNotation, Game, Model, Square};
 
