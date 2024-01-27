@@ -1,5 +1,6 @@
 mod coordinates;
 mod irreversible;
+mod list;
 mod reversible;
 
 use irreversible::IrreversibleMove;

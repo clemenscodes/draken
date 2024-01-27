@@ -1,14 +1,14 @@
 #![feature(lazy_cell)]
 #![feature(associated_type_defaults)]
-mod bitboard;
-mod board;
-mod fen;
-mod moves;
-mod pieces;
+pub mod bitboard;
+pub mod board;
+pub mod fen;
+pub mod moves;
+pub mod pieces;
 
 use api::{ForsythEdwardsNotation, Game, Model, Square};
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct ChessModel {}
 
 impl ChessModel {

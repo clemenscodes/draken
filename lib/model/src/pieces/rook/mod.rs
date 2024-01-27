@@ -1,5 +1,5 @@
-mod black;
-mod white;
+pub mod black;
+pub mod white;
 
 use black::BlackRook;
 use white::WhiteRook;
