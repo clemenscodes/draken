@@ -137,12 +137,35 @@ pub trait BitboardExt {
     fn check_bit(bitboard: Bitboard, index: usize) -> bool {
         (bitboard & Bitboard::get_single_bit(index)).bits != 0
     }
+    fn set_bit(bitboard: Bitboard, index: usize) -> Bitboard {
+        bitboard | Bitboard::get_single_bit(index)
+    }
+    fn merge_many(bitboards: Vec<Bitboard>) -> Bitboard {
+        bitboards
+            .iter()
+            .fold(Bitboard::default(), |acc, &bb| acc | bb)
+    }
+    fn overlap(lhs: Bitboard, rhs: Bitboard) -> bool {
+        (lhs & rhs).bits != 0
+    }
     fn self_check_bit(&self, index: usize) -> bool;
+    fn self_set_bit(&mut self, bitboard: Bitboard, index: usize);
+    fn self_merge_many(&mut self, bitboards: Vec<Bitboard>);
+    fn self_overlap(&self, rhs: Bitboard) -> bool;
 }
 
 impl BitboardExt for Bitboard {
     fn self_check_bit(&self, index: usize) -> bool {
         Bitboard::check_bit(*self, index)
+    }
+    fn self_set_bit(&mut self, bitboard: Bitboard, index: usize) {
+        self.bits = Bitboard::set_bit(bitboard, index).bits;
+    }
+    fn self_merge_many(&mut self, bitboards: Vec<Bitboard>) {
+        self.bits = Bitboard::merge_many(bitboards).bits;
+    }
+    fn self_overlap(&self, rhs: Bitboard) -> bool {
+        Bitboard::overlap(*self, rhs)
     }
 }
 
@@ -510,5 +533,114 @@ mod tests {
         let bitboard = Bitboard::get_single_bit(2);
         let index = 3;
         assert!(!bitboard.self_check_bit(index));
+    }
+
+    #[test]
+    fn test_set_bit() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let index = 3;
+        let result = Bitboard::set_bit(bitboard, index);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00110000\n\
+            ";
+        assert_eq!(expected, result.to_string());
+    }
+
+    #[test]
+    fn test_merge_many() {
+        let bitboards = vec![
+            Bitboard::get_single_bit(2),
+            Bitboard::get_single_bit(5),
+            Bitboard::get_single_bit(7),
+        ];
+        let result = Bitboard::merge_many(bitboards);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00100101\n\
+            ";
+        assert_eq!(expected, result.to_string());
+    }
+
+    #[test]
+    fn test_self_set_bit() {
+        let mut bitboard = Bitboard::default();
+        let index = 3;
+        bitboard.self_set_bit(Bitboard::get_single_bit(2), index);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00110000\n\
+            ";
+        assert_eq!(expected, bitboard.to_string());
+    }
+
+    #[test]
+    fn test_self_merge_many() {
+        let mut bitboard = Bitboard::default();
+        let bitboards = vec![
+            Bitboard::get_single_bit(2),
+            Bitboard::get_single_bit(5),
+            Bitboard::get_single_bit(7),
+        ];
+        bitboard.self_merge_many(bitboards);
+        let expected = "\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00100101\n\
+            ";
+        assert_eq!(expected, bitboard.to_string());
+    }
+
+    #[test]
+    fn test_overlap_true() {
+        let lhs = Bitboard::get_single_bit(2);
+        let rhs = Bitboard::get_single_bit(2);
+        let result = Bitboard::overlap(lhs, rhs);
+        assert!(result);
+    }
+
+    #[test]
+    fn test_overlap_false() {
+        let lhs = Bitboard::get_single_bit(2);
+        let rhs = Bitboard::get_single_bit(3);
+        let result = Bitboard::overlap(lhs, rhs);
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_self_overlap_true() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let result = bitboard.self_overlap(Bitboard::get_single_bit(2));
+        assert!(result);
+    }
+
+    #[test]
+    fn test_self_overlap_false() {
+        let bitboard = Bitboard::get_single_bit(2);
+        let result = bitboard.self_overlap(Bitboard::get_single_bit(3));
+        assert!(!result);
     }
 }

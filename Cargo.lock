@@ -164,7 +164,6 @@ dependencies = [
 name = "draken"
 version = "0.0.1"
 dependencies = [
- "engine",
  "uci",
 ]
 
@@ -859,6 +858,7 @@ name = "uci"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "engine",
 ]
 
 [[package]]
