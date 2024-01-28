@@ -1,4 +1,6 @@
-use crate::bitboard::Bitboard;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+
+use super::PawnExt;
 
 #[derive(Debug)]
 pub struct BlackPawn {
@@ -14,3 +16,9 @@ impl BlackPawn {
         self.bitboard
     }
 }
+
+pub trait BlackPawnExt: PawnExt {}
+
+impl BlackPawnExt for BlackPawn {}
+impl PawnExt for BlackPawn {}
+impl PieceExt for BlackPawn {}

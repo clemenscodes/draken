@@ -4,6 +4,8 @@ pub mod white;
 use black::BlackQueen;
 use white::WhiteQueen;
 
+use super::PieceExt;
+
 #[derive(Debug)]
 pub enum Queen {
     Black(BlackQueen),
@@ -22,6 +24,7 @@ impl From<BlackQueen> for Queen {
     }
 }
 
-pub trait QueenExt {}
+pub trait QueenExt: PieceExt {}
 
 impl QueenExt for Queen {}
+impl PieceExt for Queen {}

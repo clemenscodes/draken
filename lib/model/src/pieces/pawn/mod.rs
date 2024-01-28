@@ -4,6 +4,8 @@ pub mod white;
 use black::BlackPawn;
 use white::WhitePawn;
 
+use super::PieceExt;
+
 #[derive(Debug)]
 pub enum Pawn {
     Black(BlackPawn),
@@ -22,6 +24,7 @@ impl From<BlackPawn> for Pawn {
     }
 }
 
-pub trait PawnExt {}
+pub trait PawnExt: PieceExt {}
 
 impl PawnExt for Pawn {}
+impl PieceExt for Pawn {}

@@ -4,6 +4,8 @@ pub mod white;
 use black::BlackRook;
 use white::WhiteRook;
 
+use super::PieceExt;
+
 #[derive(Debug)]
 pub enum Rook {
     Black(BlackRook),
@@ -22,6 +24,7 @@ impl From<BlackRook> for Rook {
     }
 }
 
-pub trait RookExt {}
+pub trait RookExt: PieceExt {}
 
 impl RookExt for Rook {}
+impl PieceExt for Rook {}

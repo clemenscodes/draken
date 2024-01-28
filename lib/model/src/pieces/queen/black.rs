@@ -1,4 +1,6 @@
-use crate::bitboard::Bitboard;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+
+use super::QueenExt;
 
 #[derive(Debug)]
 pub struct BlackQueen {
@@ -14,3 +16,9 @@ impl BlackQueen {
         self.bitboard
     }
 }
+
+pub trait BlackQueenExt: QueenExt {}
+
+impl BlackQueenExt for BlackQueen {}
+impl QueenExt for BlackQueen {}
+impl PieceExt for BlackQueen {}

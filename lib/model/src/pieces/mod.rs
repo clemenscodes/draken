@@ -1,9 +1,9 @@
-pub mod bishop;
-pub mod king;
-pub mod knight;
-pub mod pawn;
-pub mod queen;
-pub mod rook;
+pub(crate) mod bishop;
+pub(crate) mod king;
+pub(crate) mod knight;
+pub(crate) mod pawn;
+pub(crate) mod queen;
+pub(crate) mod rook;
 
 use bishop::Bishop;
 use king::King;

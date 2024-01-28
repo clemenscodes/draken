@@ -1,4 +1,6 @@
-use crate::bitboard::Bitboard;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+
+use super::BishopExt;
 
 #[derive(Debug)]
 pub struct WhiteBishop {
@@ -14,3 +16,9 @@ impl WhiteBishop {
         self.bitboard
     }
 }
+
+pub trait WhiteBishopExt: BishopExt {}
+
+impl WhiteBishopExt for WhiteBishop {}
+impl BishopExt for WhiteBishop {}
+impl PieceExt for WhiteBishop {}

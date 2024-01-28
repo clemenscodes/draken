@@ -1,4 +1,6 @@
-use crate::bitboard::Bitboard;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+
+use super::RookExt;
 
 #[derive(Debug)]
 pub struct WhiteRook {
@@ -14,3 +16,9 @@ impl WhiteRook {
         self.bitboard
     }
 }
+
+pub trait WhiteRookExt: RookExt {}
+
+impl WhiteRookExt for WhiteRook {}
+impl RookExt for WhiteRook {}
+impl PieceExt for WhiteRook {}

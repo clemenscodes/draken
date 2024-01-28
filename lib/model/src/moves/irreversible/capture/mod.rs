@@ -1,4 +1,6 @@
-use crate::moves::coordinates::Coordinates;
+use crate::moves::{coordinates::Coordinates, MoveExt};
+
+use super::IrreversibleMoveExt;
 
 #[derive(Debug)]
 pub struct CaptureMove {
@@ -14,3 +16,9 @@ impl CaptureMove {
         &self.coordinates
     }
 }
+
+pub trait CaptureMoveExt: IrreversibleMoveExt {}
+
+impl CaptureMoveExt for CaptureMove {}
+impl IrreversibleMoveExt for CaptureMove {}
+impl MoveExt for CaptureMove {}

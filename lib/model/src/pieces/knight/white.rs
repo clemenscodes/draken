@@ -1,4 +1,6 @@
-use crate::bitboard::Bitboard;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+
+use super::KnightExt;
 
 #[derive(Debug)]
 pub struct WhiteKnight {
@@ -14,3 +16,9 @@ impl WhiteKnight {
         self.bitboard
     }
 }
+
+pub trait WhiteKnightExt: KnightExt {}
+
+impl WhiteKnightExt for WhiteKnight {}
+impl KnightExt for WhiteKnight {}
+impl PieceExt for WhiteKnight {}

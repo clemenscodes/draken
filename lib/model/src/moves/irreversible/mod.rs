@@ -6,6 +6,8 @@ use capture::CaptureMove;
 use castle::CastleMove;
 use pawn::PawnMove;
 
+use super::MoveExt;
+
 #[derive(Debug)]
 pub enum IrreversibleMove {
     Capture(CaptureMove),
@@ -30,3 +32,8 @@ impl From<CaptureMove> for IrreversibleMove {
         Self::Capture(v)
     }
 }
+
+pub trait IrreversibleMoveExt: MoveExt {}
+
+impl IrreversibleMoveExt for IrreversibleMove {}
+impl MoveExt for IrreversibleMove {}

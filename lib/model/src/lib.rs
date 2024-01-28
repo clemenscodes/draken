@@ -7,13 +7,20 @@ pub mod moves;
 pub mod pieces;
 
 use api::{ForsythEdwardsNotation, Game, Model, Square};
+use moves::list::MoveList;
 
-#[derive(Debug)]
-pub struct ChessModel {}
+#[derive(Default, Debug)]
+pub struct ChessModel {
+    move_list: MoveList,
+}
 
 impl ChessModel {
-    pub fn new() -> Self {
-        ChessModel {}
+    pub fn new(move_list: MoveList) -> Self {
+        Self { move_list }
+    }
+
+    pub fn move_list(&self) -> &MoveList {
+        &self.move_list
     }
 }
 
