@@ -1,4 +1,10 @@
-max_width = 100
+unstable_features = true
+max_width = 140
 tab_spaces = 4
 reorder_imports = true
-
+reorder_impl_items = true
+fn_single_line = false
+where_single_line = true
+wrap_comments = true
+overflow_delimited_expr = true
+indent_style = "Block"

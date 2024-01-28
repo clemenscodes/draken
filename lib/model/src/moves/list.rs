@@ -17,9 +17,7 @@ impl MoveList {
 
 impl Default for MoveList {
     fn default() -> Self {
-        Self {
-            moves: Default::default(),
-        }
+        Self { moves: Default::default() }
     }
 }
 

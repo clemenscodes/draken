@@ -78,9 +78,6 @@ fn get_app(app_id: &str) -> Application {
 
 fn build_ui(app: &Application) {
     let title = "draken";
-    let window = ApplicationWindow::builder()
-        .application(app)
-        .title(title)
-        .build();
+    let window = ApplicationWindow::builder().application(app).title(title).build();
     window.present();
 }

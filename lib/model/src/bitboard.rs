@@ -1,8 +1,7 @@
 use api::{Square, SquareExt};
 use std::fmt::{Debug, Display};
 use std::ops::{
-    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Shl,
-    ShlAssign, Shr, ShrAssign, Sub, SubAssign,
+    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign,
 };
 use std::sync::LazyLock;
 
@@ -38,6 +37,7 @@ impl Default for Bitboard {
 
 impl Add for Bitboard {
     type Output = Self;
+
     fn add(self, rhs: Self) -> Self {
         Bitboard::new(self.bits + rhs.bits)
     }
@@ -51,6 +51,7 @@ impl AddAssign for Bitboard {
 
 impl Sub for Bitboard {
     type Output = Self;
+
     fn sub(self, rhs: Self) -> Self {
         Bitboard::new(self.bits - rhs.bits)
     }
@@ -64,6 +65,7 @@ impl SubAssign for Bitboard {
 
 impl BitAnd for Bitboard {
     type Output = Self;
+
     fn bitand(self, rhs: Self) -> Self {
         Bitboard::new(self.bits & rhs.bits)
     }
@@ -77,6 +79,7 @@ impl BitAndAssign for Bitboard {
 
 impl BitOr for Bitboard {
     type Output = Self;
+
     fn bitor(self, rhs: Self) -> Self {
         Bitboard::new(self.bits | rhs.bits)
     }
@@ -90,6 +93,7 @@ impl BitOrAssign for Bitboard {
 
 impl BitXor for Bitboard {
     type Output = Self;
+
     fn bitxor(self, rhs: Self) -> Self {
         Bitboard::new(self.bits ^ rhs.bits)
     }
@@ -103,6 +107,7 @@ impl BitXorAssign for Bitboard {
 
 impl Not for Bitboard {
     type Output = Self;
+
     fn not(self) -> Self {
         Bitboard::new(!self.bits)
     }
@@ -110,6 +115,7 @@ impl Not for Bitboard {
 
 impl Shl<usize> for Bitboard {
     type Output = Self;
+
     fn shl(self, rhs: usize) -> Self {
         Bitboard::new(self.bits.wrapping_shl(rhs as u32))
     }
@@ -123,6 +129,7 @@ impl ShlAssign<usize> for Bitboard {
 
 impl Shr<usize> for Bitboard {
     type Output = Self;
+
     fn shr(self, rhs: usize) -> Self {
         Bitboard::new(self.bits.wrapping_shr(rhs as u32))
     }
@@ -148,9 +155,7 @@ pub trait BitboardExt {
         Bitboard::set_bit(bitboard, index) ^ Bitboard::get_single_bit(index)
     }
     fn merge_many(bitboards: Vec<Bitboard>) -> Bitboard {
-        bitboards
-            .iter()
-            .fold(Bitboard::default(), |acc, &bb| acc | bb)
+        bitboards.iter().fold(Bitboard::default(), |acc, &bb| acc | bb)
     }
     fn overlap(lhs: Bitboard, rhs: Bitboard) -> bool {
         (lhs & rhs).bits != 0
@@ -174,18 +179,23 @@ impl BitboardExt for Bitboard {
     fn self_check_bit(&self, index: usize) -> bool {
         Bitboard::check_bit(*self, index)
     }
+
     fn self_set_bit(&mut self, bitboard: Bitboard, index: usize) {
         self.bits = Bitboard::set_bit(bitboard, index).bits;
     }
+
     fn self_merge_many(&mut self, bitboards: Vec<Bitboard>) {
         self.bits = Bitboard::merge_many(bitboards).bits;
     }
+
     fn self_overlap(&self, rhs: Bitboard) -> bool {
         Bitboard::overlap(*self, rhs)
     }
+
     fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize) {
         self.bits = Bitboard::unset_bit(bitboard, index).bits;
     }
+
     fn self_not(&mut self) {
         self.bits = !(self).bits;
     }

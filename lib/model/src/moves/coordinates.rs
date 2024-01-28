@@ -8,10 +8,7 @@ pub struct Coordinates {
 
 impl Coordinates {
     pub fn new(source: Square, destination: Square) -> Self {
-        Self {
-            source,
-            destination,
-        }
+        Self { source, destination }
     }
 
     pub fn source(&self) -> Square {
