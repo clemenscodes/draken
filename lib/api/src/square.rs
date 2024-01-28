@@ -1,11 +1,14 @@
-use std::convert::Into;
+use std::{
+    convert::Into,
+    fmt::{Debug, Display},
+};
 use Square::*;
 
 pub const NUM_RANKS: usize = 8;
 pub const NUM_FILES: usize = 8;
 pub const NUM_SQUARES: usize = NUM_RANKS * NUM_FILES;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy, Ord, PartialOrd)]
 pub enum Square {
     A1,
     B1,
@@ -148,6 +151,83 @@ impl Into<u16> for Square {
 impl Into<u8> for Square {
     fn into(self) -> u8 {
         *&self as u8
+    }
+}
+
+impl Display for Square {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match *self {
+            A1 => write!(f, "a1"),
+            B1 => write!(f, "b1"),
+            C1 => write!(f, "c1"),
+            D1 => write!(f, "d1"),
+            E1 => write!(f, "e1"),
+            F1 => write!(f, "f1"),
+            G1 => write!(f, "g1"),
+            H1 => write!(f, "h1"),
+            A2 => write!(f, "a2"),
+            B2 => write!(f, "b2"),
+            C2 => write!(f, "c2"),
+            D2 => write!(f, "d2"),
+            E2 => write!(f, "e2"),
+            F2 => write!(f, "f2"),
+            G2 => write!(f, "g2"),
+            H2 => write!(f, "h2"),
+            A3 => write!(f, "a3"),
+            B3 => write!(f, "b3"),
+            C3 => write!(f, "c3"),
+            D3 => write!(f, "d3"),
+            E3 => write!(f, "e3"),
+            F3 => write!(f, "f3"),
+            G3 => write!(f, "g3"),
+            H3 => write!(f, "h3"),
+            A4 => write!(f, "a4"),
+            B4 => write!(f, "b4"),
+            C4 => write!(f, "c4"),
+            D4 => write!(f, "d4"),
+            E4 => write!(f, "e4"),
+            F4 => write!(f, "f4"),
+            G4 => write!(f, "g4"),
+            H4 => write!(f, "h4"),
+            A5 => write!(f, "a5"),
+            B5 => write!(f, "b5"),
+            C5 => write!(f, "c5"),
+            D5 => write!(f, "d5"),
+            E5 => write!(f, "e5"),
+            F5 => write!(f, "f5"),
+            G5 => write!(f, "g5"),
+            H5 => write!(f, "h5"),
+            A6 => write!(f, "a6"),
+            B6 => write!(f, "b6"),
+            C6 => write!(f, "c6"),
+            D6 => write!(f, "d6"),
+            E6 => write!(f, "e6"),
+            F6 => write!(f, "f6"),
+            G6 => write!(f, "g6"),
+            H6 => write!(f, "h6"),
+            A7 => write!(f, "a7"),
+            B7 => write!(f, "b7"),
+            C7 => write!(f, "c7"),
+            D7 => write!(f, "d7"),
+            E7 => write!(f, "e7"),
+            F7 => write!(f, "f7"),
+            G7 => write!(f, "g7"),
+            H7 => write!(f, "h7"),
+            A8 => write!(f, "a8"),
+            B8 => write!(f, "b8"),
+            C8 => write!(f, "c8"),
+            D8 => write!(f, "d8"),
+            E8 => write!(f, "e8"),
+            F8 => write!(f, "f8"),
+            G8 => write!(f, "g8"),
+            H8 => write!(f, "h8"),
+        }
+    }
+}
+
+impl Debug for Square {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
     }
 }
 

@@ -29,7 +29,7 @@ pub trait ActiveColorExt {
 
 impl ActiveColorExt for ActiveColor {
     fn switch(&mut self) {
-        self.color = if self.color == COLORS[0] { COLORS[1] } else { COLORS[0] };
+        self.color = if self.color == COLORS[0] { COLORS[1] } else { COLORS[0] }
     }
 }
 

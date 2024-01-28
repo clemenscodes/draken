@@ -5,7 +5,7 @@ mod full_move_clock;
 mod half_move_clock;
 mod placements;
 
-use std::fmt::{Debug, Display};
+use std::fmt::Debug;
 
 use active_color::ActiveColor;
 use castling::Castling;
