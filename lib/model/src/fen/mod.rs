@@ -5,7 +5,7 @@ mod full_move_clock;
 mod half_move_clock;
 mod placements;
 
-use std::fmt::Debug;
+use std::fmt::{Debug, Display};
 
 use active_color::ActiveColor;
 use castling::Castling;
@@ -14,7 +14,6 @@ use full_move_clock::FullMoveClock;
 use half_move_clock::HalfMoveClock;
 use placements::Placements;
 
-#[derive(Debug)]
 pub struct ForsythEdwardsNotation {
     placements: Placements,
     active_color: ActiveColor,
@@ -68,7 +67,7 @@ impl ForsythEdwardsNotation {
     }
 }
 
-/* impl Display for ForsythEdwardsNotation {
+impl Display for ForsythEdwardsNotation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -83,4 +82,3 @@ impl Debug for ForsythEdwardsNotation {
         Display::fmt(self, f)
     }
 }
- */

@@ -39,7 +39,7 @@ impl HalfMoveClockExt for HalfMoveClock {
 
 impl Display for HalfMoveClock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self.clock)
+        write!(f, "{}", self.clock)
     }
 }
 
