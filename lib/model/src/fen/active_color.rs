@@ -1,10 +1,10 @@
 use std::fmt::{Debug, Display};
 
 pub const NUM_COLORS: usize = 2;
-pub const COLORS: [char; NUM_COLORS] = ['w', 'b'];
+pub const COLORS: [u8; NUM_COLORS] = [119u8, 98u8]; // w, b
 
 pub struct ActiveColor {
-    color: char,
+    color: u8,
 }
 
 impl ActiveColor {
@@ -13,7 +13,7 @@ impl ActiveColor {
     }
 
     pub fn color(&self) -> char {
-        self.color
+        self.color as char
     }
 }
 
@@ -35,7 +35,7 @@ impl ActiveColorExt for ActiveColor {
 
 impl Display for ActiveColor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.color)
+        write!(f, "{}", self.color())
     }
 }
 

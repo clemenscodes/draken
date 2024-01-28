@@ -3,7 +3,7 @@ use std::fmt::{Debug, Display};
 pub const NUM_FILES: usize = 8;
 pub const NUM_RANKS: usize = 8;
 
-type Rank = [char; NUM_FILES];
+type Rank = [u8; NUM_FILES];
 
 pub struct Placements {
     placements: [Rank; NUM_RANKS],
@@ -14,7 +14,7 @@ impl Placements {
         Self { placements }
     }
 
-    pub fn placements(&self) -> [[char; NUM_FILES]; NUM_RANKS] {
+    pub fn placements(&self) -> [Rank; NUM_RANKS] {
         self.placements
     }
 }
