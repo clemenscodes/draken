@@ -1,8 +1,9 @@
-use crate::{bitboard::Bitboard, pieces::PieceExt};
-
 use super::RookExt;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
+pub const BLACK_ROOK: char = 'r';
+
 pub struct BlackRook {
     bitboard: Bitboard,
 }
@@ -14,6 +15,18 @@ impl BlackRook {
 
     pub fn bitboard(&self) -> Bitboard {
         self.bitboard
+    }
+}
+
+impl Display for BlackRook {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{BLACK_ROOK}")
+    }
+}
+
+impl Debug for BlackRook {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
     }
 }
 

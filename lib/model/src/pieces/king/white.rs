@@ -1,8 +1,9 @@
-use crate::{bitboard::Bitboard, pieces::PieceExt};
-
 use super::KingExt;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
+pub const WHITE_KING: char = 'K';
+
 pub struct WhiteKing {
     bitboard: Bitboard,
 }
@@ -14,6 +15,18 @@ impl WhiteKing {
 
     pub fn bitboard(&self) -> Bitboard {
         self.bitboard
+    }
+}
+
+impl Display for WhiteKing {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{WHITE_KING}")
+    }
+}
+
+impl Debug for WhiteKing {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
     }
 }
 

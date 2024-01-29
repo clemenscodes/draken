@@ -1,8 +1,9 @@
-use crate::{bitboard::Bitboard, pieces::PieceExt};
-
 use super::QueenExt;
+use crate::{bitboard::Bitboard, pieces::PieceExt};
+use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
+pub const BLACK_QUEEN: char = 'q';
+
 pub struct BlackQueen {
     bitboard: Bitboard,
 }
@@ -14,6 +15,18 @@ impl BlackQueen {
 
     pub fn bitboard(&self) -> Bitboard {
         self.bitboard
+    }
+}
+
+impl Display for BlackQueen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{BLACK_QUEEN}")
+    }
+}
+
+impl Debug for BlackQueen {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
     }
 }
 

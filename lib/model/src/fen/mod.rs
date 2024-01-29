@@ -69,11 +69,13 @@ impl ForsythEdwardsNotation {
 
 impl Display for ForsythEdwardsNotation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{} {} {} {} {} {}",
-            self.placements, self.active_color, self.castling, self.enpassant, self.half_move_clock, self.full_move_clock
-        )
+        let placements = self.placements();
+        let color = self.active_color();
+        let castling = self.castling();
+        let enpassant = self.enpassant();
+        let half = self.half_move_clock();
+        let full = self.full_move_clock();
+        writeln!(f, "{placements} {color} {castling} {enpassant} {half} {full}",)
     }
 }
 
