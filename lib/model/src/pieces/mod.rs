@@ -12,6 +12,23 @@ use pawn::Pawn;
 use queen::Queen;
 use rook::Rook;
 
+pub const NUM_PIECES: usize = 12;
+
+pub const PIECES: [char; NUM_PIECES] = [
+    rook::black::BLACK_ROOK,
+    knight::black::BLACK_KNIGHT,
+    bishop::black::BLACK_BISHOP,
+    queen::black::BLACK_QUEEN,
+    king::black::BLACK_KING,
+    pawn::black::BLACK_PAWN,
+    rook::white::WHITE_ROOK,
+    knight::white::WHITE_KNIGHT,
+    bishop::white::WHITE_BISHOP,
+    queen::white::WHITE_QUEEN,
+    king::white::WHITE_KING,
+    pawn::white::WHITE_PAWN,
+];
+
 #[derive(Debug)]
 pub enum Piece {
     Rook(Rook),

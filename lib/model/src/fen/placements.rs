@@ -1,17 +1,6 @@
 use std::fmt::{Debug, Display};
 
-use crate::pieces::bishop::black::BLACK_BISHOP;
-use crate::pieces::bishop::white::WHITE_BISHOP;
-use crate::pieces::king::black::BLACK_KING;
-use crate::pieces::king::white::WHITE_KING;
-use crate::pieces::knight::black::BLACK_KNIGHT;
-use crate::pieces::knight::white::WHITE_KNIGHT;
-use crate::pieces::pawn::black::BLACK_PAWN;
-use crate::pieces::pawn::white::WHITE_PAWN;
-use crate::pieces::queen::black::BLACK_QUEEN;
-use crate::pieces::queen::white::WHITE_QUEEN;
-use crate::pieces::rook::black::BLACK_ROOK;
-use crate::pieces::rook::white::WHITE_ROOK;
+use crate::pieces::PIECES;
 
 pub const NUM_RANKS: usize = 8;
 pub const NUM_FILES: usize = 8;
@@ -45,18 +34,19 @@ impl From<String> for Placements {
             }
             chars.for_each(|piece| {
                 match piece {
-                    WHITE_ROOK => {}
-                    WHITE_BISHOP => {}
-                    WHITE_KNIGHT => {}
-                    WHITE_QUEEN => {}
-                    WHITE_KING => {}
-                    WHITE_PAWN => {}
-                    BLACK_ROOK => {}
-                    BLACK_BISHOP => {}
-                    BLACK_KNIGHT => {}
-                    BLACK_QUEEN => {}
-                    BLACK_KING => {}
-                    BLACK_PAWN => {}
+                    p if p == PIECES[0] => {}
+                    p if p == PIECES[1] => {}
+                    p if p == PIECES[2] => {}
+                    p if p == PIECES[3] => {}
+                    p if p == PIECES[4] => {}
+                    p if p == PIECES[5] => {}
+                    p if p == PIECES[6] => {}
+                    p if p == PIECES[0] => {}
+                    p if p == PIECES[7] => {}
+                    p if p == PIECES[8] => {}
+                    p if p == PIECES[9] => {}
+                    p if p == PIECES[10] => {}
+                    p if p == PIECES[11] => {}
                     other => {
                         if !other.is_ascii_digit() {
                             panic!("Invalid piece placed")
