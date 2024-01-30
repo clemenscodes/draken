@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display};
 
 pub const NUM_COLORS: usize = 2;
-pub const COLORS: [u8; NUM_COLORS] = [119u8, 98u8]; // w, b
+pub const COLORS: [u8; NUM_COLORS] = ['w' as u8, 'b' as u8];
 
 pub struct ActiveColor {
     color: u8,

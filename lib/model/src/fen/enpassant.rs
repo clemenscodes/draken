@@ -9,23 +9,40 @@ pub struct EnPassant {
 
 impl EnPassant {
     pub fn new(square: Option<Square>) -> Self {
-        if let Some(sq) = square {
-            if Self::is_valid_square(sq) {
-                Self { square }
-            } else {
-                panic!("Invalid en passant square {sq}")
-            }
-        } else {
+        if Self::is_valid_square(square) {
             Self { square }
+        } else {
+            panic!("Invalid en passant square");
         }
     }
 
-    fn is_valid_square(sq: Square) -> bool {
-        (sq >= A3 && sq <= H3) || (sq >= A6 && sq <= H6)
+    fn is_valid_square(square: Option<Square>) -> bool {
+        if let Some(sq) = square {
+            (sq >= A3 && sq <= H3) || (sq >= A6 && sq <= H6)
+        } else {
+            true
+        }
     }
 
     pub fn square(&self) -> Option<Square> {
         self.square
+    }
+}
+
+pub(crate) trait EnPassantExt {
+    fn set_square(&mut self, square: Option<Square>);
+    fn unset(&mut self);
+}
+
+impl EnPassantExt for EnPassant {
+    fn set_square(&mut self, square: Option<Square>) {
+        if Self::is_valid_square(square) {
+            self.square = square;
+        }
+    }
+
+    fn unset(&mut self) {
+        self.square = None;
     }
 }
 
@@ -67,14 +84,14 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Invalid en passant square h7")]
+    #[should_panic(expected = "Invalid en passant square")]
     fn test_invalid_en_passant_square() {
         std::panic::set_hook(Box::new(|_| {}));
         EnPassant::new(Some(H7));
     }
 
     #[test]
-    #[should_panic(expected = "Invalid en passant square a2")]
+    #[should_panic(expected = "Invalid en passant square")]
     fn test_invalid_en_passant_square_out_of_range() {
         std::panic::set_hook(Box::new(|_| {}));
         EnPassant::new(Some(A2));

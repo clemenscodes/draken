@@ -11,9 +11,7 @@ pub struct Castling {
 
 impl Default for Castling {
     fn default() -> Self {
-        Self {
-            rights: WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE,
-        }
+        Self::new(WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE)
     }
 }
 

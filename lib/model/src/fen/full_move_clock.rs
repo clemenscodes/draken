@@ -24,7 +24,7 @@ impl Default for FullMoveClock {
     }
 }
 
-pub trait FullMoveClockExt {
+pub(crate) trait FullMoveClockExt {
     fn increment(&mut self);
 }
 

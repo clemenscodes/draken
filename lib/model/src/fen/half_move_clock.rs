@@ -25,7 +25,7 @@ impl Default for HalfMoveClock {
     }
 }
 
-pub trait HalfMoveClockExt {
+pub(crate) trait HalfMoveClockExt {
     fn increment(&mut self);
 }
 

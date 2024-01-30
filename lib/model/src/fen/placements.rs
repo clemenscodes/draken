@@ -88,7 +88,7 @@ impl Default for Placements {
 
 impl From<&str> for Placements {
     fn from(value: &str) -> Self {
-        let mut position = [[0u8; NUM_FILES]; NUM_RANKS];
+        let mut position: Position = [[0u8; NUM_FILES]; NUM_RANKS];
         let split = value.split('/');
         Self::validate_rank_count(&split);
         for (num_rank, rank) in split.enumerate() {
