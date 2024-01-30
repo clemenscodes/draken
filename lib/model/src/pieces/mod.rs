@@ -5,29 +5,66 @@ pub(crate) mod pawn;
 pub(crate) mod queen;
 pub(crate) mod rook;
 
+use std::{collections::HashMap, sync::LazyLock};
+
+use bishop::black::BLACK_BISHOP;
+use bishop::white::WHITE_BISHOP;
 use bishop::Bishop;
+use king::black::BLACK_KING;
+use king::white::WHITE_KING;
 use king::King;
+use knight::black::BLACK_KNIGHT;
+use knight::white::WHITE_KNIGHT;
 use knight::Knight;
+use pawn::black::BLACK_PAWN;
+use pawn::white::WHITE_PAWN;
 use pawn::Pawn;
+use queen::black::BLACK_QUEEN;
+use queen::white::WHITE_QUEEN;
 use queen::Queen;
+use rook::black::BLACK_ROOK;
+use rook::white::WHITE_ROOK;
 use rook::Rook;
 
 pub const NUM_PIECES: usize = 12;
 
-pub const PIECES: [char; NUM_PIECES] = [
-    rook::black::BLACK_ROOK,
-    knight::black::BLACK_KNIGHT,
-    bishop::black::BLACK_BISHOP,
-    queen::black::BLACK_QUEEN,
-    king::black::BLACK_KING,
-    pawn::black::BLACK_PAWN,
-    rook::white::WHITE_ROOK,
-    knight::white::WHITE_KNIGHT,
-    bishop::white::WHITE_BISHOP,
-    queen::white::WHITE_QUEEN,
-    king::white::WHITE_KING,
-    pawn::white::WHITE_PAWN,
+pub const PIECE_SYMBOLS: [char; NUM_PIECES] = [
+    BLACK_ROOK,
+    BLACK_KNIGHT,
+    BLACK_BISHOP,
+    BLACK_QUEEN,
+    BLACK_KING,
+    BLACK_PAWN,
+    WHITE_ROOK,
+    WHITE_KNIGHT,
+    WHITE_BISHOP,
+    WHITE_QUEEN,
+    WHITE_KING,
+    WHITE_PAWN,
 ];
+
+pub const PIECE_BYTES: [u8; NUM_PIECES] = [
+    BLACK_ROOK as u8,
+    BLACK_KNIGHT as u8,
+    BLACK_BISHOP as u8,
+    BLACK_QUEEN as u8,
+    BLACK_KING as u8,
+    BLACK_PAWN as u8,
+    WHITE_ROOK as u8,
+    WHITE_KNIGHT as u8,
+    WHITE_BISHOP as u8,
+    WHITE_QUEEN as u8,
+    WHITE_KING as u8,
+    WHITE_PAWN as u8,
+];
+
+pub static PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
+    let mut piece_lookup: HashMap<char, usize> = HashMap::new();
+    for (i, &piece) in PIECE_SYMBOLS.iter().enumerate() {
+        piece_lookup.insert(piece, i);
+    }
+    piece_lookup
+});
 
 #[derive(Debug)]
 pub enum Piece {

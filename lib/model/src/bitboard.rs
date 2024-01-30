@@ -20,7 +20,7 @@ pub struct Bitboard {
 }
 
 impl Bitboard {
-    fn new(bits: u64) -> Self {
+    pub fn new(bits: u64) -> Self {
         Bitboard { bits }
     }
 
