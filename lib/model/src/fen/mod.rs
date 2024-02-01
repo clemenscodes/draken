@@ -14,7 +14,9 @@ use full_move_clock::FullMoveClock;
 use half_move_clock::HalfMoveClock;
 use placements::Placements;
 
-use self::placements::PlacementError;
+use self::{
+    active_color::ActiveColorError, full_move_clock::FullMoveClockError, half_move_clock::HalfMoveClockError, placements::PlacementError,
+};
 
 pub const FEN_PARTS: usize = 6;
 
@@ -74,13 +76,13 @@ impl ForsythEdwardsNotation {
 
 #[derive(Debug)]
 pub enum FenError {
-    InvalidParts,
+    Invalid,
     InvalidPlacements(PlacementError),
-    InvalidActiveColor,
+    InvalidActiveColor(ActiveColorError),
     InvalidCastling,
     InvalidEnPassant,
-    InvalidHalfMoveClock,
-    InvalidFullMoveClock,
+    InvalidHalfMoveClock(HalfMoveClockError),
+    InvalidFullMoveClock(FullMoveClockError),
 }
 
 impl TryFrom<&str> for ForsythEdwardsNotation {
@@ -89,25 +91,24 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let parts: Vec<&str> = value.split(' ').collect();
         if parts.len() != FEN_PARTS {
-            return Err(FenError::InvalidParts);
+            return Err(Self::Error::Invalid);
         }
-        let placements = Placements::try_from(parts[0]).map_err(|err| FenError::InvalidPlacements(err))?;
-        // let active_color = ActiveColor::try_from(parts[1]).map_err(|_|
-        // Error::InvalidActiveColor)?; let castling =
-        // Castling::try_from(parts[2]).map_err(|_| Error::InvalidCastling)?;
-        // let enpassant = EnPassant::try_from(parts[3]).map_err(|_|
-        // Error::InvalidEnPassant)?; let half_move_clock =
-        // HalfMoveClock::try_from(parts[4]).map_err(|_| Error::InvalidHalfMoveClock)?;
-        // let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(|_|
-        // Error::InvalidFullMoveClock)?; let fen = Self::new(placements,
-        // active_color, castling, enpassant, half_move_clock, full_move_clock);
+        let placements = Placements::try_from(parts[0]).map_err(|err| Self::Error::InvalidPlacements(err))?;
+        let active_color = ActiveColor::try_from(parts[1]).map_err(|err| Self::Error::InvalidActiveColor(err))?;
+        // let castling = Castling::try_from(parts[2]).map_err(|_|
+        // Error::InvalidCastling)?; let enpassant =
+        // EnPassant::try_from(parts[3]).map_err(|_| Error::InvalidEnPassant)?;
+        let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(|err| Self::Error::InvalidHalfMoveClock(err))?;
+        let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(|err| Self::Error::InvalidFullMoveClock(err))?;
+        //let fen = Self::new(placements, active_color, castling, enpassant,
+        // half_move_clock, full_move_clock);
         let fen = Self::new(
             placements,
-            ActiveColor::default(),
+            active_color,
             Castling::default(),
             EnPassant::default(),
-            HalfMoveClock::default(),
-            FullMoveClock::default(),
+            half_move_clock,
+            full_move_clock,
         );
         Ok(fen)
     }
