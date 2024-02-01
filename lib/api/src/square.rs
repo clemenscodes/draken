@@ -7,6 +7,10 @@ use Square::*;
 pub const NUM_RANKS: usize = 8;
 pub const NUM_FILES: usize = 8;
 pub const NUM_SQUARES: usize = NUM_RANKS * NUM_FILES;
+const SQUARES: [Square; NUM_SQUARES] = [
+    A1, B1, C1, D1, E1, F1, G1, H1, A2, B2, C2, D2, E2, F2, G2, H2, A3, B3, C3, D3, E3, F3, G3, H3, A4, B4, C4, D4, E4, F4, G4, H4, A5, B5,
+    C5, D5, E5, F5, G5, H5, A6, B6, C6, D6, E6, F6, G6, H6, A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8,
+];
 
 #[derive(PartialEq, Eq, Clone, Copy, Ord, PartialOrd)]
 pub enum Square {
@@ -76,10 +80,10 @@ pub enum Square {
     H8,
 }
 
-const SQUARES: [Square; NUM_SQUARES] = [
-    A1, B1, C1, D1, E1, F1, G1, H1, A2, B2, C2, D2, E2, F2, G2, H2, A3, B3, C3, D3, E3, F3, G3, H3, A4, B4, C4, D4, E4, F4, G4, H4, A5, B5,
-    C5, D5, E5, F5, G5, H5, A6, B6, C6, D6, E6, F6, G6, H6, A7, B7, C7, D7, E7, F7, G7, H7, A8, B8, C8, D8, E8, F8, G8, H8,
-];
+#[derive(Debug, PartialEq, Eq)]
+pub enum SquareError {
+    Invalid,
+}
 
 pub trait SquareExt {
     fn from_rank_file(rank: usize, file: usize) -> Square {
@@ -97,6 +101,83 @@ pub trait SquareExt {
                 callback(rank, file);
             }
         }
+    }
+}
+
+impl TryFrom<&str> for Square {
+    type Error = SquareError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.len() != 2 {
+            return Err(Self::Error::Invalid);
+        }
+        return match value {
+            "a1" => Ok(A1),
+            "b1" => Ok(B1),
+            "c1" => Ok(C1),
+            "d1" => Ok(D1),
+            "e1" => Ok(E1),
+            "f1" => Ok(F1),
+            "g1" => Ok(G1),
+            "h1" => Ok(H1),
+            "a2" => Ok(A2),
+            "b2" => Ok(B2),
+            "c2" => Ok(C2),
+            "d2" => Ok(D2),
+            "e2" => Ok(E2),
+            "f2" => Ok(F2),
+            "g2" => Ok(G2),
+            "h2" => Ok(H2),
+            "a3" => Ok(A3),
+            "b3" => Ok(B3),
+            "c3" => Ok(C3),
+            "d3" => Ok(D3),
+            "e3" => Ok(E3),
+            "f3" => Ok(F3),
+            "g3" => Ok(G3),
+            "h3" => Ok(H3),
+            "a4" => Ok(A4),
+            "b4" => Ok(B4),
+            "c4" => Ok(C4),
+            "d4" => Ok(D4),
+            "e4" => Ok(E4),
+            "f4" => Ok(F4),
+            "g4" => Ok(G4),
+            "h4" => Ok(H4),
+            "a5" => Ok(A5),
+            "b5" => Ok(B5),
+            "c5" => Ok(C5),
+            "d5" => Ok(D5),
+            "e5" => Ok(E5),
+            "f5" => Ok(F5),
+            "g5" => Ok(G5),
+            "h5" => Ok(H5),
+            "a6" => Ok(A6),
+            "b6" => Ok(B6),
+            "c6" => Ok(C6),
+            "d6" => Ok(D6),
+            "e6" => Ok(E6),
+            "f6" => Ok(F6),
+            "g6" => Ok(G6),
+            "h6" => Ok(H6),
+            "a7" => Ok(A7),
+            "b7" => Ok(B7),
+            "c7" => Ok(C7),
+            "d7" => Ok(D7),
+            "e7" => Ok(E7),
+            "f7" => Ok(F7),
+            "g7" => Ok(G7),
+            "h7" => Ok(H7),
+            "a8" => Ok(A8),
+            "b8" => Ok(B8),
+            "c8" => Ok(C8),
+            "d8" => Ok(D8),
+            "e8" => Ok(E8),
+            "f8" => Ok(F8),
+            "g8" => Ok(G8),
+            "h8" => Ok(H8),
+            _ => Err(Self::Error::Invalid),
+        };
     }
 }
 

@@ -11,7 +11,7 @@ type Position = [Rank; NUM_RANKS];
 pub const NUM_RANKS: usize = 8;
 pub const NUM_FILES: usize = 8;
 
-const EMPTY: u8 = 0u8;
+const EMPTY: u8 = 0;
 const B_ROOK: u8 = PIECE_BYTES[0];
 const B_KNIGHT: u8 = PIECE_BYTES[1];
 const B_BISHOP: u8 = PIECE_BYTES[2];

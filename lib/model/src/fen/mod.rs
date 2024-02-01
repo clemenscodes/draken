@@ -15,7 +15,8 @@ use half_move_clock::HalfMoveClock;
 use placements::Placements;
 
 use self::{
-    active_color::ActiveColorError, full_move_clock::FullMoveClockError, half_move_clock::HalfMoveClockError, placements::PlacementError,
+    active_color::ActiveColorError, enpassant::EnPassantError, full_move_clock::FullMoveClockError, half_move_clock::HalfMoveClockError,
+    placements::PlacementError,
 };
 
 pub const FEN_PARTS: usize = 6;
@@ -80,7 +81,7 @@ pub enum FenError {
     InvalidPlacements(PlacementError),
     InvalidActiveColor(ActiveColorError),
     InvalidCastling,
-    InvalidEnPassant,
+    InvalidEnPassant(EnPassantError),
     InvalidHalfMoveClock(HalfMoveClockError),
     InvalidFullMoveClock(FullMoveClockError),
 }
@@ -96,8 +97,8 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
         let placements = Placements::try_from(parts[0]).map_err(|err| Self::Error::InvalidPlacements(err))?;
         let active_color = ActiveColor::try_from(parts[1]).map_err(|err| Self::Error::InvalidActiveColor(err))?;
         // let castling = Castling::try_from(parts[2]).map_err(|_|
-        // Error::InvalidCastling)?; let enpassant =
-        // EnPassant::try_from(parts[3]).map_err(|_| Error::InvalidEnPassant)?;
+        // Error::InvalidCastling)?;
+        let enpassant = EnPassant::try_from(parts[3]).map_err(|err| Self::Error::InvalidEnPassant(err))?;
         let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(|err| Self::Error::InvalidHalfMoveClock(err))?;
         let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(|err| Self::Error::InvalidFullMoveClock(err))?;
         //let fen = Self::new(placements, active_color, castling, enpassant,
@@ -106,7 +107,7 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
             placements,
             active_color,
             Castling::default(),
-            EnPassant::default(),
+            enpassant,
             half_move_clock,
             full_move_clock,
         );

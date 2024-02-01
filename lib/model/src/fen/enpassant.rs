@@ -3,8 +3,14 @@ use std::fmt::{Debug, Display};
 use api::Square;
 use api::Square::{A3, A6, H3, H6};
 
+#[derive(PartialEq, Eq)]
 pub struct EnPassant {
     square: Option<Square>,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum EnPassantError {
+    Invalid,
 }
 
 impl EnPassant {
@@ -26,6 +32,28 @@ impl EnPassant {
 
     pub fn square(&self) -> Option<Square> {
         self.square
+    }
+}
+
+impl TryFrom<&str> for EnPassant {
+    type Error = EnPassantError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value == "-" {
+            return Ok(EnPassant::default());
+        }
+        match Square::try_from(value) {
+            Ok(square) if EnPassant::is_valid_square(Some(square)) => Ok(EnPassant { square: Some(square) }),
+            _ => Err(Self::Error::Invalid),
+        }
+    }
+}
+
+impl TryFrom<String> for EnPassant {
+    type Error = EnPassantError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_str())
     }
 }
 
@@ -115,5 +143,29 @@ mod tests {
         let square = Some(A3);
         let en_passant = EnPassant::new(square);
         assert_eq!(format!("{en_passant:?}"), String::from("a3"));
+    }
+
+    #[test]
+    fn test_try_from_str_default() {
+        let result = EnPassant::try_from("-");
+        assert_eq!(result, Ok(EnPassant::default()));
+    }
+
+    #[test]
+    fn test_try_from_str_invalid_square() {
+        let result = EnPassant::try_from("x9");
+        assert_eq!(result, Err(EnPassantError::Invalid));
+    }
+
+    #[test]
+    fn test_try_from_string() {
+        let result = EnPassant::try_from(String::from("h3"));
+        assert_eq!(result, Ok(EnPassant { square: Some(Square::H3) }));
+    }
+
+    #[test]
+    fn test_try_from_string_invalid() {
+        let result = EnPassant::try_from("e4");
+        assert_eq!(result, Err(EnPassantError::Invalid));
     }
 }
