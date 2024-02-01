@@ -49,13 +49,14 @@ impl Placements {
         self.position
     }
 
-    fn validate_rank_count(split: &Split<'_, char>) {
+    fn validate_rank_count(split: &Split<'_, char>) -> Result<(), PlacementError> {
         if split.clone().count() != NUM_RANKS {
-            panic!("Invalid piece placement data, incorrect number of ranks");
+            return Err(PlacementError::InvalidRank);
         }
+        Ok(())
     }
 
-    fn process_piece(position: &mut Position, num_rank: usize, file: &mut usize, piece: char) {
+    fn process_piece(position: &mut Position, num_rank: usize, file: &mut usize, piece: char) -> Result<(), PlacementError> {
         match PIECE_INDEX_LOOKUP_MAP.get(&piece) {
             Some(&idx) => {
                 position[num_rank][*file] = PIECE_BYTES[idx];
@@ -63,20 +64,22 @@ impl Placements {
             }
             None if piece.is_ascii_digit() => {
                 let empty_files = piece.to_digit(10).unwrap() as usize;
-                Self::validate_file_count(*file + empty_files);
+                Self::validate_file_count(*file + empty_files)?;
                 for i in 0..empty_files {
                     position[num_rank][*file + i] = EMPTY;
                 }
                 *file += empty_files;
             }
-            _ => panic!("Invalid piece placed"),
+            _ => return Err(PlacementError::InvalidPiece),
         }
+        Ok(())
     }
 
-    fn validate_file_count(file: usize) {
+    fn validate_file_count(file: usize) -> Result<(), PlacementError> {
         if file > NUM_FILES {
-            panic!("Invalid piece placement data, too many files");
+            return Err(PlacementError::InvalidFile);
         }
+        Ok(())
     }
 }
 
@@ -86,28 +89,39 @@ impl Default for Placements {
     }
 }
 
-impl From<&str> for Placements {
-    fn from(value: &str) -> Self {
+#[derive(Debug, PartialEq, Eq)]
+pub enum PlacementError {
+    InvalidFile,
+    InvalidPiece,
+    InvalidRank,
+}
+
+impl TryFrom<&str> for Placements {
+    type Error = PlacementError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
         let mut position: Position = [[0u8; NUM_FILES]; NUM_RANKS];
         let split = value.split('/');
-        Self::validate_rank_count(&split);
+        Self::validate_rank_count(&split)?;
         for (num_rank, rank) in split.enumerate() {
             let mut file = 0;
             '_files: for piece in rank.chars() {
                 if file >= NUM_FILES {
                     break '_files;
                 }
-                Self::process_piece(&mut position, num_rank, &mut file, piece);
+                Self::process_piece(&mut position, num_rank, &mut file, piece)?;
             }
-            Self::validate_file_count(file);
+            Self::validate_file_count(file)?;
         }
-        Self { position }
+        Ok(Self { position })
     }
 }
 
-impl From<String> for Placements {
-    fn from(value: String) -> Self {
-        Placements::from(value.as_str())
+impl TryFrom<String> for Placements {
+    type Error = PlacementError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_str())
     }
 }
 
@@ -157,7 +171,7 @@ mod tests {
     #[test]
     fn test_from_valid_string() {
         let fen_string = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-        let chessboard = Placements::from(fen_string);
+        let chessboard = Placements::try_from(fen_string).unwrap();
         assert_eq!(chessboard.position(), STARTING_POSITION);
     }
 
@@ -174,29 +188,26 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Invalid piece placement data, incorrect number of ranks")]
     fn test_invalid_ranks() {
-        std::panic::set_hook(Box::new(|_| {}));
         let invalid_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/extra";
         let invalid_placement_str = String::from(invalid_fen);
-        let _ = Placements::from(invalid_placement_str);
+        let err = Placements::try_from(invalid_placement_str).unwrap_err();
+        assert_eq!(err, PlacementError::InvalidRank);
     }
 
     #[test]
-    #[should_panic(expected = "Invalid piece placement data, too many files")]
     fn test_too_many_files() {
-        std::panic::set_hook(Box::new(|_| {}));
         let invalid_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQK5R";
         let invalid_placement_str = String::from(invalid_fen);
-        let _ = Placements::from(invalid_placement_str);
+        let err = Placements::try_from(invalid_placement_str).unwrap_err();
+        assert_eq!(err, PlacementError::InvalidFile);
     }
 
     #[test]
-    #[should_panic(expected = "Invalid piece placed")]
     fn test_invalid_piece() {
         std::panic::set_hook(Box::new(|_| {}));
         let invalid_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPJQ/RNBQKBNR";
-        let invalid_placement_str = String::from(invalid_fen);
-        let _ = Placements::from(invalid_placement_str);
+        let err = Placements::try_from(invalid_fen).unwrap_err();
+        assert_eq!(err, PlacementError::InvalidPiece);
     }
 }
