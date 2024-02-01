@@ -3,6 +3,7 @@ use std::fmt::{Debug, Display};
 pub const MAX_HALF_MOVE_CLOCK: u8 = 150;
 pub const MIN_HALF_MOVE_CLOCK: u8 = 0;
 
+#[derive(PartialEq, Eq)]
 pub struct HalfMoveClock {
     clock: u8,
 }

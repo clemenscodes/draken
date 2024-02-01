@@ -5,23 +5,12 @@ mod full_move_clock;
 mod half_move_clock;
 mod placements;
 
+use self::{active_color::*, castling::*, enpassant::*, full_move_clock::*, half_move_clock::*, placements::*};
 use std::fmt::{Debug, Display};
-
-use active_color::ActiveColor;
-use castling::Castling;
-use enpassant::EnPassant;
-use full_move_clock::FullMoveClock;
-use half_move_clock::HalfMoveClock;
-use placements::Placements;
-
-use self::{
-    active_color::ActiveColorError, enpassant::EnPassantError, full_move_clock::FullMoveClockError, half_move_clock::HalfMoveClockError,
-    placements::PlacementError,
-};
 
 pub const FEN_PARTS: usize = 6;
 
-#[derive(Default)]
+#[derive(Default, PartialEq, Eq)]
 pub struct ForsythEdwardsNotation {
     placements: Placements,
     active_color: ActiveColor,
@@ -75,19 +64,19 @@ impl ForsythEdwardsNotation {
     }
 }
 
-#[derive(Debug)]
-pub enum FenError {
+#[derive(Debug, PartialEq, Eq)]
+pub enum ForsythEdwardsNotationError {
     Invalid,
     InvalidPlacements(PlacementError),
     InvalidActiveColor(ActiveColorError),
-    InvalidCastling,
+    InvalidCastling(CastlingError),
     InvalidEnPassant(EnPassantError),
     InvalidHalfMoveClock(HalfMoveClockError),
     InvalidFullMoveClock(FullMoveClockError),
 }
 
 impl TryFrom<&str> for ForsythEdwardsNotation {
-    type Error = FenError;
+    type Error = ForsythEdwardsNotationError;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let parts: Vec<&str> = value.split(' ').collect();
@@ -96,27 +85,17 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
         }
         let placements = Placements::try_from(parts[0]).map_err(|err| Self::Error::InvalidPlacements(err))?;
         let active_color = ActiveColor::try_from(parts[1]).map_err(|err| Self::Error::InvalidActiveColor(err))?;
-        // let castling = Castling::try_from(parts[2]).map_err(|_|
-        // Error::InvalidCastling)?;
+        let castling = Castling::try_from(parts[2]).map_err(|err| Self::Error::InvalidCastling(err))?;
         let enpassant = EnPassant::try_from(parts[3]).map_err(|err| Self::Error::InvalidEnPassant(err))?;
         let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(|err| Self::Error::InvalidHalfMoveClock(err))?;
         let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(|err| Self::Error::InvalidFullMoveClock(err))?;
-        //let fen = Self::new(placements, active_color, castling, enpassant,
-        // half_move_clock, full_move_clock);
-        let fen = Self::new(
-            placements,
-            active_color,
-            Castling::default(),
-            enpassant,
-            half_move_clock,
-            full_move_clock,
-        );
+        let fen = Self::new(placements, active_color, castling, enpassant, half_move_clock, full_move_clock);
         Ok(fen)
     }
 }
 
 impl TryFrom<String> for ForsythEdwardsNotation {
-    type Error = FenError;
+    type Error = ForsythEdwardsNotationError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         Self::try_from(value.as_str())
@@ -143,6 +122,43 @@ impl Debug for ForsythEdwardsNotation {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
-    fn test_fen() {}
+    fn test_try_from_valid_fen() {
+        let fen_str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        let result = ForsythEdwardsNotation::try_from(fen_str);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_try_from_invalid_fen() {
+        let fen_str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        let result = ForsythEdwardsNotation::try_from(String::from(fen_str));
+        assert_eq!(result, Err(ForsythEdwardsNotationError::Invalid));
+    }
+
+    #[test]
+    fn test_display_format() {
+        let fen = ForsythEdwardsNotation::default();
+        let display_str = format!("{}", fen);
+        assert_eq!(display_str, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\n");
+    }
+
+    #[test]
+    fn test_debug_format() {
+        let fen = ForsythEdwardsNotation::default();
+        let debug_str = format!("{:?}", fen);
+        assert_eq!(debug_str, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\n");
+    }
+
+    #[test]
+    fn test_try_from_invalid_parts() {
+        let fen_str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1";
+        let result = ForsythEdwardsNotation::try_from(fen_str);
+        assert_eq!(
+            result,
+            Err(ForsythEdwardsNotationError::InvalidActiveColor(ActiveColorError::Invalid))
+        );
+    }
 }

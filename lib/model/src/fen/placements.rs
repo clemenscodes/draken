@@ -36,6 +36,7 @@ const STARTING_POSITION: Position = [
     [W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK],
 ];
 
+#[derive(PartialEq, Eq)]
 pub struct Placements {
     position: Position,
 }
