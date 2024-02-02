@@ -112,7 +112,7 @@ impl Game for ChessController {
         todo!()
     }
 
-    fn is_own_piece_on_square(square: api::Square) -> bool {
+    fn is_own_piece_on_square(_square: api::Square) -> bool {
         todo!()
     }
 }

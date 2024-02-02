@@ -21,7 +21,7 @@ impl Model for ChessModel {
         todo!()
     }
 
-    fn get_legal_moves(square: api::Square) -> Vec<(Square, Square)> {
+    fn get_legal_moves(_square: api::Square) -> Vec<(Square, Square)> {
         todo!()
     }
 
@@ -87,7 +87,7 @@ impl Game for ChessModel {
         todo!()
     }
 
-    fn is_own_piece_on_square(square: api::Square) -> bool {
+    fn is_own_piece_on_square(_square: api::Square) -> bool {
         todo!()
     }
 }
