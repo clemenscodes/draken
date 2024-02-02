@@ -20,6 +20,7 @@
             "executor": "@monodon/rust:test",
             "outputs": ["{options.target-dir}"],
             "options": {
+                "lib": true,
                 "target-dir": "dist/target/lib/engine"
             },
             "configurations": {

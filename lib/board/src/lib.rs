@@ -1,13 +1,5 @@
-use bitboard::Bitboard;
 use fen::ForsythEdwardsNotation;
-use pieces::{
-    bishop::{black::BlackBishop, white::WhiteBishop},
-    king::{black::BlackKing, white::WhiteKing},
-    knight::{black::BlackKnight, white::WhiteKnight},
-    pawn::{black::BlackPawn, white::WhitePawn},
-    queen::{black::BlackQueen, white::WhiteQueen},
-    rook::{black::BlackRook, white::WhiteRook},
-};
+use pieces::Pieces;
 
 pub static BOARD_SIZE: i8 = 8;
 pub static NORTH: i8 = BOARD_SIZE;
@@ -30,20 +22,19 @@ pub static WEST_WEST_SOUTH: i8 = WEST + SOUTH_WEST;
 #[derive(Debug)]
 pub struct Board {
     fen: ForsythEdwardsNotation,
-    white_king: WhiteKing,
-    black_king: BlackKing,
-    white_bishop: WhiteBishop,
-    black_bishop: BlackBishop,
-    white_queen: WhiteQueen,
-    black_queen: BlackQueen,
-    white_rook: WhiteRook,
-    black_rook: BlackRook,
-    white_knight: WhiteKnight,
-    black_knight: BlackKnight,
-    white_pawn: WhitePawn,
-    black_pawn: BlackPawn,
-    white_pieces: Bitboard,
-    black_pieces: Bitboard,
-    occupied_squares: Bitboard,
-    empty_squares: Bitboard,
+    pieces: Pieces,
+}
+
+impl Board {
+    pub fn new(fen: ForsythEdwardsNotation, pieces: Pieces) -> Self {
+        Self { fen, pieces }
+    }
+
+    pub fn fen(&self) -> &ForsythEdwardsNotation {
+        &self.fen
+    }
+
+    pub fn pieces(&self) -> &Pieces {
+        &self.pieces
+    }
 }

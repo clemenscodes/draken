@@ -1,30 +1,31 @@
 #![feature(lazy_cell)]
-pub mod bishop;
-pub mod king;
-pub mod knight;
-pub mod pawn;
-pub mod queen;
-pub mod rook;
+pub(crate) mod bishop;
+pub(crate) mod king;
+pub(crate) mod knight;
+pub(crate) mod pawn;
+pub(crate) mod queen;
+pub(crate) mod rook;
 
 use std::{collections::HashMap, sync::LazyLock};
 
-use bishop::black::BLACK_BISHOP;
-use bishop::white::WHITE_BISHOP;
+use bishop::black::*;
+use bishop::white::*;
 use bishop::Bishop;
-use king::black::BLACK_KING;
-use king::white::WHITE_KING;
+use bitboard::Bitboard;
+use king::black::*;
+use king::white::*;
 use king::King;
-use knight::black::BLACK_KNIGHT;
-use knight::white::WHITE_KNIGHT;
+use knight::black::*;
+use knight::white::*;
 use knight::Knight;
-use pawn::black::BLACK_PAWN;
-use pawn::white::WHITE_PAWN;
+use pawn::black::*;
+use pawn::white::*;
 use pawn::Pawn;
-use queen::black::BLACK_QUEEN;
-use queen::white::WHITE_QUEEN;
+use queen::black::*;
+use queen::white::*;
 use queen::Queen;
-use rook::black::BLACK_ROOK;
-use rook::white::WHITE_ROOK;
+use rook::black::*;
+use rook::white::*;
 use rook::Rook;
 
 pub const NUM_PIECES: usize = 12;
@@ -66,6 +67,66 @@ pub static PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::ne
     }
     piece_lookup
 });
+
+#[derive(Debug)]
+pub struct Pieces {
+    white_king: WhiteKing,
+    black_king: BlackKing,
+    white_bishop: WhiteBishop,
+    black_bishop: BlackBishop,
+    white_queen: WhiteQueen,
+    black_queen: BlackQueen,
+    white_rook: WhiteRook,
+    black_rook: BlackRook,
+    white_knight: WhiteKnight,
+    black_knight: BlackKnight,
+    white_pawn: WhitePawn,
+    black_pawn: BlackPawn,
+    white_pieces: Bitboard,
+    black_pieces: Bitboard,
+    occupied_squares: Bitboard,
+    empty_squares: Bitboard,
+}
+
+impl Pieces {
+    pub fn new(
+        white_king: WhiteKing,
+        black_king: BlackKing,
+        white_bishop: WhiteBishop,
+        black_bishop: BlackBishop,
+        white_queen: WhiteQueen,
+        black_queen: BlackQueen,
+        white_rook: WhiteRook,
+        black_rook: BlackRook,
+        white_knight: WhiteKnight,
+        black_knight: BlackKnight,
+        white_pawn: WhitePawn,
+        black_pawn: BlackPawn,
+        white_pieces: Bitboard,
+        black_pieces: Bitboard,
+        occupied_squares: Bitboard,
+        empty_squares: Bitboard,
+    ) -> Self {
+        Self {
+            white_king,
+            black_king,
+            white_bishop,
+            black_bishop,
+            white_queen,
+            black_queen,
+            white_rook,
+            black_rook,
+            white_knight,
+            black_knight,
+            white_pawn,
+            black_pawn,
+            white_pieces,
+            black_pieces,
+            occupied_squares,
+            empty_squares,
+        }
+    }
+}
 
 #[derive(Debug)]
 pub enum Piece {

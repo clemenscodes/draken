@@ -20,7 +20,8 @@
             "executor": "@monodon/rust:test",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/lib/bitboard"
+                "target-dir": "dist/target/lib/bitboard",
+                "lib": true
             },
             "configurations": {
                 "production": {

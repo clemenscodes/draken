@@ -87,7 +87,7 @@ impl Game for ChessModel {
         todo!()
     }
 
-    fn is_own_piece_on_scquare(square: api::Square) -> bool {
+    fn is_own_piece_on_square(square: api::Square) -> bool {
         todo!()
     }
 }
