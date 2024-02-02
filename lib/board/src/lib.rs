@@ -1,7 +1,7 @@
 #![feature(variant_count)]
-use bitboard::{Bitboard, BitboardExt};
+use bitboard::Bitboard;
 use fen::ForsythEdwardsNotation;
-use pieces::{Piece, Pieces, EMPTY_SYMBOL, NUM_PIECES, PIECE_SYMBOLS};
+use pieces::Pieces;
 use std::{
     fmt::{Debug, Display},
     mem::variant_count,
@@ -88,21 +88,7 @@ pub struct Board {
 
 impl From<ForsythEdwardsNotation> for Board {
     fn from(value: ForsythEdwardsNotation) -> Self {
-        let mut reverse_rank = 0u8;
-        let mut pieces = Pieces::default();
-        for rank in (0..8u8).rev() {
-            let mut file = 0u8;
-            for piece in value.placements().position()[reverse_rank as usize] {
-                if piece == 0 {
-                    file += 1;
-                    continue;
-                }
-                let piece = Self::init_piece(piece as char, rank, file);
-                pieces.merge_piece(piece);
-                file += 1;
-            }
-            reverse_rank += 1;
-        }
+        let pieces = Pieces::from(value.placements().position());
         Self {
             fen: value,
             pieces,
@@ -158,51 +144,16 @@ impl Board {
     }
 }
 
-pub trait BoardExt {
-    fn init_piece(symbol: char, rank: u8, file: u8) -> Piece {
-        let mut piece: Piece = Piece::try_from(symbol).unwrap();
-        piece.set_on_square(rank, file);
-        piece
-    }
-    fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES];
-    fn get_piece_symbol(&self, bitboard: Bitboard) -> char;
-}
+pub trait BoardExt {}
 
-impl BoardExt for Board {
-    fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES] {
-        [
-            self.pieces().black_rook().bitboard(),
-            self.pieces().black_knight().bitboard(),
-            self.pieces().black_bishop().bitboard(),
-            self.pieces().black_queen().bitboard(),
-            self.pieces().black_king().bitboard(),
-            self.pieces().black_pawn().bitboard(),
-            self.pieces().white_rook().bitboard(),
-            self.pieces().white_knight().bitboard(),
-            self.pieces().white_bishop().bitboard(),
-            self.pieces().white_queen().bitboard(),
-            self.pieces().white_king().bitboard(),
-            self.pieces().white_pawn().bitboard(),
-        ]
-    }
-
-    fn get_piece_symbol(&self, bitboard: Bitboard) -> char {
-        let all_pieces = self.get_all_pieces();
-        for (index, piece) in all_pieces.iter().enumerate() {
-            if bitboard.self_overlap(*piece) {
-                return PIECE_SYMBOLS[index];
-            }
-        }
-        EMPTY_SYMBOL
-    }
-}
+impl BoardExt for Board {}
 
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for rank in (0..8).rev() {
             for file in 0..8 {
                 let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
-                let symbol = self.get_piece_symbol(bitboard);
+                let symbol = self.pieces().get_piece_symbol(bitboard);
                 write!(f, "[{symbol}]")?;
             }
             if rank != 0 {

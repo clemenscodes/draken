@@ -317,6 +317,39 @@ impl Pieces {
         &mut self.black_pawn
     }
 
+    pub fn create(symbol: char, rank: u8, file: u8) -> Piece {
+        let mut piece: Piece = Piece::try_from(symbol).unwrap();
+        piece.set_on_square(rank, file);
+        piece
+    }
+
+    pub fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES] {
+        [
+            self.black_rook().bitboard(),
+            self.black_knight().bitboard(),
+            self.black_bishop().bitboard(),
+            self.black_queen().bitboard(),
+            self.black_king().bitboard(),
+            self.black_pawn().bitboard(),
+            self.white_rook().bitboard(),
+            self.white_knight().bitboard(),
+            self.white_bishop().bitboard(),
+            self.white_queen().bitboard(),
+            self.white_king().bitboard(),
+            self.white_pawn().bitboard(),
+        ]
+    }
+
+    pub fn get_piece_symbol(&self, bitboard: Bitboard) -> char {
+        let all_pieces = self.get_all_pieces();
+        for (index, piece) in all_pieces.iter().enumerate() {
+            if bitboard.self_overlap(*piece) {
+                return PIECE_SYMBOLS[index];
+            }
+        }
+        EMPTY_SYMBOL
+    }
+
     pub fn merge_piece(&mut self, mut piece: Piece) {
         let board = piece.get_board().clone();
         match piece {
@@ -345,6 +378,27 @@ impl Pieces {
                 Pawn::White(_) => self.white_pawn_mut().bitboard_mut().self_merge(board),
             },
         };
+    }
+}
+
+impl From<[[u8; 8]; 8]> for Pieces {
+    fn from(value: [[u8; 8]; 8]) -> Self {
+        let mut reverse_rank = 0u8;
+        let mut pieces = Self::default();
+        for rank in (0..8u8).rev() {
+            let mut file = 0u8;
+            for piece in value[reverse_rank as usize] {
+                if piece == 0 {
+                    file += 1;
+                    continue;
+                }
+                let piece = Self::create(piece as char, rank, file);
+                pieces.merge_piece(piece);
+                file += 1;
+            }
+            reverse_rank += 1;
+        }
+        pieces
     }
 }
 
