@@ -7,7 +7,7 @@ mod queen;
 mod rook;
 
 use bishop::{black::*, white::*, Bishop};
-use bitboard::Bitboard;
+use bitboard::{Bitboard, BitboardExt};
 use king::{black::*, white::*, King};
 use knight::{black::*, white::*, Knight};
 use pawn::{black::*, white::*, Pawn};
@@ -65,6 +65,34 @@ pub enum Piece {
     Pawn(Pawn),
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum PieceError {
+    Invalid,
+}
+
+impl TryFrom<char> for Piece {
+    type Error = PieceError;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        let piece: Piece = match value {
+            piece if piece == PIECE_SYMBOLS[0] => Piece::Rook(Rook::Black(BlackRook::default())),
+            piece if piece == PIECE_SYMBOLS[1] => Piece::Knight(Knight::Black(BlackKnight::default())),
+            piece if piece == PIECE_SYMBOLS[2] => Piece::Bishop(Bishop::Black(BlackBishop::default())),
+            piece if piece == PIECE_SYMBOLS[3] => Piece::Queen(Queen::Black(BlackQueen::default())),
+            piece if piece == PIECE_SYMBOLS[4] => Piece::King(King::Black(BlackKing::default())),
+            piece if piece == PIECE_SYMBOLS[5] => Piece::Pawn(Pawn::Black(BlackPawn::default())),
+            piece if piece == PIECE_SYMBOLS[6] => Piece::Rook(Rook::White(WhiteRook::default())),
+            piece if piece == PIECE_SYMBOLS[7] => Piece::Knight(Knight::White(WhiteKnight::default())),
+            piece if piece == PIECE_SYMBOLS[8] => Piece::Bishop(Bishop::White(WhiteBishop::default())),
+            piece if piece == PIECE_SYMBOLS[9] => Piece::Queen(Queen::White(WhiteQueen::default())),
+            piece if piece == PIECE_SYMBOLS[10] => Piece::King(King::White(WhiteKing::default())),
+            piece if piece == PIECE_SYMBOLS[11] => Piece::Pawn(Pawn::White(WhitePawn::default())),
+            _ => return Err(Self::Error::Invalid),
+        };
+        Ok(piece)
+    }
+}
+
 impl From<Pawn> for Piece {
     fn from(v: Pawn) -> Self {
         Self::Pawn(v)
@@ -105,7 +133,43 @@ pub trait PieceExt {}
 
 impl PieceExt for Piece {}
 
-#[derive(Debug)]
+impl Piece {
+    pub fn get_board(&self) -> Bitboard {
+        match self {
+            Piece::Rook(rook) => match rook {
+                Rook::Black(rook) => rook.bitboard(),
+                Rook::White(rook) => rook.bitboard(),
+            },
+            Piece::Knight(knight) => match knight {
+                Knight::Black(knight) => knight.bitboard(),
+                Knight::White(knight) => knight.bitboard(),
+            },
+            Piece::Bishop(bishop) => match bishop {
+                Bishop::Black(bishop) => bishop.bitboard(),
+                Bishop::White(bishop) => bishop.bitboard(),
+            },
+            Piece::Queen(queen) => match queen {
+                Queen::Black(queen) => queen.bitboard(),
+                Queen::White(queen) => queen.bitboard(),
+            },
+            Piece::King(king) => match king {
+                King::Black(king) => king.bitboard(),
+                King::White(king) => king.bitboard(),
+            },
+            Piece::Pawn(pawn) => match pawn {
+                Pawn::Black(pawn) => pawn.bitboard(),
+                Pawn::White(pawn) => pawn.bitboard(),
+            },
+        }
+    }
+
+    pub fn set_on_square(&mut self, rank: u8, file: u8) {
+        let board = Bitboard::try_from((rank as usize, file as usize)).unwrap();
+        self.get_board().self_merge(board);
+    }
+}
+
+#[derive(Default, Debug)]
 pub struct Pieces {
     white_king: WhiteKing,
     black_king: BlackKing,
@@ -119,10 +183,6 @@ pub struct Pieces {
     black_knight: BlackKnight,
     white_pawn: WhitePawn,
     black_pawn: BlackPawn,
-    white_pieces: Bitboard,
-    black_pieces: Bitboard,
-    occupied_squares: Bitboard,
-    empty_squares: Bitboard,
 }
 
 impl Pieces {
@@ -139,10 +199,6 @@ impl Pieces {
         black_knight: BlackKnight,
         white_pawn: WhitePawn,
         black_pawn: BlackPawn,
-        white_pieces: Bitboard,
-        black_pieces: Bitboard,
-        occupied_squares: Bitboard,
-        empty_squares: Bitboard,
     ) -> Self {
         Self {
             white_king,
@@ -157,10 +213,6 @@ impl Pieces {
             black_knight,
             white_pawn,
             black_pawn,
-            white_pieces,
-            black_pieces,
-            occupied_squares,
-            empty_squares,
         }
     }
 
@@ -212,20 +264,34 @@ impl Pieces {
         &self.black_pawn
     }
 
-    pub fn white_pieces(&self) -> Bitboard {
-        self.white_pieces
-    }
-
-    pub fn black_pieces(&self) -> Bitboard {
-        self.black_pieces
-    }
-
-    pub fn occupied_squares(&self) -> Bitboard {
-        self.occupied_squares
-    }
-
-    pub fn empty_squares(&self) -> Bitboard {
-        self.empty_squares
+    pub fn merge_piece(&mut self, piece: Piece) {
+        let board = piece.get_board();
+        match piece {
+            Piece::Rook(rook) => match rook {
+                Rook::Black(_) => self.black_rook().bitboard().self_merge(board),
+                Rook::White(_) => self.white_rook().bitboard().self_merge(board),
+            },
+            Piece::Knight(knight) => match knight {
+                Knight::Black(_) => self.black_knight().bitboard().self_merge(board),
+                Knight::White(_) => self.white_knight().bitboard().self_merge(board),
+            },
+            Piece::Bishop(bishop) => match bishop {
+                Bishop::Black(_) => self.black_bishop().bitboard().self_merge(board),
+                Bishop::White(_) => self.white_bishop().bitboard().self_merge(board),
+            },
+            Piece::Queen(queen) => match queen {
+                Queen::Black(_) => self.black_queen().bitboard().self_merge(board),
+                Queen::White(_) => self.white_queen().bitboard().self_merge(board),
+            },
+            Piece::King(king) => match king {
+                King::Black(_) => self.black_king().bitboard().self_merge(board),
+                King::White(_) => self.white_king().bitboard().self_merge(board),
+            },
+            Piece::Pawn(pawn) => match pawn {
+                Pawn::Black(_) => self.black_pawn().bitboard().self_merge(board),
+                Pawn::White(_) => self.white_pawn().bitboard().self_merge(board),
+            },
+        };
     }
 }
 

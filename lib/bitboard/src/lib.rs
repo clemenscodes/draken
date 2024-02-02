@@ -158,6 +158,24 @@ impl ShrAssign<usize> for Bitboard {
     }
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum BitboardError {
+    InvalidIndex,
+}
+
+impl TryFrom<(usize, usize)> for Bitboard {
+    type Error = BitboardError;
+
+    fn try_from((rank, file): (usize, usize)) -> Result<Self, Self::Error> {
+        if rank * file < 64 {
+            return Err(Self::Error::InvalidIndex);
+        }
+        let index = (8 * rank + file) as usize;
+        let board = Bitboard::get_single_bit(index);
+        Ok(board)
+    }
+}
+
 pub trait BitboardExt {
     #[inline(always)]
     fn get_single_bit(index: usize) -> Bitboard {
@@ -192,9 +210,10 @@ pub trait BitboardExt {
         bitboard << abs_steps as usize
     }
     fn self_check_bit(&self, index: usize) -> bool;
-    fn self_set_bit(&mut self, bitboard: Bitboard, index: usize);
+    fn self_set_bit(&mut self, index: usize);
     fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize);
     fn self_merge_many(&mut self, bitboards: Vec<Bitboard>);
+    fn self_merge(&mut self, bitboard: Bitboard);
     fn self_overlap(&self, rhs: Bitboard) -> bool;
     fn self_not(&mut self);
 }
@@ -206,8 +225,8 @@ impl BitboardExt for Bitboard {
     }
 
     #[inline(always)]
-    fn self_set_bit(&mut self, bitboard: Bitboard, index: usize) {
-        self.bits = Bitboard::set_bit(bitboard, index).bits;
+    fn self_set_bit(&mut self, index: usize) {
+        self.bits = Bitboard::set_bit(*self, index).bits;
     }
 
     #[inline(always)]
@@ -228,6 +247,11 @@ impl BitboardExt for Bitboard {
     #[inline(always)]
     fn self_not(&mut self) {
         self.bits = !(self).bits;
+    }
+
+    #[inline(always)]
+    fn self_merge(&mut self, bitboard: Bitboard) {
+        self.bits |= bitboard.bits
     }
 }
 
@@ -657,7 +681,7 @@ mod tests {
     fn test_self_set_bit() {
         let mut bitboard = Bitboard::default();
         let index = 3;
-        bitboard.self_set_bit(Bitboard::get_single_bit(2), index);
+        bitboard.self_set_bit(index);
         let expected = "\
             00000000\n\
             00000000\n\
@@ -666,7 +690,7 @@ mod tests {
             00000000\n\
             00000000\n\
             00000000\n\
-            00110000\n\
+            00010000\n\
             ";
         assert_eq!(expected, bitboard.to_string());
     }

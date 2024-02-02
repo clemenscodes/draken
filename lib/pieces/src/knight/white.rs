@@ -5,6 +5,7 @@ use std::fmt::{Debug, Display};
 
 pub const WHITE_KNIGHT: char = 'N';
 
+#[derive(Default)]
 pub struct WhiteKnight {
     bitboard: Bitboard,
 }

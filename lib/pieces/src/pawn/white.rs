@@ -6,6 +6,7 @@ use std::fmt::{Debug, Display};
 
 pub const WHITE_PAWN: char = 'P';
 
+#[derive(Default)]
 pub struct WhitePawn {
     bitboard: Bitboard,
 }

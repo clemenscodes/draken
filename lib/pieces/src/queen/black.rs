@@ -5,6 +5,7 @@ use std::fmt::{Debug, Display};
 
 pub const BLACK_QUEEN: char = 'q';
 
+#[derive(Default)]
 pub struct BlackQueen {
     bitboard: Bitboard,
 }

@@ -88,6 +88,13 @@ impl TryFrom<&str> for Square {
 
 impl SquareExt for Square {}
 
+impl From<(usize, usize)> for Square {
+    fn from((rank, file): (usize, usize)) -> Self {
+        assert!(rank * file < 64, "Invalid index for square array");
+        SQUARES[8 * rank + file]
+    }
+}
+
 impl From<usize> for Square {
     fn from(index: usize) -> Self {
         assert!(index < 64, "Invalid index for square array");

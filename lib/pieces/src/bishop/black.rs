@@ -6,6 +6,7 @@ use std::fmt::{Debug, Display};
 
 pub const BLACK_BISHOP: char = 'b';
 
+#[derive(Default)]
 pub struct BlackBishop {
     bitboard: Bitboard,
 }

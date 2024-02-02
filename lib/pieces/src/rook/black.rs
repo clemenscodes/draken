@@ -5,6 +5,7 @@ use std::fmt::{Debug, Display};
 
 pub const BLACK_ROOK: char = 'r';
 
+#[derive(Default)]
 pub struct BlackRook {
     bitboard: Bitboard,
 }

@@ -6,6 +6,7 @@ use std::fmt::{Debug, Display};
 
 pub const WHITE_KING: char = 'K';
 
+#[derive(Default)]
 pub struct WhiteKing {
     bitboard: Bitboard,
 }

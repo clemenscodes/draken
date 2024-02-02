@@ -6,6 +6,7 @@ use std::fmt::{Debug, Display};
 
 pub const WHITE_ROOK: char = 'R';
 
+#[derive(Default)]
 pub struct WhiteRook {
     bitboard: Bitboard,
 }

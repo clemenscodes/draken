@@ -1,7 +1,7 @@
 #![feature(variant_count)]
 use bitboard::Bitboard;
 use fen::ForsythEdwardsNotation;
-use pieces::Pieces;
+use pieces::{Piece, Pieces};
 use std::mem::variant_count;
 
 pub const BOARD_SIZE: i8 = 8;
@@ -73,15 +73,54 @@ pub const RANKS: [Bitboard; variant_count::<Ordinal>()] = [
     EIGHTH_RANK,
 ];
 
-#[derive(Debug)]
+#[derive(Default, Debug)]
 pub struct Board {
     fen: ForsythEdwardsNotation,
     pieces: Pieces,
+    white_pieces: Bitboard,
+    black_pieces: Bitboard,
+    occupied_squares: Bitboard,
+    empty_squares: Bitboard,
+}
+
+impl From<ForsythEdwardsNotation> for Board {
+    fn from(value: ForsythEdwardsNotation) -> Self {
+        let mut reverse_rank = 0u8;
+        let mut pieces = Pieces::default();
+        for rank in (0..8u8).rev() {
+            let mut file = 0u8;
+            for piece in value.placements().position()[reverse_rank as usize] {
+                let symbol = piece as char;
+                if char::is_digit(symbol, 10) {
+                    file += char::to_digit(symbol, 10).unwrap() as u8;
+                } else {
+                    let piece = Self::init_piece(symbol, rank, file);
+                    pieces.merge_piece(piece);
+                }
+            }
+            reverse_rank += 1;
+        }
+        Self::default()
+    }
 }
 
 impl Board {
-    pub fn new(fen: ForsythEdwardsNotation, pieces: Pieces) -> Self {
-        Self { fen, pieces }
+    pub fn new(
+        fen: ForsythEdwardsNotation,
+        pieces: Pieces,
+        white_pieces: Bitboard,
+        black_pieces: Bitboard,
+        occupied_squares: Bitboard,
+        empty_squares: Bitboard,
+    ) -> Self {
+        Self {
+            fen,
+            pieces,
+            white_pieces,
+            black_pieces,
+            occupied_squares,
+            empty_squares,
+        }
     }
 
     pub fn fen(&self) -> &ForsythEdwardsNotation {
@@ -91,7 +130,33 @@ impl Board {
     pub fn pieces(&self) -> &Pieces {
         &self.pieces
     }
+
+    pub fn white_pieces(&self) -> Bitboard {
+        self.white_pieces
+    }
+
+    pub fn black_pieces(&self) -> Bitboard {
+        self.black_pieces
+    }
+
+    pub fn occupied_squares(&self) -> Bitboard {
+        self.occupied_squares
+    }
+
+    pub fn empty_squares(&self) -> Bitboard {
+        self.empty_squares
+    }
 }
+
+pub trait BoardExt {
+    fn init_piece(symbol: char, rank: u8, file: u8) -> Piece {
+        let mut piece: Piece = Piece::try_from(symbol).unwrap();
+        piece.set_on_square(rank, file);
+        piece
+    }
+}
+
+impl BoardExt for Board {}
 
 #[cfg(test)]
 mod tests {

@@ -642,6 +642,7 @@ dependencies = [
 name = "pieces"
 version = "0.1.0"
 dependencies = [
+ "api",
  "bitboard",
 ]
 

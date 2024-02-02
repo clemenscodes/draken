@@ -5,6 +5,7 @@ use std::fmt::{Debug, Display};
 
 pub const WHITE_QUEEN: char = 'Q';
 
+#[derive(Default)]
 pub struct WhiteQueen {
     bitboard: Bitboard,
 }

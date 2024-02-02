@@ -6,6 +6,7 @@ use std::fmt::{Debug, Display};
 
 pub const BLACK_KNIGHT: char = 'n';
 
+#[derive(Default)]
 pub struct BlackKnight {
     bitboard: Bitboard,
 }

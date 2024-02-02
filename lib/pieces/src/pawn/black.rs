@@ -5,6 +5,7 @@ use std::fmt::{Debug, Display};
 
 pub const BLACK_PAWN: char = 'p';
 
+#[derive(Default)]
 pub struct BlackPawn {
     bitboard: Bitboard,
 }
