@@ -1,3 +1,4 @@
+#![feature(variant_count)]
 mod controller;
 mod fen;
 mod game;

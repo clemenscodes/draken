@@ -1,32 +1,19 @@
 #![feature(lazy_cell)]
-pub(crate) mod bishop;
-pub(crate) mod king;
-pub(crate) mod knight;
-pub(crate) mod pawn;
-pub(crate) mod queen;
-pub(crate) mod rook;
+mod bishop;
+mod king;
+mod knight;
+mod pawn;
+mod queen;
+mod rook;
 
-use std::{collections::HashMap, sync::LazyLock};
-
-use bishop::black::*;
-use bishop::white::*;
-use bishop::Bishop;
+use bishop::{black::*, white::*, Bishop};
 use bitboard::Bitboard;
-use king::black::*;
-use king::white::*;
-use king::King;
-use knight::black::*;
-use knight::white::*;
-use knight::Knight;
-use pawn::black::*;
-use pawn::white::*;
-use pawn::Pawn;
-use queen::black::*;
-use queen::white::*;
-use queen::Queen;
-use rook::black::*;
-use rook::white::*;
-use rook::Rook;
+use king::{black::*, white::*, King};
+use knight::{black::*, white::*, Knight};
+use pawn::{black::*, white::*, Pawn};
+use queen::{black::*, white::*, Queen};
+use rook::{black::*, white::*, Rook};
+use std::{collections::HashMap, sync::LazyLock};
 
 pub const NUM_PIECES: usize = 12;
 
@@ -60,13 +47,14 @@ pub const PIECE_BYTES: [u8; NUM_PIECES] = [
     WHITE_PAWN as u8,
 ];
 
-pub static PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
+pub const PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
     let mut piece_lookup: HashMap<char, usize> = HashMap::new();
     for (i, &piece) in PIECE_SYMBOLS.iter().enumerate() {
         piece_lookup.insert(piece, i);
     }
     piece_lookup
 });
+
 #[derive(Debug)]
 pub enum Piece {
     Rook(Rook),

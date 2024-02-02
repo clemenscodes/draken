@@ -1,12 +1,10 @@
 #![feature(lazy_cell)]
 use api::{Square, SquareExt};
 use std::fmt::{Debug, Display};
-use std::ops::{
-    Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign,
-};
+use std::ops::*;
 use std::sync::LazyLock;
 
-static SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| {
+const SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| {
     let mut single_bits = [Bitboard::default(); u64::BITS as usize];
     Square::iterate_square_indices(|rank, file| {
         let index: usize = Square::from_rank_file_to_index(rank, file);
@@ -21,16 +19,19 @@ pub struct Bitboard {
 }
 
 impl Bitboard {
-    pub fn new(bits: u64) -> Self {
+    #[inline(always)]
+    pub const fn new(bits: u64) -> Self {
         Bitboard { bits }
     }
 
-    pub fn bits(&self) -> u64 {
+    #[inline(always)]
+    pub const fn bits(&self) -> u64 {
         self.bits
     }
 }
 
 impl Default for Bitboard {
+    #[inline(always)]
     fn default() -> Self {
         Bitboard { bits: u64::MIN }
     }
@@ -39,12 +40,14 @@ impl Default for Bitboard {
 impl Add for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn add(self, rhs: Self) -> Self {
         Bitboard::new(self.bits + rhs.bits)
     }
 }
 
 impl AddAssign for Bitboard {
+    #[inline(always)]
     fn add_assign(&mut self, rhs: Self) {
         self.bits += rhs.bits;
     }
@@ -53,12 +56,14 @@ impl AddAssign for Bitboard {
 impl Sub for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn sub(self, rhs: Self) -> Self {
         Bitboard::new(self.bits - rhs.bits)
     }
 }
 
 impl SubAssign for Bitboard {
+    #[inline(always)]
     fn sub_assign(&mut self, rhs: Self) {
         self.bits -= rhs.bits;
     }
@@ -67,12 +72,14 @@ impl SubAssign for Bitboard {
 impl BitAnd for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn bitand(self, rhs: Self) -> Self {
         Bitboard::new(self.bits & rhs.bits)
     }
 }
 
 impl BitAndAssign for Bitboard {
+    #[inline(always)]
     fn bitand_assign(&mut self, rhs: Self) {
         self.bits &= rhs.bits;
     }
@@ -81,12 +88,14 @@ impl BitAndAssign for Bitboard {
 impl BitOr for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn bitor(self, rhs: Self) -> Self {
         Bitboard::new(self.bits | rhs.bits)
     }
 }
 
 impl BitOrAssign for Bitboard {
+    #[inline(always)]
     fn bitor_assign(&mut self, rhs: Self) {
         self.bits |= rhs.bits;
     }
@@ -95,12 +104,14 @@ impl BitOrAssign for Bitboard {
 impl BitXor for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn bitxor(self, rhs: Self) -> Self {
         Bitboard::new(self.bits ^ rhs.bits)
     }
 }
 
 impl BitXorAssign for Bitboard {
+    #[inline(always)]
     fn bitxor_assign(&mut self, rhs: Self) {
         self.bits ^= rhs.bits;
     }
@@ -109,6 +120,7 @@ impl BitXorAssign for Bitboard {
 impl Not for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn not(self) -> Self {
         Bitboard::new(!self.bits)
     }
@@ -117,12 +129,14 @@ impl Not for Bitboard {
 impl Shl<usize> for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn shl(self, rhs: usize) -> Self {
         Bitboard::new(self.bits.wrapping_shl(rhs as u32))
     }
 }
 
 impl ShlAssign<usize> for Bitboard {
+    #[inline(always)]
     fn shl_assign(&mut self, rhs: usize) {
         self.bits = self.bits.wrapping_shl(rhs as u32);
     }
@@ -131,36 +145,45 @@ impl ShlAssign<usize> for Bitboard {
 impl Shr<usize> for Bitboard {
     type Output = Self;
 
+    #[inline(always)]
     fn shr(self, rhs: usize) -> Self {
         Bitboard::new(self.bits.wrapping_shr(rhs as u32))
     }
 }
 
 impl ShrAssign<usize> for Bitboard {
+    #[inline(always)]
     fn shr_assign(&mut self, rhs: usize) {
         self.bits = self.bits.wrapping_shr(rhs as u32);
     }
 }
 
 pub trait BitboardExt {
+    #[inline(always)]
     fn get_single_bit(index: usize) -> Bitboard {
         SINGLE_BITS[index]
     }
+    #[inline(always)]
     fn check_bit(bitboard: Bitboard, index: usize) -> bool {
-        (bitboard & Bitboard::get_single_bit(index)).bits != 0
+        (bitboard & Self::get_single_bit(index)).bits != 0
     }
+    #[inline(always)]
     fn set_bit(bitboard: Bitboard, index: usize) -> Bitboard {
-        bitboard | Bitboard::get_single_bit(index)
+        bitboard | Self::get_single_bit(index)
     }
+    #[inline(always)]
     fn unset_bit(bitboard: Bitboard, index: usize) -> Bitboard {
-        Bitboard::set_bit(bitboard, index) ^ Bitboard::get_single_bit(index)
+        Self::set_bit(bitboard, index) ^ Self::get_single_bit(index)
     }
+    #[inline(always)]
     fn merge_many(bitboards: Vec<Bitboard>) -> Bitboard {
         bitboards.iter().fold(Bitboard::default(), |acc, &bb| acc | bb)
     }
+    #[inline(always)]
     fn overlap(lhs: Bitboard, rhs: Bitboard) -> bool {
         (lhs & rhs).bits != 0
     }
+    #[inline(always)]
     fn shift(bitboard: Bitboard, steps: i8) -> Bitboard {
         let abs_steps = steps.abs() as u32;
         if steps < 0 {
@@ -177,26 +200,32 @@ pub trait BitboardExt {
 }
 
 impl BitboardExt for Bitboard {
+    #[inline(always)]
     fn self_check_bit(&self, index: usize) -> bool {
         Bitboard::check_bit(*self, index)
     }
 
+    #[inline(always)]
     fn self_set_bit(&mut self, bitboard: Bitboard, index: usize) {
         self.bits = Bitboard::set_bit(bitboard, index).bits;
     }
 
+    #[inline(always)]
     fn self_merge_many(&mut self, bitboards: Vec<Bitboard>) {
         self.bits = Bitboard::merge_many(bitboards).bits;
     }
 
+    #[inline(always)]
     fn self_overlap(&self, rhs: Bitboard) -> bool {
         Bitboard::overlap(*self, rhs)
     }
 
+    #[inline(always)]
     fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize) {
         self.bits = Bitboard::unset_bit(bitboard, index).bits;
     }
 
+    #[inline(always)]
     fn self_not(&mut self) {
         self.bits = !(self).bits;
     }

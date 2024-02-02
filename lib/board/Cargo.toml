@@ -7,4 +7,5 @@ edition = "2021"
 
 bitboard = { path = "../bitboard" }
 fen = { path = "../fen" }
+api = { path = "../api" }
 pieces = { path = "../pieces" }
