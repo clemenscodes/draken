@@ -1,5 +1,5 @@
 [package]
-name = "model"
+name = "board"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,6 +7,4 @@ edition = "2021"
 
 bitboard = { path = "../bitboard" }
 fen = { path = "../fen" }
-api = { path = "../api" }
-moves = { path = "../moves" }
-engine = { path = "../engine" }
+pieces = { path = "../pieces" }

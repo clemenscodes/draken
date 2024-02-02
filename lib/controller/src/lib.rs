@@ -1,4 +1,4 @@
-use api::{Controller, ForsythEdwardsNotation, Game, Square};
+use api::{Controller, ForsythEdwardsNotationExt, Game, Square};
 
 #[derive(Debug, Clone)]
 pub struct ChessController {}
@@ -117,7 +117,7 @@ impl Game for ChessController {
     }
 }
 
-impl ForsythEdwardsNotation for ChessController {
+impl ForsythEdwardsNotationExt for ChessController {
     fn get_piece_placement_data() -> Vec<String> {
         todo!()
     }
