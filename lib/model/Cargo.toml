@@ -9,4 +9,5 @@ bitboard = { path = "../bitboard" }
 fen = { path = "../fen" }
 api = { path = "../api" }
 moves = { path = "../moves" }
+board = { path = "../board" }
 engine = { path = "../engine" }
