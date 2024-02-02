@@ -167,7 +167,7 @@ impl TryFrom<(usize, usize)> for Bitboard {
     type Error = BitboardError;
 
     fn try_from((rank, file): (usize, usize)) -> Result<Self, Self::Error> {
-        if rank * file < 64 {
+        if rank * file >= 64 {
             return Err(Self::Error::InvalidIndex);
         }
         let index = (8 * rank + file) as usize;

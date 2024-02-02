@@ -19,6 +19,10 @@ impl BlackKing {
     pub fn bitboard(&self) -> Bitboard {
         self.bitboard
     }
+
+    pub fn bitboard_mut(&mut self) -> &mut Bitboard {
+        &mut self.bitboard
+    }
 }
 
 impl Display for BlackKing {

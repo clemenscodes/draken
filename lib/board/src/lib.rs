@@ -1,8 +1,11 @@
 #![feature(variant_count)]
-use bitboard::Bitboard;
+use bitboard::{Bitboard, BitboardExt};
 use fen::ForsythEdwardsNotation;
-use pieces::{Piece, Pieces};
-use std::mem::variant_count;
+use pieces::{Piece, Pieces, EMPTY_SYMBOL, NUM_PIECES, PIECE_SYMBOLS};
+use std::{
+    fmt::{Debug, Display},
+    mem::variant_count,
+};
 
 pub const BOARD_SIZE: i8 = 8;
 pub const NORTH: i8 = BOARD_SIZE;
@@ -73,7 +76,7 @@ pub const RANKS: [Bitboard; variant_count::<Ordinal>()] = [
     EIGHTH_RANK,
 ];
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Board {
     fen: ForsythEdwardsNotation,
     pieces: Pieces,
@@ -90,17 +93,24 @@ impl From<ForsythEdwardsNotation> for Board {
         for rank in (0..8u8).rev() {
             let mut file = 0u8;
             for piece in value.placements().position()[reverse_rank as usize] {
-                let symbol = piece as char;
-                if char::is_digit(symbol, 10) {
-                    file += char::to_digit(symbol, 10).unwrap() as u8;
-                } else {
-                    let piece = Self::init_piece(symbol, rank, file);
-                    pieces.merge_piece(piece);
+                if piece == 0 {
+                    file += 1;
+                    continue;
                 }
+                let piece = Self::init_piece(piece as char, rank, file);
+                pieces.merge_piece(piece);
+                file += 1;
             }
             reverse_rank += 1;
         }
-        Self::default()
+        Self {
+            fen: value,
+            pieces,
+            white_pieces: Bitboard::default(),
+            black_pieces: Bitboard::default(),
+            occupied_squares: Bitboard::default(),
+            empty_squares: Bitboard::default(),
+        }
     }
 }
 
@@ -154,9 +164,60 @@ pub trait BoardExt {
         piece.set_on_square(rank, file);
         piece
     }
+    fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES];
+    fn get_piece_symbol(&self, bitboard: Bitboard) -> char;
 }
 
-impl BoardExt for Board {}
+impl BoardExt for Board {
+    fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES] {
+        [
+            self.pieces().black_rook().bitboard(),
+            self.pieces().black_knight().bitboard(),
+            self.pieces().black_bishop().bitboard(),
+            self.pieces().black_queen().bitboard(),
+            self.pieces().black_king().bitboard(),
+            self.pieces().black_pawn().bitboard(),
+            self.pieces().white_rook().bitboard(),
+            self.pieces().white_knight().bitboard(),
+            self.pieces().white_bishop().bitboard(),
+            self.pieces().white_queen().bitboard(),
+            self.pieces().white_king().bitboard(),
+            self.pieces().white_pawn().bitboard(),
+        ]
+    }
+
+    fn get_piece_symbol(&self, bitboard: Bitboard) -> char {
+        let all_pieces = self.get_all_pieces();
+        for (index, piece) in all_pieces.iter().enumerate() {
+            if bitboard.self_overlap(*piece) {
+                return PIECE_SYMBOLS[index];
+            }
+        }
+        EMPTY_SYMBOL
+    }
+}
+
+impl Display for Board {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for rank in (0..8).rev() {
+            for file in 0..8 {
+                let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
+                let symbol = self.get_piece_symbol(bitboard);
+                write!(f, "[{symbol}]")?;
+            }
+            if rank != 0 {
+                writeln!(f)?;
+            }
+        }
+        Ok(())
+    }
+}
+
+impl Debug for Board {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(&self, f)
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -400,5 +461,12 @@ mod tests {
             00000000\n\
             ";
         assert_eq!(expected, EIGHTH_RANK.to_string());
+    }
+
+    #[test]
+    fn test_from_fen() {
+        let fen = ForsythEdwardsNotation::default();
+        let board = Board::from(fen);
+        println!("{board}");
     }
 }
