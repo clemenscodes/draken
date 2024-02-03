@@ -20,33 +20,48 @@ pub const NUM_PIECES: usize = 12;
 pub const EMPTY_SYMBOL: char = ' ';
 
 pub const PIECE_SYMBOLS: [char; NUM_PIECES] = [
-    BLACK_ROOK,
-    BLACK_KNIGHT,
-    BLACK_BISHOP,
-    BLACK_QUEEN,
-    BLACK_KING,
-    BLACK_PAWN,
-    WHITE_ROOK,
-    WHITE_KNIGHT,
-    WHITE_BISHOP,
-    WHITE_QUEEN,
-    WHITE_KING,
-    WHITE_PAWN,
+    BlackRook::symbol(),
+    BlackKnight::symbol(),
+    BlackBishop::symbol(),
+    BlackQueen::symbol(),
+    BlackKing::symbol(),
+    BlackPawn::symbol(),
+    WhiteRook::symbol(),
+    WhiteKnight::symbol(),
+    WhiteBishop::symbol(),
+    WhiteQueen::symbol(),
+    WhiteKing::symbol(),
+    WhitePawn::symbol(),
+];
+
+pub const UTF_SYMBOLS: [char; NUM_PIECES] = [
+    BlackRook::utf_symbol(),
+    BlackKnight::utf_symbol(),
+    BlackBishop::utf_symbol(),
+    BlackQueen::utf_symbol(),
+    BlackKing::utf_symbol(),
+    BlackPawn::utf_symbol(),
+    WhiteRook::utf_symbol(),
+    WhiteKnight::utf_symbol(),
+    WhiteBishop::utf_symbol(),
+    WhiteQueen::utf_symbol(),
+    WhiteKing::utf_symbol(),
+    WhitePawn::utf_symbol(),
 ];
 
 pub const PIECE_BYTES: [u8; NUM_PIECES] = [
-    BLACK_ROOK as u8,
-    BLACK_KNIGHT as u8,
-    BLACK_BISHOP as u8,
-    BLACK_QUEEN as u8,
-    BLACK_KING as u8,
-    BLACK_PAWN as u8,
-    WHITE_ROOK as u8,
-    WHITE_KNIGHT as u8,
-    WHITE_BISHOP as u8,
-    WHITE_QUEEN as u8,
-    WHITE_KING as u8,
-    WHITE_PAWN as u8,
+    BlackRook::symbol() as u8,
+    BlackKnight::symbol() as u8,
+    BlackBishop::symbol() as u8,
+    BlackQueen::symbol() as u8,
+    BlackKing::symbol() as u8,
+    BlackPawn::symbol() as u8,
+    WhiteRook::symbol() as u8,
+    WhiteKnight::symbol() as u8,
+    WhiteBishop::symbol() as u8,
+    WhiteQueen::symbol() as u8,
+    WhiteKing::symbol() as u8,
+    WhitePawn::symbol() as u8,
 ];
 
 pub const PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
@@ -188,39 +203,13 @@ pub struct Pieces {
     black_knight: BlackKnight,
     white_pawn: WhitePawn,
     black_pawn: BlackPawn,
+    white_pieces: Bitboard,
+    black_pieces: Bitboard,
+    occupied_squares: Bitboard,
+    empty_squares: Bitboard,
 }
 
 impl Pieces {
-    pub fn new(
-        white_king: WhiteKing,
-        black_king: BlackKing,
-        white_bishop: WhiteBishop,
-        black_bishop: BlackBishop,
-        white_queen: WhiteQueen,
-        black_queen: BlackQueen,
-        white_rook: WhiteRook,
-        black_rook: BlackRook,
-        white_knight: WhiteKnight,
-        black_knight: BlackKnight,
-        white_pawn: WhitePawn,
-        black_pawn: BlackPawn,
-    ) -> Self {
-        Self {
-            white_king,
-            black_king,
-            white_bishop,
-            black_bishop,
-            white_queen,
-            black_queen,
-            white_rook,
-            black_rook,
-            white_knight,
-            black_knight,
-            white_pawn,
-            black_pawn,
-        }
-    }
-
     pub fn white_king(&self) -> &WhiteKing {
         &self.white_king
     }
@@ -350,6 +339,16 @@ impl Pieces {
         EMPTY_SYMBOL
     }
 
+    pub fn get_utf_piece_symbol(&self, bitboard: Bitboard) -> char {
+        let all_pieces = self.get_all_pieces();
+        for (index, piece) in all_pieces.iter().enumerate() {
+            if bitboard.self_overlap(*piece) {
+                return UTF_SYMBOLS[index];
+            }
+        }
+        EMPTY_SYMBOL
+    }
+
     pub fn merge_piece(&mut self, mut piece: Piece) {
         let board = piece.get_board().clone();
         match piece {
@@ -378,6 +377,38 @@ impl Pieces {
                 Pawn::White(_) => self.white_pawn_mut().bitboard_mut().self_merge(board),
             },
         };
+    }
+
+    pub fn white_pieces(&self) -> Bitboard {
+        self.white_pieces
+    }
+
+    pub fn white_pieces_mut(&mut self) -> &mut Bitboard {
+        &mut self.white_pieces
+    }
+
+    pub fn black_pieces(&self) -> Bitboard {
+        self.black_pieces
+    }
+
+    pub fn black_pieces_mut(&mut self) -> &mut Bitboard {
+        &mut self.black_pieces
+    }
+
+    pub fn occupied_squares(&self) -> Bitboard {
+        self.occupied_squares
+    }
+
+    pub fn occupied_squares_mut(&mut self) -> &mut Bitboard {
+        &mut self.occupied_squares
+    }
+
+    pub fn empty_squares(&self) -> Bitboard {
+        self.empty_squares
+    }
+
+    pub fn empty_squares_mut(&mut self) -> &mut Bitboard {
+        &mut self.empty_squares
     }
 }
 

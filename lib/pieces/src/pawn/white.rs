@@ -4,8 +4,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_PAWN: char = 'P';
-
 #[derive(Default)]
 pub struct WhitePawn {
     bitboard: Bitboard,
@@ -23,11 +21,19 @@ impl WhitePawn {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'P'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♙'
+    }
 }
 
 impl Display for WhitePawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_PAWN}")
+        write!(f, "{}", WhitePawn::symbol())
     }
 }
 

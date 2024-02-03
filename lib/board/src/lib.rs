@@ -80,43 +80,11 @@ pub const RANKS: [Bitboard; variant_count::<Ordinal>()] = [
 pub struct Board {
     fen: ForsythEdwardsNotation,
     pieces: Pieces,
-    white_pieces: Bitboard,
-    black_pieces: Bitboard,
-    occupied_squares: Bitboard,
-    empty_squares: Bitboard,
-}
-
-impl From<ForsythEdwardsNotation> for Board {
-    fn from(value: ForsythEdwardsNotation) -> Self {
-        let pieces = Pieces::from(value.placements().position());
-        Self {
-            fen: value,
-            pieces,
-            white_pieces: Bitboard::default(),
-            black_pieces: Bitboard::default(),
-            occupied_squares: Bitboard::default(),
-            empty_squares: Bitboard::default(),
-        }
-    }
 }
 
 impl Board {
-    pub fn new(
-        fen: ForsythEdwardsNotation,
-        pieces: Pieces,
-        white_pieces: Bitboard,
-        black_pieces: Bitboard,
-        occupied_squares: Bitboard,
-        empty_squares: Bitboard,
-    ) -> Self {
-        Self {
-            fen,
-            pieces,
-            white_pieces,
-            black_pieces,
-            occupied_squares,
-            empty_squares,
-        }
+    pub fn new(fen: ForsythEdwardsNotation, pieces: Pieces) -> Self {
+        Self { fen, pieces }
     }
 
     pub fn fen(&self) -> &ForsythEdwardsNotation {
@@ -126,21 +94,12 @@ impl Board {
     pub fn pieces(&self) -> &Pieces {
         &self.pieces
     }
+}
 
-    pub fn white_pieces(&self) -> Bitboard {
-        self.white_pieces
-    }
-
-    pub fn black_pieces(&self) -> Bitboard {
-        self.black_pieces
-    }
-
-    pub fn occupied_squares(&self) -> Bitboard {
-        self.occupied_squares
-    }
-
-    pub fn empty_squares(&self) -> Bitboard {
-        self.empty_squares
+impl From<ForsythEdwardsNotation> for Board {
+    fn from(value: ForsythEdwardsNotation) -> Self {
+        let pieces = Pieces::from(value.placements().position());
+        Self { fen: value, pieces }
     }
 }
 
@@ -153,7 +112,7 @@ impl Display for Board {
         for rank in (0..8).rev() {
             for file in 0..8 {
                 let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
-                let symbol = self.pieces().get_piece_symbol(bitboard);
+                let symbol = self.pieces().get_utf_piece_symbol(bitboard);
                 write!(f, "[{symbol}]")?;
             }
             if rank != 0 {
@@ -415,9 +374,18 @@ mod tests {
     }
 
     #[test]
-    fn test_from_fen() {
-        let fen = ForsythEdwardsNotation::default();
-        let board = Board::from(fen);
-        println!("{board}");
+    fn test_from_default_fen() {
+        let board = Board::from(ForsythEdwardsNotation::default());
+        let expected = "\
+            [♜][♞][♝][♛][♚][♝][♞][♜]\n\
+            [♟][♟][♟][♟][♟][♟][♟][♟]\n\
+            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+            [♙][♙][♙][♙][♙][♙][♙][♙]\n\
+            [♖][♘][♗][♕][♔][♗][♘][♖]\
+        ";
+        assert_eq!(expected, board.to_string());
     }
 }

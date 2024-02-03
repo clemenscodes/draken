@@ -3,8 +3,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const BLACK_PAWN: char = 'p';
-
 #[derive(Default)]
 pub struct BlackPawn {
     bitboard: Bitboard,
@@ -22,11 +20,19 @@ impl BlackPawn {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'p'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♟'
+    }
 }
 
 impl Display for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{BLACK_PAWN}")
+        write!(f, "{}", BlackPawn::symbol())
     }
 }
 

@@ -4,8 +4,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_KING: char = 'K';
-
 #[derive(Default)]
 pub struct WhiteKing {
     bitboard: Bitboard,
@@ -23,11 +21,19 @@ impl WhiteKing {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'K'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♔'
+    }
 }
 
 impl Display for WhiteKing {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_KING}")
+        write!(f, "{}", WhiteKing::symbol())
     }
 }
 

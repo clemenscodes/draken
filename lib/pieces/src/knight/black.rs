@@ -4,8 +4,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const BLACK_KNIGHT: char = 'n';
-
 #[derive(Default)]
 pub struct BlackKnight {
     bitboard: Bitboard,
@@ -23,11 +21,19 @@ impl BlackKnight {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'n'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♞'
+    }
 }
 
 impl Display for BlackKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{BLACK_KNIGHT}")
+        write!(f, "{}", BlackKnight::symbol())
     }
 }
 

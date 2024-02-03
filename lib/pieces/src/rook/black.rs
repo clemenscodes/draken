@@ -3,8 +3,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const BLACK_ROOK: char = 'r';
-
 #[derive(Default)]
 pub struct BlackRook {
     bitboard: Bitboard,
@@ -22,11 +20,19 @@ impl BlackRook {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'r'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♜'
+    }
 }
 
 impl Display for BlackRook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{BLACK_ROOK}")
+        write!(f, "{}", BlackRook::symbol())
     }
 }
 

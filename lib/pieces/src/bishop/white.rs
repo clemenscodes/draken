@@ -3,8 +3,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_BISHOP: char = 'B';
-
 #[derive(Default)]
 pub struct WhiteBishop {
     bitboard: Bitboard,
@@ -22,11 +20,19 @@ impl WhiteBishop {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'B'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♗'
+    }
 }
 
 impl Display for WhiteBishop {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_BISHOP}")
+        write!(f, "{}", WhiteBishop::symbol())
     }
 }
 

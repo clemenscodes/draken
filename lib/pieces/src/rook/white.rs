@@ -4,8 +4,6 @@ use super::RookExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_ROOK: char = 'R';
-
 #[derive(Default)]
 pub struct WhiteRook {
     bitboard: Bitboard,
@@ -23,11 +21,19 @@ impl WhiteRook {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'R'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♖'
+    }
 }
 
 impl Display for WhiteRook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_ROOK}")
+        write!(f, "{}", WhiteRook::symbol())
     }
 }
 

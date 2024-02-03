@@ -3,8 +3,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_QUEEN: char = 'Q';
-
 #[derive(Default)]
 pub struct WhiteQueen {
     bitboard: Bitboard,
@@ -22,11 +20,19 @@ impl WhiteQueen {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'Q'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♕'
+    }
 }
 
 impl Display for WhiteQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_QUEEN}")
+        write!(f, "{}", WhiteQueen::symbol())
     }
 }
 

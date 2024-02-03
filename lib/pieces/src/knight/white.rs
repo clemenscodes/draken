@@ -3,8 +3,6 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-pub const WHITE_KNIGHT: char = 'N';
-
 #[derive(Default)]
 pub struct WhiteKnight {
     bitboard: Bitboard,
@@ -22,11 +20,19 @@ impl WhiteKnight {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
+
+    pub const fn symbol() -> char {
+        'N'
+    }
+
+    pub const fn utf_symbol() -> char {
+        '♘'
+    }
 }
 
 impl Display for WhiteKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{WHITE_KNIGHT}")
+        write!(f, "{}", WhiteKnight::symbol())
     }
 }
 
