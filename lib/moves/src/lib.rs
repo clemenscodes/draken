@@ -6,7 +6,7 @@ pub(crate) mod reversible;
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Move {
     Reversible(ReversibleMove),
     Irreversible(IrreversibleMove),

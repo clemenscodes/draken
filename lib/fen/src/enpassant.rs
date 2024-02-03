@@ -3,7 +3,7 @@ use std::fmt::{Debug, Display};
 use api::Square;
 use api::Square::{A3, A6, H3, H6};
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct EnPassant {
     square: Option<Square>,
 }

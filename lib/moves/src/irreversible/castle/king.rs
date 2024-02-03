@@ -2,7 +2,7 @@ use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt
 
 use super::CastleMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct KingCastleMove {
     coordinates: Coordinates,
 }

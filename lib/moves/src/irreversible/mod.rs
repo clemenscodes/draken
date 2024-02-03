@@ -8,7 +8,7 @@ use pawn::PawnMove;
 
 use super::MoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IrreversibleMove {
     Capture(CaptureMove),
     Pawn(PawnMove),

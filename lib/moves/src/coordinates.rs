@@ -1,6 +1,6 @@
 use api::Square;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Coordinates {
     source: Square,
     destination: Square,

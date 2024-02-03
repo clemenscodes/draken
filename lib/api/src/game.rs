@@ -1,6 +1,6 @@
 use crate::square::Square;
 
-pub trait Game {
+pub trait GameExt {
     fn init_game();
     fn start_game();
     fn resign();

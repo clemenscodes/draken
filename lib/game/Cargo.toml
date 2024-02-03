@@ -1,0 +1,10 @@
+[package]
+name = "game"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+board = { path = "../board" }
+api = { path = "../api" }
+moves = { path = "../moves" }

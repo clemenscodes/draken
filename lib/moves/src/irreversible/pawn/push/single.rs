@@ -6,7 +6,7 @@ use crate::{
 
 use super::PushMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SinglePushMove {
     coordinates: Coordinates,
 }

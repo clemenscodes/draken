@@ -9,7 +9,7 @@ mod view;
 
 pub use controller::Controller;
 pub use fen::ForsythEdwardsNotationExt;
-pub use game::Game;
+pub use game::GameExt;
 pub use model::Model;
 pub use square::{Square, SquareExt};
 pub use state::State;

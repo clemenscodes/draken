@@ -15,7 +15,7 @@ use crate::{
 
 use super::PromotionMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PromotionCaptureMove {
     Queen(QueenPromotionCaptureMove),
     Rook(RookPromotionCaptureMove),

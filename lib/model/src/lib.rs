@@ -1,18 +1,22 @@
-use api::{ForsythEdwardsNotationExt, Game, Model, Square};
-use moves::list::MoveList;
+use api::{ForsythEdwardsNotationExt, GameExt, Model, Square};
+use game::Game;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct ChessModel {
-    move_list: MoveList,
+    game: Game,
 }
 
 impl ChessModel {
-    pub fn new(move_list: MoveList) -> Self {
-        Self { move_list }
+    pub fn new(game: Game) -> Self {
+        Self { game }
     }
 
-    pub fn move_list(&self) -> &MoveList {
-        &self.move_list
+    pub fn game(&self) -> &Game {
+        &self.game
+    }
+
+    pub fn game_mut(&mut self) -> &mut Game {
+        &mut self.game
     }
 }
 
@@ -30,7 +34,7 @@ impl Model for ChessModel {
     }
 }
 
-impl Game for ChessModel {
+impl GameExt for ChessModel {
     fn init_game() {
         todo!()
     }

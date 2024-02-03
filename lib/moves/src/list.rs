@@ -1,6 +1,6 @@
 use crate::Move;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MoveList {
     moves: Vec<Move>,
 }

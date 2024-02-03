@@ -5,7 +5,7 @@ const WHITE_QUEEN_CASTLE: u8 = 0b0100;
 const BLACK_KING_CASTLE: u8 = 0b0010;
 const BLACK_QUEEN_CASTLE: u8 = 0b0001;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct Castling {
     rights: u8,
 }

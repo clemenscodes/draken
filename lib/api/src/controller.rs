@@ -1,6 +1,6 @@
-use crate::{ForsythEdwardsNotationExt, Game, Square};
+use crate::{ForsythEdwardsNotationExt, GameExt, Square};
 
-pub trait Controller: Game + ForsythEdwardsNotationExt {
+pub trait Controller: GameExt + ForsythEdwardsNotationExt {
     fn handle_mouse_pressed();
     fn handle_mouse_dragged();
     fn handle_mouse_released();

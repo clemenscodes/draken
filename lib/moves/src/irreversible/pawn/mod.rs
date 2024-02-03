@@ -12,7 +12,7 @@ use crate::MoveExt;
 
 use super::IrreversibleMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PawnMove {
     Push(PushMove),
     Capture(PawnCaptureMove),

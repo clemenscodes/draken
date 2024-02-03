@@ -10,7 +10,7 @@ use std::fmt::{Debug, Display};
 
 pub const FEN_PARTS: usize = 6;
 
-#[derive(Default, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct ForsythEdwardsNotation {
     placements: Placements,
     active_color: ActiveColor,

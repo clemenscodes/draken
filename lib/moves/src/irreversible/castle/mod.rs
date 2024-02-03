@@ -8,7 +8,7 @@ use crate::MoveExt;
 
 use super::IrreversibleMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CastleMove {
     King(KingCastleMove),
     Queen(QueenCastleMove),

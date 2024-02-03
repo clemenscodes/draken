@@ -8,7 +8,7 @@ use crate::{irreversible::IrreversibleMoveExt, MoveExt};
 
 use super::PawnMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PushMove {
     Single(SinglePushMove),
     Double(DoublePushMove),

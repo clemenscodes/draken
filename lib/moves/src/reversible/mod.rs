@@ -4,7 +4,7 @@ use quiet::QuietMove;
 
 use super::MoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum ReversibleMove {
     Quiet(QuietMove),
 }

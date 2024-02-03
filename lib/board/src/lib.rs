@@ -77,7 +77,7 @@ pub const RANKS: [Bitboard; variant_count::<Ordinal>()] = [
     EIGHTH_RANK,
 ];
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Board {
     fen: ForsythEdwardsNotation,
     pieces: Pieces,

@@ -8,6 +8,5 @@ edition = "2021"
 bitboard = { path = "../bitboard" }
 fen = { path = "../fen" }
 api = { path = "../api" }
-moves = { path = "../moves" }
-board = { path = "../board" }
+game = { path = "../game" }
 engine = { path = "../engine" }

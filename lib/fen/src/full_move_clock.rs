@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 pub const MIN_FULL_MOVE_CLOCK: u16 = 1;
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct FullMoveClock {
     clock: u16,
 }

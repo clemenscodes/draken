@@ -2,7 +2,7 @@ use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt
 
 use super::PawnMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PawnCaptureMove {
     coordinates: Coordinates,
 }

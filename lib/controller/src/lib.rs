@@ -1,4 +1,4 @@
-use api::{Controller, ForsythEdwardsNotationExt, Game, Square};
+use api::{Controller, ForsythEdwardsNotationExt, GameExt, Square};
 
 #[derive(Debug, Clone)]
 pub struct ChessController {}
@@ -55,7 +55,7 @@ impl Controller for ChessController {
     }
 }
 
-impl Game for ChessController {
+impl GameExt for ChessController {
     fn init_game() {
         todo!()
     }

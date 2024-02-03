@@ -9,7 +9,7 @@ use crate::{
 
 use super::PromotionCaptureMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct KnightPromotionCaptureMove {
     coordinates: Coordinates,
 }

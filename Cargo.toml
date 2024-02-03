@@ -15,6 +15,7 @@ members = [
 	'lib/bitboard',
 	'lib/board',
 	'lib/moves',
+	'lib/game',
 ]
 
 [profile.release]

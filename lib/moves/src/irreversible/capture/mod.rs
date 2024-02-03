@@ -2,7 +2,7 @@ use crate::{coordinates::Coordinates, MoveExt};
 
 use super::IrreversibleMoveExt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CaptureMove {
     coordinates: Coordinates,
 }

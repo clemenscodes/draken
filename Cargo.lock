@@ -279,6 +279,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "game"
+version = "0.1.0"
+dependencies = [
+ "api",
+ "board",
+ "moves",
+]
+
+[[package]]
 name = "gdk-pixbuf"
 version = "0.18.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -594,10 +603,9 @@ version = "0.1.0"
 dependencies = [
  "api",
  "bitboard",
- "board",
  "engine",
  "fen",
- "moves",
+ "game",
 ]
 
 [[package]]
