@@ -1,3 +1,4 @@
+#![feature(variant_count)]
 mod controller;
 mod fen;
 mod game;
@@ -7,7 +8,7 @@ mod state;
 mod view;
 
 pub use controller::Controller;
-pub use fen::ForsythEdwardsNotation;
+pub use fen::ForsythEdwardsNotationExt;
 pub use game::Game;
 pub use model::Model;
 pub use square::{Square, SquareExt};

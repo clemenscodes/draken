@@ -1,4 +1,4 @@
-pub trait ForsythEdwardsNotation {
+pub trait ForsythEdwardsNotationExt {
     fn get_piece_placement_data() -> Vec<String>;
     fn is_white() -> bool;
     fn get_castling() -> String;

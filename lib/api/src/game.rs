@@ -15,5 +15,5 @@ pub trait Game {
     fn promote_rook();
     fn promote_knight();
     fn promote_bishop();
-    fn is_own_piece_on_scquare(square: Square) -> bool;
+    fn is_own_piece_on_square(square: Square) -> bool;
 }

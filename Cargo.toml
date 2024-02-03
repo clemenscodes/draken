@@ -10,6 +10,11 @@ members = [
 	'lib/api',
 	'lib/engine',
 	'lib/uci',
+	'lib/fen',
+	'lib/pieces',
+	'lib/bitboard',
+	'lib/board',
+	'lib/moves',
 ]
 
 [profile.release]

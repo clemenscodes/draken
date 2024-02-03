@@ -1,12 +1,4 @@
-#![feature(lazy_cell)]
-#![feature(associated_type_defaults)]
-pub mod bitboard;
-pub mod board;
-pub mod fen;
-pub mod moves;
-pub mod pieces;
-
-use api::{ForsythEdwardsNotation, Game, Model, Square};
+use api::{ForsythEdwardsNotationExt, Game, Model, Square};
 use moves::list::MoveList;
 
 #[derive(Default, Debug)]
@@ -29,7 +21,7 @@ impl Model for ChessModel {
         todo!()
     }
 
-    fn get_legal_moves(square: api::Square) -> Vec<(Square, Square)> {
+    fn get_legal_moves(_square: api::Square) -> Vec<(Square, Square)> {
         todo!()
     }
 
@@ -95,12 +87,12 @@ impl Game for ChessModel {
         todo!()
     }
 
-    fn is_own_piece_on_scquare(square: api::Square) -> bool {
+    fn is_own_piece_on_square(_square: api::Square) -> bool {
         todo!()
     }
 }
 
-impl ForsythEdwardsNotation for ChessModel {
+impl ForsythEdwardsNotationExt for ChessModel {
     fn get_piece_placement_data() -> Vec<String> {
         todo!()
     }

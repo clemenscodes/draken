@@ -5,5 +5,9 @@ edition = "2021"
 
 [dependencies]
 
+bitboard = { path = "../bitboard" }
+fen = { path = "../fen" }
 api = { path = "../api" }
+moves = { path = "../moves" }
+board = { path = "../board" }
 engine = { path = "../engine" }
