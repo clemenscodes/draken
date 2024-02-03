@@ -4,7 +4,7 @@ use super::RookExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct WhiteRook {
     bitboard: Bitboard,
 }

@@ -13,9 +13,11 @@ use knight::{black::*, white::*, Knight};
 use pawn::{black::*, white::*, Pawn};
 use queen::{black::*, white::*, Queen};
 use rook::{black::*, white::*, Rook};
-use std::{collections::HashMap, sync::LazyLock};
+use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
 
-pub const NUM_PIECES: usize = 12;
+pub const NUM_COLOR_PIECES: usize = 6;
+pub const NUM_COLORS: usize = 2;
+pub const NUM_PIECES: usize = NUM_COLORS * NUM_COLOR_PIECES;
 
 pub const EMPTY_SYMBOL: char = ' ';
 
@@ -154,7 +156,7 @@ pub trait PieceExt {}
 impl PieceExt for Piece {}
 
 impl Piece {
-    pub fn get_board(&mut self) -> &mut Bitboard {
+    fn get_board(&mut self) -> &mut Bitboard {
         match self {
             Piece::Rook(rook) => match rook {
                 Rook::Black(rook) => rook.bitboard_mut(),
@@ -183,215 +185,180 @@ impl Piece {
         }
     }
 
-    pub fn set_on_square(&mut self, rank: u8, file: u8) {
+    fn set_on_square(&mut self, rank: u8, file: u8) {
         let board = Bitboard::try_from((rank as usize, file as usize)).unwrap();
         self.get_board().self_merge(board);
     }
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+struct WhitePieces {
+    rook: WhiteRook,
+    knight: WhiteKnight,
+    bishop: WhiteBishop,
+    queen: WhiteQueen,
+    king: WhiteKing,
+    pawn: WhitePawn,
+}
+
+impl WhitePieces {
+    fn rook(&self) -> WhiteRook {
+        self.rook
+    }
+
+    fn rook_mut(&mut self) -> &mut WhiteRook {
+        &mut self.rook
+    }
+
+    fn knight(&self) -> WhiteKnight {
+        self.knight
+    }
+
+    fn knight_mut(&mut self) -> &mut WhiteKnight {
+        &mut self.knight
+    }
+
+    fn bishop(&self) -> WhiteBishop {
+        self.bishop
+    }
+
+    fn bishop_mut(&mut self) -> &mut WhiteBishop {
+        &mut self.bishop
+    }
+
+    fn queen(&self) -> WhiteQueen {
+        self.queen
+    }
+
+    fn queen_mut(&mut self) -> &mut WhiteQueen {
+        &mut self.queen
+    }
+
+    fn king(&self) -> WhiteKing {
+        self.king
+    }
+
+    fn king_mut(&mut self) -> &mut WhiteKing {
+        &mut self.king
+    }
+
+    fn pawn(&self) -> WhitePawn {
+        self.pawn
+    }
+
+    fn pawn_mut(&mut self) -> &mut WhitePawn {
+        &mut self.pawn
+    }
+}
+
+impl Into<Bitboard> for WhitePieces {
+    fn into(self) -> Bitboard {
+        Bitboard::merge_many(vec![
+            self.rook.bitboard(),
+            self.knight.bitboard(),
+            self.bishop.bitboard(),
+            self.queen.bitboard(),
+            self.king.bitboard(),
+            self.pawn.bitboard(),
+        ])
+    }
+}
+
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+struct BlackPieces {
+    rook: BlackRook,
+    knight: BlackKnight,
+    bishop: BlackBishop,
+    queen: BlackQueen,
+    king: BlackKing,
+    pawn: BlackPawn,
+}
+
+impl BlackPieces {
+    fn rook(&self) -> BlackRook {
+        self.rook
+    }
+
+    fn rook_mut(&mut self) -> &mut BlackRook {
+        &mut self.rook
+    }
+
+    fn knight(&self) -> BlackKnight {
+        self.knight
+    }
+
+    fn knight_mut(&mut self) -> &mut BlackKnight {
+        &mut self.knight
+    }
+
+    fn bishop(&self) -> BlackBishop {
+        self.bishop
+    }
+
+    fn bishop_mut(&mut self) -> &mut BlackBishop {
+        &mut self.bishop
+    }
+
+    fn queen(&self) -> BlackQueen {
+        self.queen
+    }
+
+    fn queen_mut(&mut self) -> &mut BlackQueen {
+        &mut self.queen
+    }
+
+    fn king(&self) -> BlackKing {
+        self.king
+    }
+
+    fn king_mut(&mut self) -> &mut BlackKing {
+        &mut self.king
+    }
+
+    fn pawn(&self) -> BlackPawn {
+        self.pawn
+    }
+
+    fn pawn_mut(&mut self) -> &mut BlackPawn {
+        &mut self.pawn
+    }
+}
+
+impl Into<Bitboard> for BlackPieces {
+    fn into(self) -> Bitboard {
+        Bitboard::merge_many(vec![
+            self.rook.bitboard(),
+            self.knight.bitboard(),
+            self.bishop.bitboard(),
+            self.queen.bitboard(),
+            self.king.bitboard(),
+            self.pawn.bitboard(),
+        ])
+    }
+}
+
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Pieces {
-    white_king: WhiteKing,
-    black_king: BlackKing,
-    white_bishop: WhiteBishop,
-    black_bishop: BlackBishop,
-    white_queen: WhiteQueen,
-    black_queen: BlackQueen,
-    white_rook: WhiteRook,
-    black_rook: BlackRook,
-    white_knight: WhiteKnight,
-    black_knight: BlackKnight,
-    white_pawn: WhitePawn,
-    black_pawn: BlackPawn,
-    white_pieces: Bitboard,
-    black_pieces: Bitboard,
+    white_pieces: WhitePieces,
+    black_pieces: BlackPieces,
     occupied_squares: Bitboard,
     empty_squares: Bitboard,
 }
 
 impl Pieces {
-    pub fn white_king(&self) -> &WhiteKing {
-        &self.white_king
-    }
-
-    pub fn black_king(&self) -> &BlackKing {
-        &self.black_king
-    }
-
-    pub fn white_bishop(&self) -> &WhiteBishop {
-        &self.white_bishop
-    }
-
-    pub fn black_bishop(&self) -> &BlackBishop {
-        &self.black_bishop
-    }
-
-    pub fn white_queen(&self) -> &WhiteQueen {
-        &self.white_queen
-    }
-
-    pub fn black_queen(&self) -> &BlackQueen {
-        &self.black_queen
-    }
-
-    pub fn white_rook(&self) -> &WhiteRook {
-        &self.white_rook
-    }
-
-    pub fn black_rook(&self) -> &BlackRook {
-        &self.black_rook
-    }
-
-    pub fn white_knight(&self) -> &WhiteKnight {
-        &self.white_knight
-    }
-
-    pub fn black_knight(&self) -> &BlackKnight {
-        &self.black_knight
-    }
-
-    pub fn white_pawn(&self) -> &WhitePawn {
-        &self.white_pawn
-    }
-
-    pub fn black_pawn(&self) -> &BlackPawn {
-        &self.black_pawn
-    }
-
-    pub fn white_king_mut(&mut self) -> &mut WhiteKing {
-        &mut self.white_king
-    }
-
-    pub fn black_king_mut(&mut self) -> &mut BlackKing {
-        &mut self.black_king
-    }
-
-    pub fn white_bishop_mut(&mut self) -> &mut WhiteBishop {
-        &mut self.white_bishop
-    }
-
-    pub fn black_bishop_mut(&mut self) -> &mut BlackBishop {
-        &mut self.black_bishop
-    }
-
-    pub fn white_queen_mut(&mut self) -> &mut WhiteQueen {
-        &mut self.white_queen
-    }
-
-    pub fn black_queen_mut(&mut self) -> &mut BlackQueen {
-        &mut self.black_queen
-    }
-
-    pub fn white_rook_mut(&mut self) -> &mut WhiteRook {
-        &mut self.white_rook
-    }
-
-    pub fn black_rook_mut(&mut self) -> &mut BlackRook {
-        &mut self.black_rook
-    }
-
-    pub fn white_knight_mut(&mut self) -> &mut WhiteKnight {
-        &mut self.white_knight
-    }
-
-    pub fn black_knight_mut(&mut self) -> &mut BlackKnight {
-        &mut self.black_knight
-    }
-
-    pub fn white_pawn_mut(&mut self) -> &mut WhitePawn {
-        &mut self.white_pawn
-    }
-
-    pub fn black_pawn_mut(&mut self) -> &mut BlackPawn {
-        &mut self.black_pawn
-    }
-
-    pub fn create(symbol: char, rank: u8, file: u8) -> Piece {
-        let mut piece: Piece = Piece::try_from(symbol).unwrap();
-        piece.set_on_square(rank, file);
-        piece
-    }
-
-    pub fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES] {
-        [
-            self.black_rook().bitboard(),
-            self.black_knight().bitboard(),
-            self.black_bishop().bitboard(),
-            self.black_queen().bitboard(),
-            self.black_king().bitboard(),
-            self.black_pawn().bitboard(),
-            self.white_rook().bitboard(),
-            self.white_knight().bitboard(),
-            self.white_bishop().bitboard(),
-            self.white_queen().bitboard(),
-            self.white_king().bitboard(),
-            self.white_pawn().bitboard(),
-        ]
-    }
-
-    pub fn get_piece_symbol(&self, bitboard: Bitboard) -> char {
-        let all_pieces = self.get_all_pieces();
-        for (index, piece) in all_pieces.iter().enumerate() {
-            if bitboard.self_overlap(*piece) {
-                return PIECE_SYMBOLS[index];
-            }
-        }
-        EMPTY_SYMBOL
-    }
-
-    pub fn get_utf_piece_symbol(&self, bitboard: Bitboard) -> char {
-        let all_pieces = self.get_all_pieces();
-        for (index, piece) in all_pieces.iter().enumerate() {
-            if bitboard.self_overlap(*piece) {
-                return UTF_SYMBOLS[index];
-            }
-        }
-        EMPTY_SYMBOL
-    }
-
-    pub fn merge_piece(&mut self, mut piece: Piece) {
-        let board = piece.get_board().clone();
-        match piece {
-            Piece::Rook(rook) => match rook {
-                Rook::Black(_) => self.black_rook_mut().bitboard_mut().self_merge(board),
-                Rook::White(_) => self.white_rook_mut().bitboard_mut().self_merge(board),
-            },
-            Piece::Knight(knight) => match knight {
-                Knight::Black(_) => self.black_knight_mut().bitboard_mut().self_merge(board),
-                Knight::White(_) => self.white_knight_mut().bitboard_mut().self_merge(board),
-            },
-            Piece::Bishop(bishop) => match bishop {
-                Bishop::Black(_) => self.black_bishop_mut().bitboard_mut().self_merge(board),
-                Bishop::White(_) => self.white_bishop_mut().bitboard_mut().self_merge(board),
-            },
-            Piece::Queen(queen) => match queen {
-                Queen::Black(_) => self.black_queen_mut().bitboard_mut().self_merge(board),
-                Queen::White(_) => self.white_queen_mut().bitboard_mut().self_merge(board),
-            },
-            Piece::King(king) => match king {
-                King::Black(_) => self.black_king_mut().bitboard_mut().self_merge(board),
-                King::White(_) => self.white_king_mut().bitboard_mut().self_merge(board),
-            },
-            Piece::Pawn(pawn) => match pawn {
-                Pawn::Black(_) => self.black_pawn_mut().bitboard_mut().self_merge(board),
-                Pawn::White(_) => self.white_pawn_mut().bitboard_mut().self_merge(board),
-            },
-        };
-    }
-
-    pub fn white_pieces(&self) -> Bitboard {
+    fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
     }
 
-    pub fn white_pieces_mut(&mut self) -> &mut Bitboard {
+    fn white_pieces_mut(&mut self) -> &mut WhitePieces {
         &mut self.white_pieces
     }
 
-    pub fn black_pieces(&self) -> Bitboard {
+    fn black_pieces(&self) -> BlackPieces {
         self.black_pieces
     }
 
-    pub fn black_pieces_mut(&mut self) -> &mut Bitboard {
+    fn black_pieces_mut(&mut self) -> &mut BlackPieces {
         &mut self.black_pieces
     }
 
@@ -399,16 +366,71 @@ impl Pieces {
         self.occupied_squares
     }
 
-    pub fn occupied_squares_mut(&mut self) -> &mut Bitboard {
-        &mut self.occupied_squares
-    }
-
     pub fn empty_squares(&self) -> Bitboard {
         self.empty_squares
     }
 
-    pub fn empty_squares_mut(&mut self) -> &mut Bitboard {
-        &mut self.empty_squares
+    pub fn get_all_pieces(&self) -> [Bitboard; NUM_PIECES] {
+        [
+            self.black_pieces().rook().bitboard(),
+            self.black_pieces().knight().bitboard(),
+            self.black_pieces().bishop().bitboard(),
+            self.black_pieces().queen().bitboard(),
+            self.black_pieces().king().bitboard(),
+            self.black_pieces().pawn().bitboard(),
+            self.white_pieces().rook().bitboard(),
+            self.white_pieces().knight().bitboard(),
+            self.white_pieces().bishop().bitboard(),
+            self.white_pieces().queen().bitboard(),
+            self.white_pieces().king().bitboard(),
+            self.white_pieces().pawn().bitboard(),
+        ]
+    }
+
+    pub fn get_piece_symbol(&self, bitboard: Bitboard, symbols: [char; NUM_PIECES]) -> char {
+        let all_pieces = self.get_all_pieces();
+        for (index, piece) in all_pieces.iter().enumerate() {
+            if bitboard.self_overlap(*piece) {
+                return symbols[index];
+            }
+        }
+        EMPTY_SYMBOL
+    }
+
+    fn create(symbol: char, rank: u8, file: u8) -> Piece {
+        let mut piece: Piece = Piece::try_from(symbol).unwrap();
+        piece.set_on_square(rank, file);
+        piece
+    }
+
+    fn merge_piece(&mut self, mut piece: Piece) {
+        let board = piece.get_board().clone();
+        match piece {
+            Piece::Rook(rook) => match rook {
+                Rook::Black(_) => self.black_pieces_mut().rook_mut().bitboard_mut().self_merge(board),
+                Rook::White(_) => self.white_pieces_mut().rook_mut().bitboard_mut().self_merge(board),
+            },
+            Piece::Knight(knight) => match knight {
+                Knight::Black(_) => self.black_pieces_mut().knight_mut().bitboard_mut().self_merge(board),
+                Knight::White(_) => self.white_pieces_mut().knight_mut().bitboard_mut().self_merge(board),
+            },
+            Piece::Bishop(bishop) => match bishop {
+                Bishop::Black(_) => self.black_pieces_mut().bishop_mut().bitboard_mut().self_merge(board),
+                Bishop::White(_) => self.white_pieces_mut().bishop_mut().bitboard_mut().self_merge(board),
+            },
+            Piece::Queen(queen) => match queen {
+                Queen::Black(_) => self.black_pieces_mut().queen_mut().bitboard_mut().self_merge(board),
+                Queen::White(_) => self.white_pieces_mut().queen_mut().bitboard_mut().self_merge(board),
+            },
+            Piece::King(king) => match king {
+                King::Black(_) => self.black_pieces_mut().king_mut().bitboard_mut().self_merge(board),
+                King::White(_) => self.white_pieces_mut().king_mut().bitboard_mut().self_merge(board),
+            },
+            Piece::Pawn(pawn) => match pawn {
+                Pawn::Black(_) => self.black_pieces_mut().pawn_mut().bitboard_mut().self_merge(board),
+                Pawn::White(_) => self.white_pieces_mut().pawn_mut().bitboard_mut().self_merge(board),
+            },
+        };
     }
 }
 
@@ -429,7 +451,14 @@ impl From<[[u8; 8]; 8]> for Pieces {
             }
             reverse_rank += 1;
         }
-        pieces
+        let occupied_squares = Bitboard::merge_many(pieces.get_all_pieces().to_vec());
+        let empty_squares = !occupied_squares;
+        Self {
+            black_pieces: pieces.black_pieces(),
+            white_pieces: pieces.white_pieces(),
+            occupied_squares,
+            empty_squares,
+        }
     }
 }
 

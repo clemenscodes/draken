@@ -1,7 +1,8 @@
 #![feature(variant_count)]
+use api::{Square, SquareExt};
 use bitboard::Bitboard;
 use fen::ForsythEdwardsNotation;
-use pieces::Pieces;
+use pieces::{Pieces, UTF_SYMBOLS};
 use std::{
     fmt::{Debug, Display},
     mem::variant_count,
@@ -109,16 +110,14 @@ impl BoardExt for Board {}
 
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for rank in (0..8).rev() {
-            for file in 0..8 {
-                let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
-                let symbol = self.pieces().get_utf_piece_symbol(bitboard);
-                write!(f, "[{symbol}]")?;
+        Square::iterate_square_indices(|rank, file| {
+            let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
+            let symbol = self.pieces().get_piece_symbol(bitboard, UTF_SYMBOLS);
+            write!(f, "[{symbol}]").unwrap();
+            if file == 7 && rank != 0 {
+                writeln!(f).unwrap();
             }
-            if rank != 0 {
-                writeln!(f)?;
-            }
-        }
+        });
         Ok(())
     }
 }
@@ -374,18 +373,52 @@ mod tests {
     }
 
     #[test]
-    fn test_from_default_fen() {
+    fn test_create_board_from_default_fen() {
         let board = Board::from(ForsythEdwardsNotation::default());
-        let expected = "\
-            [♜][♞][♝][♛][♚][♝][♞][♜]\n\
-            [♟][♟][♟][♟][♟][♟][♟][♟]\n\
-            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
-            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
-            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
-            [ ][ ][ ][ ][ ][ ][ ][ ]\n\
-            [♙][♙][♙][♙][♙][♙][♙][♙]\n\
-            [♖][♘][♗][♕][♔][♗][♘][♖]\
+        let expected_board = "\
+        [♜][♞][♝][♛][♚][♝][♞][♜]\n\
+        [♟][♟][♟][♟][♟][♟][♟][♟]\n\
+        [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+        [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+        [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+        [ ][ ][ ][ ][ ][ ][ ][ ]\n\
+        [♙][♙][♙][♙][♙][♙][♙][♙]\n\
+        [♖][♘][♗][♕][♔][♗][♘][♖]\
+    ";
+        assert_eq!(expected_board, board.to_string());
+    }
+
+    #[test]
+    fn test_empty_squares_on_board() {
+        let board = Board::from(ForsythEdwardsNotation::default());
+        let empty = board.pieces().empty_squares();
+        let expected_empty = "\
+            00000000\n\
+            00000000\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            00000000\n\
+            00000000\n\
         ";
-        assert_eq!(expected, board.to_string());
+        assert_eq!(expected_empty, empty.to_string());
+    }
+
+    #[test]
+    fn test_occupied_squares_on_board() {
+        let board = Board::from(ForsythEdwardsNotation::default());
+        let occupied = board.pieces().occupied_squares();
+        let expected_occupied = "\
+            11111111\n\
+            11111111\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            00000000\n\
+            11111111\n\
+            11111111\n\
+        ";
+        assert_eq!(expected_occupied, occupied.to_string());
     }
 }

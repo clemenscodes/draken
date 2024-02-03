@@ -4,7 +4,7 @@ use crate::PieceExt;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct BlackBishop {
     bitboard: Bitboard,
 }
