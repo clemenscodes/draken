@@ -6,5 +6,4 @@ edition = "2021"
 [dependencies]
 
 board = { path = "../board" }
-api = { path = "../api" }
 moves = { path = "../moves" }

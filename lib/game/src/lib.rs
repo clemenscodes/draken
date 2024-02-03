@@ -1,7 +1,7 @@
 use board::Board;
 use moves::list::MoveList;
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Game {
     board: Board,
     move_list: MoveList,

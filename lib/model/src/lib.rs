@@ -1,7 +1,7 @@
 use api::{ForsythEdwardsNotationExt, GameExt, Model, Square};
 use game::Game;
 
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ChessModel {
     game: Game,
 }
