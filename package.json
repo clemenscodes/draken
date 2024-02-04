@@ -2,6 +2,7 @@
     "name": "draken",
     "version": "0.0.0",
     "license": "MIT",
+    "private": true,
     "scripts": {
         "all": "pnpm nx run-many --output-style=stream --skip-nx-cache -t",
         "affected": "pnpm nx affected --output-style=stream --skip-nx-cache -t",
@@ -15,7 +16,6 @@
         "fmt": "cargo fmt --all && pnpm nx format --all",
         "prepare": "husky install"
     },
-    "private": true,
     "devDependencies": {
         "@commitlint/cli": "^18.2.0",
         "@commitlint/config-conventional": "^18.1.0",
@@ -28,5 +28,10 @@
         "@nx/js": "17.2.8",
         "nx": "17.2.8",
         "prettier": "^3.2.4"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-git"
+        }
     }
 }
