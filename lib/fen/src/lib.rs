@@ -5,6 +5,8 @@ mod full_move_clock;
 mod half_move_clock;
 mod placements;
 
+use api::ForsythEdwardsNotationExt;
+
 use self::{active_color::*, castling::*, enpassant::*, full_move_clock::*, half_move_clock::*, placements::*};
 use std::fmt::{Debug, Display};
 
@@ -117,6 +119,48 @@ impl Display for ForsythEdwardsNotation {
 impl Debug for ForsythEdwardsNotation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
+    }
+}
+
+impl ForsythEdwardsNotationExt for ForsythEdwardsNotation {
+    fn get_piece_placement_data(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn is_white(&self) -> bool {
+        todo!()
+    }
+
+    fn get_castling(&self) -> String {
+        todo!()
+    }
+
+    fn get_white_king_castle(&self) -> bool {
+        todo!()
+    }
+
+    fn get_white_queen_castle(&self) -> bool {
+        todo!()
+    }
+
+    fn get_black_king_castle(&self) -> bool {
+        todo!()
+    }
+
+    fn get_black_queen_castle(&self) -> bool {
+        todo!()
+    }
+
+    fn get_en_passant(&self) -> String {
+        todo!()
+    }
+
+    fn get_half_move_clock(&self) -> u8 {
+        todo!()
+    }
+
+    fn get_full_move_clock(&self) -> u16 {
+        todo!()
     }
 }
 

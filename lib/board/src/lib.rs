@@ -77,10 +77,18 @@ pub const RANKS: [Bitboard; variant_count::<Ordinal>()] = [
     EIGHTH_RANK,
 ];
 
-#[derive(Default, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Board {
     fen: ForsythEdwardsNotation,
     pieces: Pieces,
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        let fen = ForsythEdwardsNotation::default();
+        let pieces = Pieces::from(fen.placements().position());
+        Self { fen, pieces }
+    }
 }
 
 impl Board {

@@ -4,8 +4,8 @@ use view::ChessView;
 
 fn main() {
     let model = ChessModel::default();
-    let view = ChessView::new();
-    let controller = ChessController::new();
+    let view = ChessView::default();
+    let controller = ChessController::default();
     println!("{model:#?}");
     println!("{controller:#?}");
     println!("{view:#?}");

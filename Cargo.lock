@@ -175,6 +175,7 @@ name = "controller"
 version = "0.1.0"
 dependencies = [
  "api",
+ "model",
 ]
 
 [[package]]
@@ -282,6 +283,7 @@ dependencies = [
 name = "game"
 version = "0.1.0"
 dependencies = [
+ "api",
  "board",
  "moves",
 ]

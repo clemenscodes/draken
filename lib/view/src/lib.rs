@@ -2,14 +2,10 @@ use api::View;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow};
 
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct ChessView {}
 
-impl ChessView {
-    pub fn new() -> Self {
-        ChessView {}
-    }
-}
+impl ChessView {}
 
 impl View for ChessView {
     fn get_left_board_offset(&self) -> i32 {
