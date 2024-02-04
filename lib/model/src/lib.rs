@@ -71,10 +71,6 @@ impl GameExt for ChessModel {
         self.game().get_moves()
     }
 
-    fn make_move(&mut self) {
-        self.game_mut().make_move()
-    }
-
     fn promote_queen(&mut self) {
         self.game_mut().promote_queen()
     }
@@ -93,6 +89,10 @@ impl GameExt for ChessModel {
 
     fn is_own_piece_on_square(&self, square: Square) -> bool {
         self.game().is_own_piece_on_square(square)
+    }
+
+    fn make_move(&mut self, source: Square, destination: Square) {
+        self.game_mut().make_move(source, destination)
     }
 }
 

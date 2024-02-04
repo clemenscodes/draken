@@ -93,10 +93,6 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn make_move(&mut self) {
-        todo!()
-    }
-
     fn promote_queen(&mut self) {
         todo!()
     }
@@ -114,6 +110,10 @@ impl GameExt for Game {
     }
 
     fn is_own_piece_on_square(&self, _square: api::Square) -> bool {
+        todo!()
+    }
+
+    fn make_move(&mut self, _source: api::Square, _destination: api::Square) {
         todo!()
     }
 }

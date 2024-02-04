@@ -1,5 +1,7 @@
 use std::fmt::{Debug, Display};
 
+use api::MoveListExt;
+
 pub const MAX_PLY: usize = 512;
 
 type Moves = [u16; MAX_PLY];
@@ -7,11 +9,12 @@ type Moves = [u16; MAX_PLY];
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct MoveList {
     moves: Moves,
+    ply: u16,
 }
 
 impl MoveList {
-    pub fn new(moves: Moves) -> Self {
-        Self { moves }
+    pub fn new(moves: Moves, ply: u16) -> Self {
+        Self { moves, ply }
     }
 
     pub fn moves(&self) -> &[u16] {
@@ -21,7 +24,10 @@ impl MoveList {
 
 impl Default for MoveList {
     fn default() -> Self {
-        Self { moves: [0; MAX_PLY] }
+        Self {
+            moves: [0; MAX_PLY],
+            ply: 0,
+        }
     }
 }
 
@@ -37,6 +43,8 @@ impl Debug for MoveList {
     }
 }
 
-pub trait MoveListExt {}
-
-impl MoveListExt for MoveList {}
+impl MoveListExt for MoveList {
+    fn ply(&self) -> u16 {
+        self.ply
+    }
+}

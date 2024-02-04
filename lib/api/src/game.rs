@@ -10,10 +10,10 @@ pub trait GameExt {
     fn claim_draw(&mut self);
     fn get_game_state(&self);
     fn get_moves(&self);
-    fn make_move(&mut self);
     fn promote_queen(&mut self);
     fn promote_rook(&mut self);
     fn promote_knight(&mut self);
     fn promote_bishop(&mut self);
     fn is_own_piece_on_square(&self, square: Square) -> bool;
+    fn make_move(&mut self, source: Square, destination: Square);
 }
