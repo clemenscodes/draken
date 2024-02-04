@@ -1,6 +1,6 @@
 use std::fmt::{Debug, Display};
 
-use api::{GameExt, State};
+use api::{GameExt, MoveListExt, State};
 use board::Board;
 use moves::list::MoveList;
 
@@ -113,18 +113,31 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn make_move(&mut self, _source: api::Square, _destination: api::Square) {
-        todo!()
+    fn make_move(&mut self, source: api::Square, destination: api::Square) {
+        self.move_list_mut().add(source, destination)
+    }
+
+    fn ply(&self) -> u16 {
+        self.move_list().ply()
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use api::Square::*;
 
     #[test]
     fn test_game() {
         let game = Game::default();
         println!("{game}");
+    }
+
+    #[test]
+    fn test_make_move() {
+        let mut game = Game::default();
+        assert_eq!(game.ply(), 0);
+        game.make_move(E2, E4);
+        assert_eq!(game.ply(), 1);
     }
 }

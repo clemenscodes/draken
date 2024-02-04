@@ -126,6 +126,10 @@ impl GameExt for ChessController {
     fn make_move(&mut self, source: Square, destination: Square) {
         self.model_mut().make_move(source, destination)
     }
+
+    fn ply(&self) -> u16 {
+        self.model().ply()
+    }
 }
 
 impl ForsythEdwardsNotationExt for ChessController {

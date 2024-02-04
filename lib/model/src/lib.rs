@@ -1,4 +1,4 @@
-use api::{ForsythEdwardsNotationExt, GameExt, Model, Square};
+use api::{ForsythEdwardsNotationExt, GameExt, Model, MoveListExt, Square};
 use game::Game;
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
@@ -93,6 +93,10 @@ impl GameExt for ChessModel {
 
     fn make_move(&mut self, source: Square, destination: Square) {
         self.game_mut().make_move(source, destination)
+    }
+
+    fn ply(&self) -> u16 {
+        self.game().move_list().ply()
     }
 }
 

@@ -20,6 +20,10 @@ impl MoveList {
     pub fn moves(&self) -> &[u16] {
         self.moves.as_ref()
     }
+
+    pub fn set_ply(&mut self, ply: u16) {
+        self.ply = ply;
+    }
 }
 
 impl Default for MoveList {
@@ -33,7 +37,12 @@ impl Default for MoveList {
 
 impl Display for MoveList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Move list!")
+        writeln!(f, "Move list!")?;
+        for ply in 0..self.ply() {
+            let action = self.moves()[ply as usize];
+            writeln!(f, "Ply: {ply} {action}")?;
+        }
+        Ok(())
     }
 }
 
@@ -46,5 +55,10 @@ impl Debug for MoveList {
 impl MoveListExt for MoveList {
     fn ply(&self) -> u16 {
         self.ply
+    }
+
+    fn add(&mut self, source: api::Square, destination: api::Square) {
+        println!("Making move from {source} to {destination}");
+        self.set_ply(self.ply() + 1)
     }
 }
