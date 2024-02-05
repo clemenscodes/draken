@@ -4,6 +4,8 @@ pub(crate) mod irreversible;
 pub mod list;
 pub(crate) mod reversible;
 
+use coordinates::Coordinates;
+use encoded_move::{DESTINATION_SHIFT, SOURCE_SHIFT};
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
 
@@ -25,6 +27,26 @@ impl From<ReversibleMove> for Move {
     }
 }
 
-pub trait MoveExt {}
+pub trait MoveExt {
+    fn coordinates(&self) -> Coordinates;
+}
 
-impl MoveExt for Move {}
+pub trait Encode: MoveExt {
+    fn encode(&self, kind_mask: u16) -> u16 {
+        let source_index: u16 = self.coordinates().source().into();
+        let destination_index: u16 = self.coordinates().destination().into();
+        let source = source_index << SOURCE_SHIFT;
+        let destination = destination_index << DESTINATION_SHIFT;
+        let data = source | destination | kind_mask;
+        data
+    }
+}
+
+impl MoveExt for Move {
+    fn coordinates(&self) -> Coordinates {
+        match *self {
+            Move::Reversible(reversible) => reversible.coordinates(),
+            Move::Irreversible(irreversible) => irreversible.coordinates(),
+        }
+    }
+}

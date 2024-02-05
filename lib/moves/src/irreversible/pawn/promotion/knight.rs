@@ -1,7 +1,7 @@
 use crate::{
     coordinates::Coordinates,
     irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
-    MoveExt,
+    Encode, MoveExt,
 };
 
 use super::PromotionMoveExt;
@@ -16,7 +16,7 @@ impl KnightPromotionMove {
         Self { coordinates }
     }
 
-    pub fn coordinates(&self) -> &Coordinates {
+    fn coordinates(&self) -> &Coordinates {
         &self.coordinates
     }
 }
@@ -27,4 +27,11 @@ impl KnightPromotionMoveExt for KnightPromotionMove {}
 impl PromotionMoveExt for KnightPromotionMove {}
 impl PawnMoveExt for KnightPromotionMove {}
 impl IrreversibleMoveExt for KnightPromotionMove {}
-impl MoveExt for KnightPromotionMove {}
+
+impl MoveExt for KnightPromotionMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
+    }
+}
+
+impl Encode for KnightPromotionMove {}

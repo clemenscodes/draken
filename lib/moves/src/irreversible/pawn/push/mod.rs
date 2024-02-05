@@ -1,34 +1,34 @@
-mod double;
-mod single;
-
-use double::DoublePushMove;
-use single::SinglePushMove;
-
-use crate::{irreversible::IrreversibleMoveExt, MoveExt};
-
-use super::PawnMoveExt;
+use crate::{
+    coordinates::Coordinates,
+    irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
+    Encode, MoveExt,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PushMove {
-    Single(SinglePushMove),
-    Double(DoublePushMove),
+pub struct DoublePushMove {
+    coordinates: Coordinates,
 }
 
-impl From<DoublePushMove> for PushMove {
-    fn from(v: DoublePushMove) -> Self {
-        Self::Double(v)
+impl DoublePushMove {
+    pub fn new(coordinates: Coordinates) -> Self {
+        Self { coordinates }
+    }
+
+    fn coordinates(&self) -> &Coordinates {
+        &self.coordinates
     }
 }
 
-impl From<SinglePushMove> for PushMove {
-    fn from(v: SinglePushMove) -> Self {
-        Self::Single(v)
+pub trait DoublePushMoveExt: PawnMoveExt {}
+
+impl DoublePushMoveExt for DoublePushMove {}
+impl PawnMoveExt for DoublePushMove {}
+impl IrreversibleMoveExt for DoublePushMove {}
+
+impl MoveExt for DoublePushMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
     }
 }
 
-pub trait PushMoveExt: PawnMoveExt {}
-
-impl PushMoveExt for PushMove {}
-impl PawnMoveExt for PushMove {}
-impl IrreversibleMoveExt for PushMove {}
-impl MoveExt for PushMove {}
+impl Encode for DoublePushMove {}

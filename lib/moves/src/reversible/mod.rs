@@ -1,4 +1,4 @@
-mod quiet;
+pub(crate) mod quiet;
 
 use quiet::QuietMove;
 
@@ -18,4 +18,11 @@ impl From<QuietMove> for ReversibleMove {
 pub trait ReversibleMoveExt: MoveExt {}
 
 impl ReversibleMoveExt for ReversibleMove {}
-impl MoveExt for ReversibleMove {}
+
+impl MoveExt for ReversibleMove {
+    fn coordinates(&self) -> crate::coordinates::Coordinates {
+        match *self {
+            ReversibleMove::Quiet(quiet) => quiet.coordinates(),
+        }
+    }
+}

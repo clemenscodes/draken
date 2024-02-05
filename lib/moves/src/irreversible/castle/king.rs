@@ -1,4 +1,4 @@
-use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt};
+use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
 
 use super::CastleMoveExt;
 
@@ -12,7 +12,7 @@ impl KingCastleMove {
         Self { coordinates }
     }
 
-    pub fn coordinates(&self) -> &Coordinates {
+    fn coordinates(&self) -> &Coordinates {
         &self.coordinates
     }
 }
@@ -22,4 +22,11 @@ pub trait KingCastleMoveExt: CastleMoveExt {}
 impl KingCastleMoveExt for KingCastleMove {}
 impl CastleMoveExt for KingCastleMove {}
 impl IrreversibleMoveExt for KingCastleMove {}
-impl MoveExt for KingCastleMove {}
+
+impl MoveExt for KingCastleMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
+    }
+}
+
+impl Encode for KingCastleMove {}

@@ -1,8 +1,8 @@
-mod bishop;
-mod capture;
-mod knight;
-mod queen;
-mod rook;
+pub(crate) mod bishop;
+pub(crate) mod capture;
+pub(crate) mod knight;
+pub(crate) mod queen;
+pub(crate) mod rook;
 
 use bishop::BishopPromotionMove;
 use capture::PromotionCaptureMove;
@@ -58,4 +58,15 @@ pub trait PromotionMoveExt: PawnMoveExt {}
 impl PromotionMoveExt for PromotionMove {}
 impl PawnMoveExt for PromotionMove {}
 impl IrreversibleMoveExt for PromotionMove {}
-impl MoveExt for PromotionMove {}
+
+impl MoveExt for PromotionMove {
+    fn coordinates(&self) -> crate::coordinates::Coordinates {
+        match *self {
+            PromotionMove::PromotionCapture(promotion) => promotion.coordinates(),
+            PromotionMove::Queen(queen) => queen.coordinates(),
+            PromotionMove::Rook(rook) => rook.coordinates(),
+            PromotionMove::Knight(knight) => knight.coordinates(),
+            PromotionMove::Bishop(bishop) => bishop.coordinates(),
+        }
+    }
+}

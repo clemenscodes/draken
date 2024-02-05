@@ -4,7 +4,7 @@ use crate::{
         pawn::{promotion::PromotionMoveExt, PawnMoveExt},
         IrreversibleMoveExt,
     },
-    MoveExt,
+    Encode, MoveExt,
 };
 
 use super::PromotionCaptureMoveExt;
@@ -19,7 +19,7 @@ impl BishopPromotionCaptureMove {
         Self { coordinates }
     }
 
-    pub fn coordinates(&self) -> &Coordinates {
+    fn coordinates(&self) -> &Coordinates {
         &self.coordinates
     }
 }
@@ -31,4 +31,11 @@ impl PromotionCaptureMoveExt for BishopPromotionCaptureMove {}
 impl PromotionMoveExt for BishopPromotionCaptureMove {}
 impl PawnMoveExt for BishopPromotionCaptureMove {}
 impl IrreversibleMoveExt for BishopPromotionCaptureMove {}
-impl MoveExt for BishopPromotionCaptureMove {}
+
+impl MoveExt for BishopPromotionCaptureMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
+    }
+}
+
+impl Encode for BishopPromotionCaptureMove {}

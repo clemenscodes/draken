@@ -1,4 +1,4 @@
-use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt};
+use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
 
 use super::PawnMoveExt;
 
@@ -12,7 +12,7 @@ impl EnPassantMove {
         Self { coordinates }
     }
 
-    pub fn coordinates(&self) -> &Coordinates {
+    fn coordinates(&self) -> &Coordinates {
         &self.coordinates
     }
 }
@@ -22,4 +22,11 @@ pub trait EnPassantMoveExt: PawnMoveExt {}
 impl EnPassantMoveExt for EnPassantMove {}
 impl PawnMoveExt for EnPassantMove {}
 impl IrreversibleMoveExt for EnPassantMove {}
-impl MoveExt for EnPassantMove {}
+
+impl MoveExt for EnPassantMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
+    }
+}
+
+impl Encode for EnPassantMove {}

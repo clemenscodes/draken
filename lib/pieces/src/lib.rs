@@ -106,7 +106,7 @@ impl TryFrom<char> for Piece {
             piece if piece == PIECE_SYMBOLS[9] => Piece::Queen(Queen::White(WhiteQueen::default())),
             piece if piece == PIECE_SYMBOLS[10] => Piece::King(King::White(WhiteKing::default())),
             piece if piece == PIECE_SYMBOLS[11] => Piece::Pawn(Pawn::White(WhitePawn::default())),
-            _ => return Err(Self::Error::Invalid)
+            _ => return Err(Self::Error::Invalid),
         };
         Ok(piece)
     }

@@ -1,4 +1,4 @@
-use crate::{coordinates::Coordinates, MoveExt};
+use crate::{coordinates::Coordinates, Encode, MoveExt};
 
 use super::IrreversibleMoveExt;
 
@@ -12,7 +12,7 @@ impl CaptureMove {
         Self { coordinates }
     }
 
-    pub fn coordinates(&self) -> &Coordinates {
+    fn coordinates(&self) -> &Coordinates {
         &self.coordinates
     }
 }
@@ -21,4 +21,11 @@ pub trait CaptureMoveExt: IrreversibleMoveExt {}
 
 impl CaptureMoveExt for CaptureMove {}
 impl IrreversibleMoveExt for CaptureMove {}
-impl MoveExt for CaptureMove {}
+
+impl MoveExt for CaptureMove {
+    fn coordinates(&self) -> Coordinates {
+        *self.coordinates()
+    }
+}
+
+impl Encode for CaptureMove {}

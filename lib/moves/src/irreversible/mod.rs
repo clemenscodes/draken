@@ -1,6 +1,6 @@
-mod capture;
-mod castle;
-mod pawn;
+pub(crate) mod capture;
+pub(crate) mod castle;
+pub(crate) mod pawn;
 
 use capture::CaptureMove;
 use castle::CastleMove;
@@ -36,4 +36,13 @@ impl From<CaptureMove> for IrreversibleMove {
 pub trait IrreversibleMoveExt: MoveExt {}
 
 impl IrreversibleMoveExt for IrreversibleMove {}
-impl MoveExt for IrreversibleMove {}
+
+impl MoveExt for IrreversibleMove {
+    fn coordinates(&self) -> crate::coordinates::Coordinates {
+        match *self {
+            IrreversibleMove::Capture(capture) => capture.coordinates(),
+            IrreversibleMove::Pawn(pawn) => pawn.coordinates(),
+            IrreversibleMove::Castle(castle) => castle.coordinates(),
+        }
+    }
+}
