@@ -1,0 +1,55 @@
+{
+    "name": "gui",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/gui/src",
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "tauri build",
+                "cwd": "apps/gui"
+            }
+        },
+        "dev": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "tauri dev",
+                "cwd": "apps/gui"
+            }
+        },
+        "test": {
+            "executor": "@monodon/rust:test",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/apps/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "lint": {
+            "executor": "@monodon/rust:lint",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/apps/gui"
+            }
+        },
+        "start": {
+            "dependsOn": ["^build"],
+            "executor": "@monodon/rust:run",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/target/apps/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        }
+    },
+    "tags": []
+}

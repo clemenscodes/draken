@@ -1,9 +1,0 @@
-[package]
-name = "view"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-
-api = { path = "../api" }
-gtk = { version = "0.7.3", package = "gtk4", features = ["v4_12"] }

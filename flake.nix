@@ -37,43 +37,45 @@
         rustToolchain = (pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml).override {
           extensions = ["rust-src" "clippy"];
         };
-        nativeBuildInputs = with pkgs; [rustToolchain pkg-config];
+        nativeBuildInputs = with pkgs; [rustToolchain pkg-config wrapGAppsHook cargo-tauri];
         libraries = with pkgs; [
           webkitgtk
-          gtk3
+          webkitgtk_4_1
+          libsoup
+          openssl_3
+          atk
+          pango
           cairo
           gdk-pixbuf
-          glib
           dbus
+          zlib
+        ];
+        tauri_packages = with pkgs; [
+          wget
+          pkg-config
+          atk
+          pango
+          libsoup_3
+          webkitgtk
+          webkitgtk_4_1
           openssl_3
-          librsvg
+          appimagekit
         ];
         buildInputs = with pkgs; [
-          openssl
           rust-analyzer
           nodejs_20
           corepack_20
-          gtk4
-          glib.dev
-          curl
-          wget
-          dbus
-          openssl_3
-          glib
-          gtk3
-          libsoup
-          webkitgtk
-          librsvg
-        ];
+        ] ++ tauri_packages ;
       in
         with pkgs; {
           devShells.default = mkShell {
             inherit buildInputs nativeBuildInputs;
             RUST_BACKTRACE = 1;
             RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+            NIX_LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath libraries;
+            NIX_LD = "${pkgs.stdenv.cc.libc}/lib/ld-linux-x86-64.so.2";
             shellHook = ''
               export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
-              export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
             '';
           };
         }
