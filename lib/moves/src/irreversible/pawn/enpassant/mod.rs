@@ -1,15 +1,21 @@
+use std::fmt::{Debug, Display};
+
+use api::Square;
+
 use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
 
 use super::PawnMoveExt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct EnPassantMove {
     coordinates: Coordinates,
 }
 
 impl EnPassantMove {
-    pub fn new(coordinates: Coordinates) -> Self {
-        Self { coordinates }
+    pub fn new(source: Square, destination: Square) -> Self {
+        Self {
+            coordinates: Coordinates::new(source, destination),
+        }
     }
 
     fn coordinates(&self) -> &Coordinates {
@@ -30,3 +36,15 @@ impl MoveExt for EnPassantMove {
 }
 
 impl Encode for EnPassantMove {}
+
+impl Display for EnPassantMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "enpassant move")
+    }
+}
+
+impl Debug for EnPassantMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
+}

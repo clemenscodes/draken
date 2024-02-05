@@ -1,15 +1,21 @@
+use std::fmt::{Debug, Display};
+
+use api::Square;
+
 use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
 
 use super::CastleMoveExt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct KingCastleMove {
     coordinates: Coordinates,
 }
 
 impl KingCastleMove {
-    pub fn new(coordinates: Coordinates) -> Self {
-        Self { coordinates }
+    pub fn new(source: Square, destination: Square) -> Self {
+        Self {
+            coordinates: Coordinates::new(source, destination),
+        }
     }
 
     fn coordinates(&self) -> &Coordinates {
@@ -30,3 +36,15 @@ impl MoveExt for KingCastleMove {
 }
 
 impl Encode for KingCastleMove {}
+
+impl Display for KingCastleMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "king castle move")
+    }
+}
+
+impl Debug for KingCastleMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
+}

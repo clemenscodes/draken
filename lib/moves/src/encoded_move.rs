@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::fmt::{Debug, Display, Error};
 
 use api::Square;
 
@@ -45,9 +45,29 @@ pub const DESTINATION_SHIFT: usize = 4;
 /// bits 0-5 bits store the source
 /// bits 6-11 bits store the destination
 /// bits 12-15 store the kind
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct EncodedMove {
     data: u16,
+}
+
+pub trait EncodedMoveExt {
+    fn source(&self) -> Square;
+    fn destination(&self) -> Square;
+    fn kind(&self) -> u16;
+}
+
+impl EncodedMoveExt for EncodedMove {
+    fn source(&self) -> Square {
+        Square::from((self.data & SOURCE_MASK) >> SOURCE_SHIFT)
+    }
+
+    fn destination(&self) -> Square {
+        Square::from((self.data & DESTINATION_MASK) >> DESTINATION_SHIFT)
+    }
+
+    fn kind(&self) -> u16 {
+        self.data & KIND_MASK
+    }
 }
 
 impl EncodedMove {
@@ -180,34 +200,39 @@ impl From<QueenPromotionCaptureMove> for EncodedMove {
 
 impl Display for EncodedMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.data())
+        let source = self.source();
+        let destination = self.destination();
+        let encoded_move: String = match self.kind() {
+            QUIET_MOVE => QuietMove::new(source, destination).to_string(),
+            DOUBLE_PAWN_PUSH => DoublePushMove::new(source, destination).to_string(),
+            KING_CASTLE => KingCastleMove::new(source, destination).to_string(),
+            QUEEN_CASTLE => QueenCastleMove::new(source, destination).to_string(),
+            CAPTURE => CaptureMove::new(source, destination).to_string(),
+            ENPASSANT => EnPassantMove::new(source, destination).to_string(),
+            KNIGHT_PROMOTION => KnightPromotionMove::new(source, destination).to_string(),
+            BISHOP_PROMOTION => BishopPromotionMove::new(source, destination).to_string(),
+            ROOK_PROMOTION => RookPromotionMove::new(source, destination).to_string(),
+            QUEEN_PROMOTION => QueenPromotionMove::new(source, destination).to_string(),
+            KNIGHT_PROMOTION_CAPTURE => KnightPromotionCaptureMove::new(source, destination).to_string(),
+            BISHOP_PROMOTION_CAPTURE => BishopPromotionCaptureMove::new(source, destination).to_string(),
+            ROOK_PROMOTION_CAPTURE => RookPromotionCaptureMove::new(source, destination).to_string(),
+            QUEEN_PROMOTION_CAPTURE => QueenPromotionCaptureMove::new(source, destination).to_string(),
+            _ => return Err(Error),
+        };
+        write!(f, "{encoded_move}")
     }
 }
 
-pub trait EncodedMoveExt {
-    fn source(&self) -> Square;
-    fn destination(&self) -> Square;
-    fn kind(&self) -> u16;
-}
-
-impl EncodedMoveExt for EncodedMove {
-    fn source(&self) -> Square {
-        Square::from((self.data & SOURCE_MASK) >> SOURCE_SHIFT)
-    }
-
-    fn destination(&self) -> Square {
-        Square::from((self.data & DESTINATION_MASK) >> DESTINATION_SHIFT)
-    }
-
-    fn kind(&self) -> u16 {
-        self.data & KIND_MASK
+impl Debug for EncodedMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::*;
+    use crate::MoveExt;
     use api::Square::*;
 
     #[test]

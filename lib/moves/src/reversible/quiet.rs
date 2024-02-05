@@ -1,10 +1,12 @@
+use std::fmt::{Debug, Display};
+
 use api::Square;
 
 use crate::{coordinates::Coordinates, Encode, MoveExt};
 
 use super::ReversibleMoveExt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct QuietMove {
     coordinates: Coordinates,
 }
@@ -33,3 +35,15 @@ impl MoveExt for QuietMove {
 }
 
 impl Encode for QuietMove {}
+
+impl Display for QuietMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "quiet move")
+    }
+}
+
+impl Debug for QuietMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
+}

@@ -1,3 +1,7 @@
+use std::fmt::{Debug, Display};
+
+use api::Square;
+
 use crate::{
     coordinates::Coordinates,
     irreversible::{
@@ -9,14 +13,16 @@ use crate::{
 
 use super::PromotionCaptureMoveExt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct BishopPromotionCaptureMove {
     coordinates: Coordinates,
 }
 
 impl BishopPromotionCaptureMove {
-    pub fn new(coordinates: Coordinates) -> Self {
-        Self { coordinates }
+    pub fn new(source: Square, destination: Square) -> Self {
+        Self {
+            coordinates: Coordinates::new(source, destination),
+        }
     }
 
     fn coordinates(&self) -> &Coordinates {
@@ -39,3 +45,15 @@ impl MoveExt for BishopPromotionCaptureMove {
 }
 
 impl Encode for BishopPromotionCaptureMove {}
+
+impl Display for BishopPromotionCaptureMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "bishop promotion capture move")
+    }
+}
+
+impl Debug for BishopPromotionCaptureMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
+}

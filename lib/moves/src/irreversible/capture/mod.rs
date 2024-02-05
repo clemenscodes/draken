@@ -1,15 +1,21 @@
+use std::fmt::{Debug, Display};
+
+use api::Square;
+
 use crate::{coordinates::Coordinates, Encode, MoveExt};
 
 use super::IrreversibleMoveExt;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct CaptureMove {
     coordinates: Coordinates,
 }
 
 impl CaptureMove {
-    pub fn new(coordinates: Coordinates) -> Self {
-        Self { coordinates }
+    pub fn new(source: Square, destination: Square) -> Self {
+        Self {
+            coordinates: Coordinates::new(source, destination),
+        }
     }
 
     fn coordinates(&self) -> &Coordinates {
@@ -29,3 +35,15 @@ impl MoveExt for CaptureMove {
 }
 
 impl Encode for CaptureMove {}
+
+impl Display for CaptureMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "capture move")
+    }
+}
+
+impl Debug for CaptureMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(self, f)
+    }
+}
