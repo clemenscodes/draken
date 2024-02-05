@@ -48,7 +48,9 @@ impl Encode for BishopPromotionCaptureMove {}
 
 impl Display for BishopPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "bishop promotion capture move")
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        write!(f, "{source}{destination}")
     }
 }
 

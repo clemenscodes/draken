@@ -17,24 +17,6 @@ pub enum PawnMove {
     Promotion(PromotionMove),
 }
 
-impl From<PromotionMove> for PawnMove {
-    fn from(v: PromotionMove) -> Self {
-        Self::Promotion(v)
-    }
-}
-
-impl From<EnPassantMove> for PawnMove {
-    fn from(v: EnPassantMove) -> Self {
-        Self::EnPassant(v)
-    }
-}
-
-impl From<DoublePushMove> for PawnMove {
-    fn from(v: DoublePushMove) -> Self {
-        Self::Push(v)
-    }
-}
-
 pub trait PawnMoveExt: IrreversibleMoveExt {}
 
 impl PawnMoveExt for PawnMove {}

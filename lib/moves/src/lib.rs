@@ -4,8 +4,10 @@ pub(crate) mod irreversible;
 pub mod list;
 pub(crate) mod reversible;
 
+const SOURCE_SHIFT: usize = 10;
+const DESTINATION_SHIFT: usize = 4;
+
 use coordinates::Coordinates;
-use encoded_move::{DESTINATION_SHIFT, SOURCE_SHIFT};
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
 
@@ -13,18 +15,6 @@ use reversible::ReversibleMove;
 pub enum Move {
     Reversible(ReversibleMove),
     Irreversible(IrreversibleMove),
-}
-
-impl From<IrreversibleMove> for Move {
-    fn from(v: IrreversibleMove) -> Self {
-        Self::Irreversible(v)
-    }
-}
-
-impl From<ReversibleMove> for Move {
-    fn from(v: ReversibleMove) -> Self {
-        Self::Reversible(v)
-    }
 }
 
 pub trait MoveExt {

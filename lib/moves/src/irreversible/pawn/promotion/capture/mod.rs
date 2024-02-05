@@ -23,30 +23,6 @@ pub enum PromotionCaptureMove {
     Bishop(BishopPromotionCaptureMove),
 }
 
-impl From<BishopPromotionCaptureMove> for PromotionCaptureMove {
-    fn from(v: BishopPromotionCaptureMove) -> Self {
-        Self::Bishop(v)
-    }
-}
-
-impl From<KnightPromotionCaptureMove> for PromotionCaptureMove {
-    fn from(v: KnightPromotionCaptureMove) -> Self {
-        Self::Knight(v)
-    }
-}
-
-impl From<RookPromotionCaptureMove> for PromotionCaptureMove {
-    fn from(v: RookPromotionCaptureMove) -> Self {
-        Self::Rook(v)
-    }
-}
-
-impl From<QueenPromotionCaptureMove> for PromotionCaptureMove {
-    fn from(v: QueenPromotionCaptureMove) -> Self {
-        Self::Queen(v)
-    }
-}
-
 pub trait PromotionCaptureMoveExt: PromotionMoveExt {}
 
 impl PromotionCaptureMoveExt for PromotionCaptureMove {}

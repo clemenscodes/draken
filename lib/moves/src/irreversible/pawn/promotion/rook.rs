@@ -44,7 +44,9 @@ impl Encode for RookPromotionMove {}
 
 impl Display for RookPromotionMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "rook promotion move")
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        write!(f, "{source}{destination}")
     }
 }
 

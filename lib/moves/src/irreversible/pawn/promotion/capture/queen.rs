@@ -48,7 +48,9 @@ impl Encode for QueenPromotionCaptureMove {}
 
 impl Display for QueenPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "queen promotion capture move")
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        write!(f, "{source}{destination}")
     }
 }
 

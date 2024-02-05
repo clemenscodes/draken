@@ -39,7 +39,9 @@ impl Encode for QueenCastleMove {}
 
 impl Display for QueenCastleMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "queen castle move")
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        write!(f, "{source}{destination}")
     }
 }
 

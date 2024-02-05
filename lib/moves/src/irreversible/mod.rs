@@ -15,24 +15,6 @@ pub enum IrreversibleMove {
     Castle(CastleMove),
 }
 
-impl From<CastleMove> for IrreversibleMove {
-    fn from(v: CastleMove) -> Self {
-        Self::Castle(v)
-    }
-}
-
-impl From<PawnMove> for IrreversibleMove {
-    fn from(v: PawnMove) -> Self {
-        Self::Pawn(v)
-    }
-}
-
-impl From<CaptureMove> for IrreversibleMove {
-    fn from(v: CaptureMove) -> Self {
-        Self::Capture(v)
-    }
-}
-
 pub trait IrreversibleMoveExt: MoveExt {}
 
 impl IrreversibleMoveExt for IrreversibleMove {}

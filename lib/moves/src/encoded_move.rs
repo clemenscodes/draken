@@ -19,32 +19,27 @@ use crate::{
         },
     },
     reversible::quiet::*,
-    Encode,
+    Encode, DESTINATION_SHIFT, SOURCE_SHIFT,
 };
 
-pub const QUIET_MOVE: u16 = 0b0000;
-pub const DOUBLE_PAWN_PUSH: u16 = 0b0001;
-pub const KING_CASTLE: u16 = 0b0010;
-pub const QUEEN_CASTLE: u16 = 0b0011;
-pub const CAPTURE: u16 = 0b0100;
-pub const ENPASSANT: u16 = 0b0101;
-pub const KNIGHT_PROMOTION: u16 = 0b1000;
-pub const BISHOP_PROMOTION: u16 = 0b1001;
-pub const ROOK_PROMOTION: u16 = 0b1010;
-pub const QUEEN_PROMOTION: u16 = 0b1011;
-pub const KNIGHT_PROMOTION_CAPTURE: u16 = 0b1100;
-pub const BISHOP_PROMOTION_CAPTURE: u16 = 0b1101;
-pub const ROOK_PROMOTION_CAPTURE: u16 = 0b1110;
-pub const QUEEN_PROMOTION_CAPTURE: u16 = 0b1111;
-pub const SOURCE_MASK: u16 = 0b1111110000000000;
-pub const DESTINATION_MASK: u16 = 0b0000001111110000;
-pub const KIND_MASK: u16 = 0b0000000000001111;
-pub const SOURCE_SHIFT: usize = 10;
-pub const DESTINATION_SHIFT: usize = 4;
+const QUIET_MOVE: u16 = 0b0000;
+const DOUBLE_PAWN_PUSH: u16 = 0b0001;
+const KING_CASTLE: u16 = 0b0010;
+const QUEEN_CASTLE: u16 = 0b0011;
+const CAPTURE: u16 = 0b0100;
+const ENPASSANT: u16 = 0b0101;
+const KNIGHT_PROMOTION: u16 = 0b1000;
+const BISHOP_PROMOTION: u16 = 0b1001;
+const ROOK_PROMOTION: u16 = 0b1010;
+const QUEEN_PROMOTION: u16 = 0b1011;
+const KNIGHT_PROMOTION_CAPTURE: u16 = 0b1100;
+const BISHOP_PROMOTION_CAPTURE: u16 = 0b1101;
+const ROOK_PROMOTION_CAPTURE: u16 = 0b1110;
+const QUEEN_PROMOTION_CAPTURE: u16 = 0b1111;
+const SOURCE_MASK: u16 = 0b1111110000000000;
+const DESTINATION_MASK: u16 = 0b0000001111110000;
+const KIND_MASK: u16 = 0b0000000000001111;
 
-/// bits 0-5 bits store the source
-/// bits 6-11 bits store the destination
-/// bits 12-15 store the kind
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct EncodedMove {
     data: u16,
@@ -264,6 +259,150 @@ mod tests {
         let expected_source = expected_source_index << SOURCE_SHIFT;
         let expected_destination = expected_destination_index << DESTINATION_SHIFT;
         let expected_data = expected_source | expected_destination | QUIET_MOVE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_double_push_move_into_encoded_move() {
+        let double_push_move = DoublePushMove::new(E2, E4);
+        let encoded_move: EncodedMove = double_push_move.into();
+        let expected_source_index: u16 = double_push_move.coordinates().source().into();
+        let expected_destination_index: u16 = double_push_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | DOUBLE_PAWN_PUSH;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_king_castle_move_into_encoded_move() {
+        let king_castle_move = KingCastleMove::new(E2, E4);
+        let encoded_move: EncodedMove = king_castle_move.into();
+        let expected_source_index: u16 = king_castle_move.coordinates().source().into();
+        let expected_destination_index: u16 = king_castle_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | KING_CASTLE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_queen_castle_move_into_encoded_move() {
+        let queen_castle_move = QueenCastleMove::new(E2, E4);
+        let encoded_move: EncodedMove = queen_castle_move.into();
+        let expected_source_index: u16 = queen_castle_move.coordinates().source().into();
+        let expected_destination_index: u16 = queen_castle_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | QUEEN_CASTLE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_enpassant_move_into_encoded_move() {
+        let enpassant_move = EnPassantMove::new(E2, E4);
+        let encoded_move: EncodedMove = enpassant_move.into();
+        let expected_source_index: u16 = enpassant_move.coordinates().source().into();
+        let expected_destination_index: u16 = enpassant_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | ENPASSANT;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_knight_promotion_move_into_encoded_move() {
+        let knight_promotion_move = KnightPromotionMove::new(E2, E4);
+        let encoded_move: EncodedMove = knight_promotion_move.into();
+        let expected_source_index: u16 = knight_promotion_move.coordinates().source().into();
+        let expected_destination_index: u16 = knight_promotion_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | KNIGHT_PROMOTION;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_bishop_promotion_move_into_encoded_move() {
+        let bishop_promotion_move = BishopPromotionMove::new(E2, E4);
+        let encoded_move: EncodedMove = bishop_promotion_move.into();
+        let expected_source_index: u16 = bishop_promotion_move.coordinates().source().into();
+        let expected_destination_index: u16 = bishop_promotion_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | BISHOP_PROMOTION;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_rook_promotion_move_into_encoded_move() {
+        let rook_promotion_move = RookPromotionMove::new(E2, E4);
+        let encoded_move: EncodedMove = rook_promotion_move.into();
+        let expected_source_index: u16 = rook_promotion_move.coordinates().source().into();
+        let expected_destination_index: u16 = rook_promotion_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | ROOK_PROMOTION;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_queen_promotion_move_into_encoded_move() {
+        let queen_promotion_move = QueenPromotionMove::new(E2, E4);
+        let encoded_move: EncodedMove = queen_promotion_move.into();
+        let expected_source_index: u16 = queen_promotion_move.coordinates().source().into();
+        let expected_destination_index: u16 = queen_promotion_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | QUEEN_PROMOTION;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_knight_promotion_capture_move_into_encoded_move() {
+        let knight_promotion_capture_move = KnightPromotionCaptureMove::new(E2, E4);
+        let encoded_move: EncodedMove = knight_promotion_capture_move.into();
+        let expected_source_index: u16 = knight_promotion_capture_move.coordinates().source().into();
+        let expected_destination_index: u16 = knight_promotion_capture_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | KNIGHT_PROMOTION_CAPTURE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_bishop_promotion_capture_move_into_encoded_move() {
+        let bishop_promotion_capture_move = BishopPromotionCaptureMove::new(E2, E4);
+        let encoded_move: EncodedMove = bishop_promotion_capture_move.into();
+        let expected_source_index: u16 = bishop_promotion_capture_move.coordinates().source().into();
+        let expected_destination_index: u16 = bishop_promotion_capture_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | BISHOP_PROMOTION_CAPTURE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_rook_promotion_capture_move_into_encoded_move() {
+        let rook_promotion_capture_move = RookPromotionCaptureMove::new(E2, E4);
+        let encoded_move: EncodedMove = rook_promotion_capture_move.into();
+        let expected_source_index: u16 = rook_promotion_capture_move.coordinates().source().into();
+        let expected_destination_index: u16 = rook_promotion_capture_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | ROOK_PROMOTION_CAPTURE;
+        assert_eq!(encoded_move.data, expected_data);
+    }
+
+    #[test]
+    fn test_queen_promotion_capture_move_into_encoded_move() {
+        let queen_promotion_capture_move = QueenPromotionCaptureMove::new(E2, E4);
+        let encoded_move: EncodedMove = queen_promotion_capture_move.into();
+        let expected_source_index: u16 = queen_promotion_capture_move.coordinates().source().into();
+        let expected_destination_index: u16 = queen_promotion_capture_move.coordinates().destination().into();
+        let expected_source = expected_source_index << SOURCE_SHIFT;
+        let expected_destination = expected_destination_index << DESTINATION_SHIFT;
+        let expected_data = expected_source | expected_destination | QUEEN_PROMOTION_CAPTURE;
         assert_eq!(encoded_move.data, expected_data);
     }
 }

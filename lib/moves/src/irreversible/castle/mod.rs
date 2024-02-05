@@ -14,18 +14,6 @@ pub enum CastleMove {
     Queen(QueenCastleMove),
 }
 
-impl From<QueenCastleMove> for CastleMove {
-    fn from(v: QueenCastleMove) -> Self {
-        Self::Queen(v)
-    }
-}
-
-impl From<KingCastleMove> for CastleMove {
-    fn from(v: KingCastleMove) -> Self {
-        Self::King(v)
-    }
-}
-
 pub trait CastleMoveExt: IrreversibleMoveExt {}
 
 impl CastleMoveExt for CastleMove {}

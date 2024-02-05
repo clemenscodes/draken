@@ -48,7 +48,9 @@ impl Encode for KnightPromotionCaptureMove {}
 
 impl Display for KnightPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "knight promotion capture move")
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        write!(f, "{source}{destination}")
     }
 }
 

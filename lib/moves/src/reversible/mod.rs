@@ -9,12 +9,6 @@ pub enum ReversibleMove {
     Quiet(QuietMove),
 }
 
-impl From<QuietMove> for ReversibleMove {
-    fn from(v: QuietMove) -> Self {
-        Self::Quiet(v)
-    }
-}
-
 pub trait ReversibleMoveExt: MoveExt {}
 
 impl ReversibleMoveExt for ReversibleMove {}
