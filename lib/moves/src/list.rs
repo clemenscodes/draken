@@ -6,8 +6,6 @@ use crate::encoded_move::EncodedMove;
 
 pub const MAX_PLY: usize = 512;
 
-
-
 type Moves = [EncodedMove; MAX_PLY];
 
 #[derive(Clone, Copy, PartialEq, Eq)]
