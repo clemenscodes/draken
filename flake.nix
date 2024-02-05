@@ -38,6 +38,16 @@
           extensions = ["rust-src" "clippy"];
         };
         nativeBuildInputs = with pkgs; [rustToolchain pkg-config];
+        libraries = with pkgs; [
+          webkitgtk
+          gtk3
+          cairo
+          gdk-pixbuf
+          glib
+          dbus
+          openssl_3
+          librsvg
+        ];
         buildInputs = with pkgs; [
           openssl
           rust-analyzer
@@ -45,6 +55,15 @@
           corepack_20
           gtk4
           glib.dev
+          curl
+          wget
+          dbus
+          openssl_3
+          glib
+          gtk3
+          libsoup
+          webkitgtk
+          librsvg
         ];
       in
         with pkgs; {
@@ -52,6 +71,10 @@
             inherit buildInputs nativeBuildInputs;
             RUST_BACKTRACE = 1;
             RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+            shellHook = ''
+              export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath libraries}:$LD_LIBRARY_PATH
+              export XDG_DATA_DIRS=${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}:$XDG_DATA_DIRS
+            '';
           };
         }
     );
