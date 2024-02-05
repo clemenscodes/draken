@@ -113,7 +113,7 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn make_move(&mut self, source: api::Square, destination: api::Square) {
+    fn make_move(&mut self, source: api::Square, destination: api::Square) -> Result<(), ()> {
         self.move_list_mut().add(source, destination)
     }
 
@@ -137,7 +137,8 @@ mod tests {
     fn test_make_move() {
         let mut game = Game::default();
         assert_eq!(game.ply(), 0);
-        game.make_move(E2, E4);
+        game.make_move(E2, E4).unwrap();
         assert_eq!(game.ply(), 1);
+        println!("{game}");
     }
 }

@@ -15,6 +15,6 @@ pub trait GameExt {
     fn promote_knight(&mut self);
     fn promote_bishop(&mut self);
     fn is_own_piece_on_square(&self, square: Square) -> bool;
-    fn make_move(&mut self, source: Square, destination: Square);
+    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()>;
     fn ply(&self) -> u16;
 }

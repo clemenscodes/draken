@@ -1,4 +1,5 @@
 pub(crate) mod coordinates;
+pub(crate) mod encoded_move;
 pub(crate) mod irreversible;
 pub mod list;
 pub(crate) mod reversible;
