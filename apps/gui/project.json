@@ -11,6 +11,13 @@
                 "cwd": "apps/gui"
             }
         },
+        "android:build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm tauri android init && pnpm tauri android build",
+                "cwd": "apps/gui"
+            }
+        },
         "dev": {
             "executor": "nx:run-commands",
             "options": {

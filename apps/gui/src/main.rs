@@ -1,6 +1,5 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-mod app;
+#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
 
 fn main() {
-    app::run()
+    gui::AppBuilder::new().run();
 }
