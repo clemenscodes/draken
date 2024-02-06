@@ -7,22 +7,34 @@
         "build": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "tauri build",
+                "command": "pnpm tauri build",
                 "cwd": "apps/gui"
             }
         },
         "dev": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "tauri dev",
+                "command": "pnpm tauri dev",
                 "cwd": "apps/gui"
+            }
+        },
+        "cargo:build": {
+            "executor": "@monodon/rust:build",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/apps/gui"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
             }
         },
         "test": {
             "executor": "@monodon/rust:test",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/apps/gui"
+                "target-dir": "dist/apps/gui"
             },
             "configurations": {
                 "production": {
@@ -34,7 +46,7 @@
             "executor": "@monodon/rust:lint",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/apps/gui"
+                "target-dir": "dist/apps/gui"
             }
         },
         "start": {
@@ -42,7 +54,7 @@
             "executor": "@monodon/rust:run",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/apps/gui"
+                "target-dir": "dist/apps/gui"
             },
             "configurations": {
                 "production": {

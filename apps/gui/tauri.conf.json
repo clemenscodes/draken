@@ -6,7 +6,7 @@
         "beforeDevCommand": "pnpm nx dev ui",
         "beforeBuildCommand": "pnpm nx build ui",
         "devUrl": "http://localhost:3000",
-        "frontendDist": "../ui/out"
+        "frontendDist": "../../dist/apps/ui"
     },
     "app": {
         "security": {

@@ -8,7 +8,7 @@
             "executor": "@monodon/rust:build",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/libs/view"
+                "target-dir": "dist/libs/view"
             },
             "configurations": {
                 "production": {
@@ -21,7 +21,7 @@
             "outputs": ["{options.target-dir}"],
             "options": {
                 "lib": true,
-                "target-dir": "dist/target/libs/view"
+                "target-dir": "dist/libs/view"
             },
             "configurations": {
                 "production": {
@@ -33,7 +33,7 @@
             "executor": "@monodon/rust:lint",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/libs/view"
+                "target-dir": "dist/libs/view"
             }
         }
     },

@@ -8,7 +8,7 @@
             "executor": "@monodon/rust:build",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/libs/game"
+                "target-dir": "dist/libs/game"
             },
             "configurations": {
                 "production": {
@@ -20,7 +20,7 @@
             "executor": "@monodon/rust:test",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/libs/game"
+                "target-dir": "dist/libs/game"
             },
             "configurations": {
                 "production": {
@@ -32,7 +32,7 @@
             "executor": "@monodon/rust:lint",
             "outputs": ["{options.target-dir}"],
             "options": {
-                "target-dir": "dist/target/libs/game"
+                "target-dir": "dist/libs/game"
             }
         }
     },
