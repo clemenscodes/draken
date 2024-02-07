@@ -160,7 +160,7 @@ impl ShrAssign<usize> for Bitboard {
 
 impl From<Square> for Bitboard {
     fn from(value: Square) -> Self {
-        Bitboard::new(value.into())
+        Bitboard::get_single_bit(value.into())
     }
 }
 

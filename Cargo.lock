@@ -1356,7 +1356,6 @@ dependencies = [
  "api",
  "bitboard",
  "board",
- "moves",
 ]
 
 [[package]]
@@ -2260,14 +2259,6 @@ dependencies = [
  "bitboard",
  "engine",
  "game",
-]
-
-[[package]]
-name = "moves"
-version = "0.1.0"
-dependencies = [
- "api",
- "board",
 ]
 
 [[package]]

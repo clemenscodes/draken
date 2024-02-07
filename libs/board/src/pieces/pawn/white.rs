@@ -1,9 +1,9 @@
+use super::PawnExt;
 use crate::{
-    pieces::{March, PieceExt},
+    moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
+    pieces::{PieceExt, Verify},
     Board,
 };
-
-use super::{Pawn, PawnExt};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
@@ -56,8 +56,10 @@ impl Debug for WhitePawn {
 impl PawnExt for WhitePawn {}
 impl PieceExt for WhitePawn {}
 
-impl March for WhitePawn {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Pawn::from(*self).march(source, destination, board)
+impl Verify for WhitePawn {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        println!("Verifying white pawn move from {source} to {destination}");
+        let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
+        Ok(encoded_move.data())
     }
 }

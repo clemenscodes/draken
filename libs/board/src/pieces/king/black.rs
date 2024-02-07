@@ -1,6 +1,6 @@
 use super::{King, KingExt};
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 use api::Square;
@@ -55,8 +55,8 @@ impl Debug for BlackKing {
 impl KingExt for BlackKing {}
 impl PieceExt for BlackKing {}
 
-impl March for BlackKing {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        King::from(*self).march(source, destination, board)
+impl Verify for BlackKing {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        King::from(*self).verify(source, destination, board)
     }
 }

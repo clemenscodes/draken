@@ -1,6 +1,6 @@
 use super::{Queen, QueenExt};
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 use api::Square;
@@ -54,8 +54,8 @@ impl Debug for BlackQueen {
 impl QueenExt for BlackQueen {}
 impl PieceExt for BlackQueen {}
 
-impl March for BlackQueen {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Queen::from(*self).march(source, destination, board)
+impl Verify for BlackQueen {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Queen::from(*self).verify(source, destination, board)
     }
 }

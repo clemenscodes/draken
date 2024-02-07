@@ -1,6 +1,6 @@
-use super::{Pawn, PawnExt};
+use super::PawnExt;
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 use api::Square;
@@ -54,8 +54,8 @@ impl Debug for BlackPawn {
 impl PawnExt for BlackPawn {}
 impl PieceExt for BlackPawn {}
 
-impl March for BlackPawn {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Pawn::from(*self).march(source, destination, board)
+impl Verify for BlackPawn {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        todo!();
     }
 }

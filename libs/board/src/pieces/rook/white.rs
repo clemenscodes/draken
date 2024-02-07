@@ -1,6 +1,6 @@
 use super::{Rook, RookExt};
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 use api::Square;
@@ -55,8 +55,8 @@ impl Debug for WhiteRook {
 impl RookExt for WhiteRook {}
 impl PieceExt for WhiteRook {}
 
-impl March for WhiteRook {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Rook::from(*self).march(source, destination, board)
+impl Verify for WhiteRook {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Rook::from(*self).verify(source, destination, board)
     }
 }

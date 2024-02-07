@@ -1,5 +1,5 @@
 use super::{Bishop, BishopExt, PieceExt};
-use crate::{pieces::March, Board};
+use crate::{pieces::Verify, Board};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
@@ -52,8 +52,8 @@ impl Debug for BlackBishop {
 impl BishopExt for BlackBishop {}
 impl PieceExt for BlackBishop {}
 
-impl March for BlackBishop {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Bishop::from(*self).march(source, destination, board)
+impl Verify for BlackBishop {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Bishop::from(*self).verify(source, destination, board)
     }
 }

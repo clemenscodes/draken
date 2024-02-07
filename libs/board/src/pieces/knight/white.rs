@@ -1,6 +1,6 @@
 use super::{Knight, KnightExt};
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 use api::Square;
@@ -54,8 +54,8 @@ impl Debug for WhiteKnight {
 impl KnightExt for WhiteKnight {}
 impl PieceExt for WhiteKnight {}
 
-impl March for WhiteKnight {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Knight::from(*self).march(source, destination, board)
+impl Verify for WhiteKnight {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Knight::from(*self).verify(source, destination, board)
     }
 }

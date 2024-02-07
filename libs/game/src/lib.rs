@@ -1,29 +1,32 @@
 use api::{GameExt, MoveListExt, Square, State};
 use bitboard::{Bitboard, BitboardExt};
-use board::{pieces::March, Board};
-use moves::{
-    encoded_move::{EncodedMove, EncodedMoveExt},
-    irreversible::{
-        capture::CaptureMove,
-        castle::{king::KingCastleMove, queen::QueenCastleMove},
-        pawn::{
-            enpassant::EnPassantMove,
-            promotion::{
-                bishop::BishopPromotionMove,
-                capture::{
-                    bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
-                    rook::RookPromotionCaptureMove,
+use board::Board;
+use board::{
+    moves::{
+        encoded_move::{EncodedMove, EncodedMoveExt},
+        irreversible::{
+            capture::CaptureMove,
+            castle::{king::KingCastleMove, queen::QueenCastleMove},
+            pawn::{
+                enpassant::EnPassantMove,
+                promotion::{
+                    bishop::BishopPromotionMove,
+                    capture::{
+                        bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
+                        rook::RookPromotionCaptureMove,
+                    },
+                    knight::KnightPromotionMove,
+                    queen::QueenPromotionMove,
+                    rook::RookPromotionMove,
                 },
-                knight::KnightPromotionMove,
-                queen::QueenPromotionMove,
-                rook::RookPromotionMove,
+                push::DoublePushMove,
             },
-            push::DoublePushMove,
         },
+        list::MoveList,
+        reversible::quiet::QuietMove,
+        *,
     },
-    list::MoveList,
-    reversible::quiet::QuietMove,
-    *,
+    pieces::Verify,
 };
 use std::fmt::{Debug, Display};
 
@@ -68,26 +71,27 @@ impl Game {
         let board = self.board();
         let pieces = self.board_mut().pieces_mut();
         match piece_index {
-            0 => pieces.black_pieces_mut().rook_mut().march(source, destination, board),
-            1 => pieces.black_pieces_mut().knight_mut().march(source, destination, board),
-            2 => pieces.black_pieces_mut().bishop_mut().march(source, destination, board),
-            3 => pieces.black_pieces_mut().queen_mut().march(source, destination, board),
-            4 => pieces.black_pieces_mut().king_mut().march(source, destination, board),
-            5 => pieces.black_pieces_mut().pawn().march(source, destination, board),
-            6 => pieces.white_pieces_mut().rook_mut().march(source, destination, board),
-            7 => pieces.white_pieces_mut().knight_mut().march(source, destination, board),
-            8 => pieces.white_pieces_mut().bishop_mut().march(source, destination, board),
-            9 => pieces.white_pieces_mut().queen_mut().march(source, destination, board),
-            10 => pieces.white_pieces_mut().king_mut().march(source, destination, board),
-            11 => pieces.white_pieces_mut().pawn_mut().march(source, destination, board),
+            0 => pieces.black_pieces_mut().rook_mut().verify(source, destination, board),
+            1 => pieces.black_pieces_mut().knight_mut().verify(source, destination, board),
+            2 => pieces.black_pieces_mut().bishop_mut().verify(source, destination, board),
+            3 => pieces.black_pieces_mut().queen_mut().verify(source, destination, board),
+            4 => pieces.black_pieces_mut().king_mut().verify(source, destination, board),
+            5 => pieces.black_pieces_mut().pawn().verify(source, destination, board),
+            6 => pieces.white_pieces_mut().rook_mut().verify(source, destination, board),
+            7 => pieces.white_pieces_mut().knight_mut().verify(source, destination, board),
+            8 => pieces.white_pieces_mut().bishop_mut().verify(source, destination, board),
+            9 => pieces.white_pieces_mut().queen_mut().verify(source, destination, board),
+            10 => pieces.white_pieces_mut().king_mut().verify(source, destination, board),
+            11 => pieces.white_pieces_mut().pawn_mut().verify(source, destination, board),
             _ => Err(()),
         }
     }
 
     fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
+        let bitboard = Bitboard::from(source);
         let pieces = self.board().pieces().get_all_pieces();
         for index in 0..pieces.len() {
-            if Bitboard::overlap(Bitboard::from(source), pieces[index]) {
+            if Bitboard::overlap(bitboard, pieces[index]) {
                 return Ok(index);
             }
         }
@@ -207,7 +211,7 @@ impl GameExt for Game {
             eprintln!("Source square can not be unoccupied");
             return Err(());
         }
-        let data: u16 = self.calculate_move(source, destination)?;
+        let data = self.calculate_move(source, destination)?;
         self.perform_move(EncodedMove::new(data))
     }
 

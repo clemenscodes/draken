@@ -1,7 +1,7 @@
 pub mod black;
 pub mod white;
 
-use super::{March, PieceExt};
+use super::{PieceExt, Verify};
 use crate::Board;
 use api::Square;
 use black::BlackRook;
@@ -30,8 +30,8 @@ pub trait RookExt: PieceExt {}
 impl RookExt for Rook {}
 impl PieceExt for Rook {}
 
-impl March for Rook {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+impl Verify for Rook {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }

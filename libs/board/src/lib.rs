@@ -1,6 +1,7 @@
 #![feature(variant_count)]
 #![feature(lazy_cell)]
 pub mod fen;
+pub mod moves;
 pub mod pieces;
 
 use api::{Square, SquareExt};

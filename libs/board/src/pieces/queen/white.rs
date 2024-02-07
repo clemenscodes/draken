@@ -1,5 +1,5 @@
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
 
@@ -56,8 +56,8 @@ impl Debug for WhiteQueen {
 impl QueenExt for WhiteQueen {}
 impl PieceExt for WhiteQueen {}
 
-impl March for WhiteQueen {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Queen::from(*self).march(source, destination, board)
+impl Verify for WhiteQueen {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Queen::from(*self).verify(source, destination, board)
     }
 }

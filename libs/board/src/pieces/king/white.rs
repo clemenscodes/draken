@@ -1,10 +1,8 @@
+use super::{King, KingExt};
 use crate::{
-    pieces::{March, PieceExt},
+    pieces::{PieceExt, Verify},
     Board,
 };
-
-use super::{King, KingExt};
-
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
@@ -57,8 +55,8 @@ impl Debug for WhiteKing {
 impl KingExt for WhiteKing {}
 impl PieceExt for WhiteKing {}
 
-impl March for WhiteKing {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        King::from(*self).march(source, destination, board)
+impl Verify for WhiteKing {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        King::from(*self).verify(source, destination, board)
     }
 }

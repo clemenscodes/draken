@@ -114,23 +114,23 @@ impl TryFrom<char> for Piece {
     }
 }
 
-pub trait March {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
+pub trait Verify {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
 }
 
-pub trait PieceExt: March {}
+pub trait PieceExt: Verify {}
 
 impl PieceExt for Piece {}
 
-impl March for Piece {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+impl Verify for Piece {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         match self {
-            Piece::Rook(rook) => rook.march(source, destination, board),
-            Piece::Knight(knight) => knight.march(source, destination, board),
-            Piece::Bishop(bishop) => bishop.march(source, destination, board),
-            Piece::Queen(queen) => queen.march(source, destination, board),
-            Piece::King(king) => king.march(source, destination, board),
-            Piece::Pawn(pawn) => pawn.march(source, destination, board),
+            Piece::Rook(rook) => rook.verify(source, destination, board),
+            Piece::Knight(knight) => knight.verify(source, destination, board),
+            Piece::Bishop(bishop) => bishop.verify(source, destination, board),
+            Piece::Queen(queen) => queen.verify(source, destination, board),
+            Piece::King(king) => king.verify(source, destination, board),
+            Piece::Pawn(pawn) => pawn.verify(source, destination, board),
         }
     }
 }

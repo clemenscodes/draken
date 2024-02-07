@@ -1,7 +1,7 @@
 pub mod black;
 pub mod white;
 
-use super::{March, PieceExt};
+use super::{PieceExt, Verify};
 use crate::Board;
 use api::Square;
 use black::BlackBishop;
@@ -30,8 +30,8 @@ pub trait BishopExt: PieceExt {}
 impl BishopExt for Bishop {}
 impl PieceExt for Bishop {}
 
-impl March for Bishop {
-    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+impl Verify for Bishop {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }
