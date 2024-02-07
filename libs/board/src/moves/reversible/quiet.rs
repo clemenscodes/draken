@@ -5,6 +5,7 @@ use crate::{
 
 use super::ReversibleMoveExt;
 use api::Square;
+use bitboard::{Bitboard, BitboardExt};
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -37,8 +38,9 @@ impl MoveExt for QuietMove {
     fn march(&self, board: &mut Board) {
         let source = self.coordinates().source();
         let destination = self.coordinates().destination();
-        println!("Marching quietly from {source} to {destination}");
-        println!("{board}");
+        let piece = board.get_piece_board_mut(source).unwrap();
+        piece.self_unset_bit(source.into());
+        piece.self_set_bit(destination.into());
     }
 }
 

@@ -5,7 +5,7 @@ pub mod moves;
 pub mod pieces;
 
 use api::{Square, SquareExt};
-use bitboard::Bitboard;
+use bitboard::{Bitboard, BitboardExt};
 use fen::ForsythEdwardsNotation;
 use pieces::{Pieces, UTF_SYMBOLS};
 use std::{
@@ -111,6 +111,38 @@ impl Board {
 
     pub fn pieces_mut(&mut self) -> &mut Pieces {
         &mut self.pieces
+    }
+
+    pub fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
+        let bitboard = Bitboard::from(source);
+        let pieces = self.pieces().get_all_pieces();
+        for index in 0..pieces.len() {
+            if Bitboard::overlap(bitboard, pieces[index]) {
+                return Ok(index);
+            }
+        }
+        eprintln!("No piece found on {source}");
+        Err(())
+    }
+
+    pub fn get_piece_board_mut(&mut self, source: Square) -> Result<&mut Bitboard, ()> {
+        let piece_index = self.get_piece_index(source).unwrap();
+        let pieces = self.pieces_mut();
+        match piece_index {
+            0 => Ok(pieces.black_pieces_mut().rook_mut().bitboard_mut()),
+            1 => Ok(pieces.black_pieces_mut().knight_mut().bitboard_mut()),
+            2 => Ok(pieces.black_pieces_mut().bishop_mut().bitboard_mut()),
+            3 => Ok(pieces.black_pieces_mut().queen_mut().bitboard_mut()),
+            4 => Ok(pieces.black_pieces_mut().king_mut().bitboard_mut()),
+            5 => Ok(pieces.black_pieces_mut().pawn_mut().bitboard_mut()),
+            6 => Ok(pieces.white_pieces_mut().rook_mut().bitboard_mut()),
+            7 => Ok(pieces.white_pieces_mut().knight_mut().bitboard_mut()),
+            8 => Ok(pieces.white_pieces_mut().bishop_mut().bitboard_mut()),
+            9 => Ok(pieces.white_pieces_mut().queen_mut().bitboard_mut()),
+            10 => Ok(pieces.white_pieces_mut().king_mut().bitboard_mut()),
+            11 => Ok(pieces.white_pieces_mut().pawn_mut().bitboard_mut()),
+            _ => Err(()),
+        }
     }
 }
 

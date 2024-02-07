@@ -217,7 +217,7 @@ pub trait BitboardExt {
     }
     fn self_check_bit(&self, index: usize) -> bool;
     fn self_set_bit(&mut self, index: usize);
-    fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize);
+    fn self_unset_bit(&mut self, index: usize);
     fn self_merge_many(&mut self, bitboards: Vec<Bitboard>);
     fn self_merge(&mut self, bitboard: Bitboard);
     fn self_overlap(&self, rhs: Bitboard) -> bool;
@@ -246,8 +246,8 @@ impl BitboardExt for Bitboard {
     }
 
     #[inline(always)]
-    fn self_unset_bit(&mut self, bitboard: Bitboard, index: usize) {
-        self.bits = Bitboard::unset_bit(bitboard, index).bits;
+    fn self_unset_bit(&mut self, index: usize) {
+        self.bits = Bitboard::unset_bit(*self, index).bits;
     }
 
     #[inline(always)]
@@ -755,19 +755,21 @@ mod tests {
 
     #[test]
     fn test_unset_bit() {
-        let bitboard = Bitboard::get_single_bit(2);
-        let index = 2;
+        let bitboard = Bitboard::new(u64::MAX);
+        let index = 35;
         let result = Bitboard::unset_bit(bitboard, index);
         let expected = "\
-            00000000\n\
-            00000000\n\
-            00000000\n\
-            00000000\n\
-            00000000\n\
-            00000000\n\
-            00000000\n\
-            00000000\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11101111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
+            11111111\n\
             ";
+        assert_eq!(expected, result.to_string());
+        let result = Bitboard::unset_bit(bitboard, index);
         assert_eq!(expected, result.to_string());
     }
 

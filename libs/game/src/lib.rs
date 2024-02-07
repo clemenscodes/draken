@@ -67,36 +67,24 @@ impl Game {
     }
 
     fn calculate_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
-        let piece_index = self.get_piece_index(source)?;
         let board = self.board();
-        let pieces = self.board_mut().pieces_mut();
+        let piece_index = board.get_piece_index(source)?;
+        let pieces = board.pieces();
         match piece_index {
-            0 => pieces.black_pieces_mut().rook_mut().verify(source, destination, board),
-            1 => pieces.black_pieces_mut().knight_mut().verify(source, destination, board),
-            2 => pieces.black_pieces_mut().bishop_mut().verify(source, destination, board),
-            3 => pieces.black_pieces_mut().queen_mut().verify(source, destination, board),
-            4 => pieces.black_pieces_mut().king_mut().verify(source, destination, board),
-            5 => pieces.black_pieces_mut().pawn().verify(source, destination, board),
-            6 => pieces.white_pieces_mut().rook_mut().verify(source, destination, board),
-            7 => pieces.white_pieces_mut().knight_mut().verify(source, destination, board),
-            8 => pieces.white_pieces_mut().bishop_mut().verify(source, destination, board),
-            9 => pieces.white_pieces_mut().queen_mut().verify(source, destination, board),
-            10 => pieces.white_pieces_mut().king_mut().verify(source, destination, board),
-            11 => pieces.white_pieces_mut().pawn_mut().verify(source, destination, board),
+            0 => pieces.black_pieces().rook().verify(source, destination, board),
+            1 => pieces.black_pieces().knight().verify(source, destination, board),
+            2 => pieces.black_pieces().bishop().verify(source, destination, board),
+            3 => pieces.black_pieces().queen().verify(source, destination, board),
+            4 => pieces.black_pieces().king().verify(source, destination, board),
+            5 => pieces.black_pieces().pawn().verify(source, destination, board),
+            6 => pieces.white_pieces().rook().verify(source, destination, board),
+            7 => pieces.white_pieces().knight().verify(source, destination, board),
+            8 => pieces.white_pieces().bishop().verify(source, destination, board),
+            9 => pieces.white_pieces().queen().verify(source, destination, board),
+            10 => pieces.white_pieces().king().verify(source, destination, board),
+            11 => pieces.white_pieces().pawn().verify(source, destination, board),
             _ => Err(()),
         }
-    }
-
-    fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
-        let bitboard = Bitboard::from(source);
-        let pieces = self.board().pieces().get_all_pieces();
-        for index in 0..pieces.len() {
-            if Bitboard::overlap(bitboard, pieces[index]) {
-                return Ok(index);
-            }
-        }
-        eprintln!("No piece found on {source}");
-        Err(())
     }
 
     fn piece_on_source(&self, source: Bitboard) -> bool {

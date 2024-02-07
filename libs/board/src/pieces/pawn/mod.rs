@@ -13,18 +13,6 @@ pub enum Pawn {
     White(WhitePawn),
 }
 
-impl From<WhitePawn> for Pawn {
-    fn from(v: WhitePawn) -> Self {
-        Self::White(v)
-    }
-}
-
-impl From<BlackPawn> for Pawn {
-    fn from(v: BlackPawn) -> Self {
-        Self::Black(v)
-    }
-}
-
 pub trait PawnExt: PieceExt {}
 
 impl PawnExt for Pawn {}
