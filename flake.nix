@@ -81,6 +81,7 @@
           webkitgtk
           webkitgtk_4_1
           openssl_3
+          librsvg
         ];
         buildInputs = with pkgs;
           [
