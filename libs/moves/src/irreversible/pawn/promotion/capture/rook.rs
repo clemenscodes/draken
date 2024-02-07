@@ -1,7 +1,4 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
+use super::PromotionCaptureMoveExt;
 use crate::{
     coordinates::Coordinates,
     irreversible::{
@@ -10,8 +7,9 @@ use crate::{
     },
     Encode, MoveExt,
 };
-
-use super::PromotionCaptureMoveExt;
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct RookPromotionCaptureMove {
@@ -41,6 +39,10 @@ impl IrreversibleMoveExt for RookPromotionCaptureMove {}
 impl MoveExt for RookPromotionCaptureMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

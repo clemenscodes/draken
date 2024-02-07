@@ -1,10 +1,8 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
-use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
-
 use super::CastleMoveExt;
+use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct KingCastleMove {
@@ -32,6 +30,10 @@ impl IrreversibleMoveExt for KingCastleMove {}
 impl MoveExt for KingCastleMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

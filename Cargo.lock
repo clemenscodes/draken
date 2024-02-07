@@ -2267,6 +2267,7 @@ name = "moves"
 version = "0.1.0"
 dependencies = [
  "api",
+ "board",
 ]
 
 [[package]]

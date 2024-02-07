@@ -1,9 +1,31 @@
-use std::fmt::{Debug, Display};
-
 use api::{GameExt, MoveListExt, Square, State};
 use bitboard::{Bitboard, BitboardExt};
 use board::{pieces::March, Board};
-use moves::list::MoveList;
+use moves::{
+    encoded_move::{EncodedMove, EncodedMoveExt},
+    irreversible::{
+        capture::CaptureMove,
+        castle::{king::KingCastleMove, queen::QueenCastleMove},
+        pawn::{
+            enpassant::EnPassantMove,
+            promotion::{
+                bishop::BishopPromotionMove,
+                capture::{
+                    bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
+                    rook::RookPromotionCaptureMove,
+                },
+                knight::KnightPromotionMove,
+                queen::QueenPromotionMove,
+                rook::RookPromotionMove,
+            },
+            push::DoublePushMove,
+        },
+    },
+    list::MoveList,
+    reversible::quiet::QuietMove,
+    *,
+};
+use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Game {
@@ -41,7 +63,7 @@ impl Game {
         &mut self.state
     }
 
-    fn perform_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
+    fn calculate_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
         let piece_index = self.get_piece_index(source)?;
         let board = self.board();
         let pieces = self.board_mut().pieces_mut();
@@ -75,6 +97,31 @@ impl Game {
 
     fn piece_on_source(&self, source: Bitboard) -> bool {
         Bitboard::overlap(source, self.board().into())
+    }
+
+    fn perform_move(&mut self, encoded_move: EncodedMove) -> Result<(), ()> {
+        let source = encoded_move.source();
+        let destination = encoded_move.destination();
+        let board = self.board_mut();
+        match encoded_move.kind() {
+            QUIET_MOVE => QuietMove::new(source, destination).march(board),
+            DOUBLE_PAWN_PUSH => DoublePushMove::new(source, destination).march(board),
+            KING_CASTLE => KingCastleMove::new(source, destination).march(board),
+            QUEEN_CASTLE => QueenCastleMove::new(source, destination).march(board),
+            CAPTURE => CaptureMove::new(source, destination).march(board),
+            ENPASSANT => EnPassantMove::new(source, destination).march(board),
+            KNIGHT_PROMOTION => KnightPromotionMove::new(source, destination).march(board),
+            BISHOP_PROMOTION => BishopPromotionMove::new(source, destination).march(board),
+            ROOK_PROMOTION => RookPromotionMove::new(source, destination).march(board),
+            QUEEN_PROMOTION => QueenPromotionMove::new(source, destination).march(board),
+            KNIGHT_PROMOTION_CAPTURE => KnightPromotionCaptureMove::new(source, destination).march(board),
+            BISHOP_PROMOTION_CAPTURE => BishopPromotionCaptureMove::new(source, destination).march(board),
+            ROOK_PROMOTION_CAPTURE => RookPromotionCaptureMove::new(source, destination).march(board),
+            QUEEN_PROMOTION_CAPTURE => QueenPromotionCaptureMove::new(source, destination).march(board),
+            _ => return Err(()),
+        };
+        self.move_list_mut().add(encoded_move.data());
+        Ok(())
     }
 }
 
@@ -160,8 +207,8 @@ impl GameExt for Game {
             eprintln!("Source square can not be unoccupied");
             return Err(());
         }
-        let encoded_move: u16 = self.perform_move(source, destination)?;
-        self.move_list_mut().add(encoded_move)
+        let data: u16 = self.calculate_move(source, destination)?;
+        self.perform_move(EncodedMove::new(data))
     }
 
     fn ply(&self) -> u16 {

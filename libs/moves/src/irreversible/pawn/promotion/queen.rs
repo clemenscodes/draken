@@ -1,12 +1,11 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
 use crate::{
     coordinates::Coordinates,
     irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
     Encode, MoveExt,
 };
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 use super::PromotionMoveExt;
 
@@ -37,6 +36,10 @@ impl IrreversibleMoveExt for QueenPromotionMove {}
 impl MoveExt for QueenPromotionMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

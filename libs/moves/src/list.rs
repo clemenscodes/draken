@@ -72,11 +72,10 @@ impl MoveListExt for MoveList {
         self.ply()
     }
 
-    fn add(&mut self, encoded_move: u16) -> Result<(), ()> {
+    fn add(&mut self, encoded_move: u16) {
         let ply = self.ply();
         self.moves_mut()[ply as usize] = EncodedMove::new(encoded_move);
         self.set_ply(ply + 1);
-        Ok(())
     }
 
     fn validate(&self, source: Square, destination: Square) -> bool {
@@ -91,13 +90,13 @@ mod tests {
     #[test]
     fn test_add() {
         let mut move_list = MoveList::default();
-        move_list.add(0).unwrap();
+        move_list.add(0);
         println!("{move_list}");
     }
 
     #[test]
     fn test_validate() {
         let mut move_list = MoveList::default();
-        move_list.add(0).unwrap_err();
+        move_list.add(0);
     }
 }

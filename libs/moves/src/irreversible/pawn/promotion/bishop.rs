@@ -1,14 +1,12 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
+use super::PromotionMoveExt;
 use crate::{
     coordinates::Coordinates,
     irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
     Encode, MoveExt,
 };
-
-use super::PromotionMoveExt;
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct BishopPromotionMove {
@@ -37,6 +35,10 @@ impl IrreversibleMoveExt for BishopPromotionMove {}
 impl MoveExt for BishopPromotionMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

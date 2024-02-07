@@ -2,7 +2,7 @@ pub mod black;
 pub mod white;
 
 use super::{March, PieceExt};
-use crate::{fen::ForsythEdwardsNotation, Board};
+use crate::Board;
 use api::Square;
 use black::BlackRook;
 use white::WhiteRook;

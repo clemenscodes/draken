@@ -1,12 +1,12 @@
 use std::fmt::{Debug, Display};
 
-use api::Square;
-
 use crate::{
     coordinates::Coordinates,
     irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
     Encode, MoveExt,
 };
+use api::Square;
+use board::Board;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct DoublePushMove {
@@ -34,6 +34,10 @@ impl IrreversibleMoveExt for DoublePushMove {}
 impl MoveExt for DoublePushMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

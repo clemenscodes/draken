@@ -1,7 +1,3 @@
-use std::fmt::{Debug, Display, Error};
-
-use api::Square;
-
 use crate::{
     irreversible::{
         capture::*,
@@ -19,23 +15,11 @@ use crate::{
         },
     },
     reversible::quiet::*,
-    Encode, DESTINATION_SHIFT, SOURCE_SHIFT,
+    *,
 };
+use api::Square;
+use std::fmt::{Debug, Display, Error};
 
-const QUIET_MOVE: u16 = 0b0000;
-const DOUBLE_PAWN_PUSH: u16 = 0b0001;
-const KING_CASTLE: u16 = 0b0010;
-const QUEEN_CASTLE: u16 = 0b0011;
-const CAPTURE: u16 = 0b0100;
-const ENPASSANT: u16 = 0b0101;
-const KNIGHT_PROMOTION: u16 = 0b1000;
-const BISHOP_PROMOTION: u16 = 0b1001;
-const ROOK_PROMOTION: u16 = 0b1010;
-const QUEEN_PROMOTION: u16 = 0b1011;
-const KNIGHT_PROMOTION_CAPTURE: u16 = 0b1100;
-const BISHOP_PROMOTION_CAPTURE: u16 = 0b1101;
-const ROOK_PROMOTION_CAPTURE: u16 = 0b1110;
-const QUEEN_PROMOTION_CAPTURE: u16 = 0b1111;
 const SOURCE_MASK: u16 = 0b1111110000000000;
 const DESTINATION_MASK: u16 = 0b0000001111110000;
 const KIND_MASK: u16 = 0b0000000000001111;

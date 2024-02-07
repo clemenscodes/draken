@@ -1,15 +1,31 @@
-pub(crate) mod coordinates;
-pub(crate) mod encoded_move;
-pub(crate) mod irreversible;
+pub mod coordinates;
+pub mod encoded_move;
+pub mod irreversible;
 pub mod list;
-pub(crate) mod reversible;
+pub mod reversible;
 
-const SOURCE_SHIFT: usize = 10;
-const DESTINATION_SHIFT: usize = 4;
-
+use board::Board;
 use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
+
+pub const QUIET_MOVE: u16 = 0b0000;
+pub const DOUBLE_PAWN_PUSH: u16 = 0b0001;
+pub const KING_CASTLE: u16 = 0b0010;
+pub const QUEEN_CASTLE: u16 = 0b0011;
+pub const CAPTURE: u16 = 0b0100;
+pub const ENPASSANT: u16 = 0b0101;
+pub const KNIGHT_PROMOTION: u16 = 0b1000;
+pub const BISHOP_PROMOTION: u16 = 0b1001;
+pub const ROOK_PROMOTION: u16 = 0b1010;
+pub const QUEEN_PROMOTION: u16 = 0b1011;
+pub const KNIGHT_PROMOTION_CAPTURE: u16 = 0b1100;
+pub const BISHOP_PROMOTION_CAPTURE: u16 = 0b1101;
+pub const ROOK_PROMOTION_CAPTURE: u16 = 0b1110;
+pub const QUEEN_PROMOTION_CAPTURE: u16 = 0b1111;
+
+const SOURCE_SHIFT: usize = 10;
+const DESTINATION_SHIFT: usize = 4;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Move {
@@ -19,6 +35,7 @@ pub enum Move {
 
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
+    fn march(&self, board: &mut Board);
 }
 
 pub trait Encode: MoveExt {
@@ -37,6 +54,13 @@ impl MoveExt for Move {
         match *self {
             Move::Reversible(reversible) => reversible.coordinates(),
             Move::Irreversible(irreversible) => irreversible.coordinates(),
+        }
+    }
+
+    fn march(&self, board: &mut Board) {
+        match *self {
+            Move::Reversible(reversible) => reversible.march(board),
+            Move::Irreversible(irreversible) => irreversible.march(board),
         }
     }
 }

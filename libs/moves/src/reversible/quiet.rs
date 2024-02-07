@@ -1,10 +1,8 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
-use crate::{coordinates::Coordinates, Encode, MoveExt};
-
 use super::ReversibleMoveExt;
+use crate::{coordinates::Coordinates, Encode, MoveExt};
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct QuietMove {
@@ -31,6 +29,10 @@ impl ReversibleMoveExt for QuietMove {}
 impl MoveExt for QuietMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

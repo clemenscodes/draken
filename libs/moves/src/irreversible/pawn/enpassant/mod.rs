@@ -1,10 +1,8 @@
-use std::fmt::{Debug, Display};
-
-use api::Square;
-
-use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
-
 use super::PawnMoveExt;
+use crate::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt};
+use api::Square;
+use board::Board;
+use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct EnPassantMove {
@@ -32,6 +30,10 @@ impl IrreversibleMoveExt for EnPassantMove {}
 impl MoveExt for EnPassantMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
+    }
+
+    fn march(&self, board: &mut Board) {
+        todo!()
     }
 }
 

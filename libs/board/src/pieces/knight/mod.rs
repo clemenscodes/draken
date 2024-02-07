@@ -1,9 +1,8 @@
 pub mod black;
 pub mod white;
 
-use crate::Board;
-
 use super::{March, PieceExt};
+use crate::Board;
 use api::Square;
 use black::BlackKnight;
 use white::WhiteKnight;
