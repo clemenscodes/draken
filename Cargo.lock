@@ -406,8 +406,6 @@ version = "0.1.0"
 dependencies = [
  "api",
  "bitboard",
- "fen",
- "pieces",
 ]
 
 [[package]]
@@ -1171,14 +1169,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fen"
-version = "0.1.0"
-dependencies = [
- "api",
- "pieces",
-]
-
-[[package]]
 name = "field-offset"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1367,7 +1357,6 @@ dependencies = [
  "bitboard",
  "board",
  "moves",
- "pieces",
 ]
 
 [[package]]
@@ -2270,7 +2259,6 @@ dependencies = [
  "api",
  "bitboard",
  "engine",
- "fen",
  "game",
 ]
 
@@ -2659,14 +2647,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90fcb95eef784c2ac79119d1dd819e162b5da872ce6f3c3abe1e8ca1c082f72b"
 dependencies = [
  "siphasher",
-]
-
-[[package]]
-name = "pieces"
-version = "0.1.0"
-dependencies = [
- "api",
- "bitboard",
 ]
 
 [[package]]

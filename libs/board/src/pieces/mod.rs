@@ -1,4 +1,3 @@
-#![feature(lazy_cell)]
 mod bishop;
 mod king;
 mod knight;
@@ -15,6 +14,8 @@ pub use pawn::{black::*, white::*, Pawn};
 pub use queen::{black::*, white::*, Queen};
 pub use rook::{black::*, white::*, Rook};
 pub use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
+
+use crate::Board;
 
 pub const NUM_COLOR_PIECES: usize = 6;
 pub const NUM_COLORS: usize = 2;
@@ -114,7 +115,7 @@ impl TryFrom<char> for Piece {
 }
 
 pub trait March {
-    fn march(&self, source: Square, destination: Square) -> Result<u16, ()>;
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
 }
 
 pub trait PieceExt: March {}
@@ -122,14 +123,14 @@ pub trait PieceExt: March {}
 impl PieceExt for Piece {}
 
 impl March for Piece {
-    fn march(&self, source: Square, destination: Square) -> Result<u16, ()> {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         match self {
-            Piece::Rook(rook) => rook.march(source, destination),
-            Piece::Knight(knight) => knight.march(source, destination),
-            Piece::Bishop(bishop) => bishop.march(source, destination),
-            Piece::Queen(queen) => queen.march(source, destination),
-            Piece::King(king) => king.march(source, destination),
-            Piece::Pawn(pawn) => pawn.march(source, destination),
+            Piece::Rook(rook) => rook.march(source, destination, board),
+            Piece::Knight(knight) => knight.march(source, destination, board),
+            Piece::Bishop(bishop) => bishop.march(source, destination, board),
+            Piece::Queen(queen) => queen.march(source, destination, board),
+            Piece::King(king) => king.march(source, destination, board),
+            Piece::Pawn(pawn) => pawn.march(source, destination, board),
         }
     }
 }

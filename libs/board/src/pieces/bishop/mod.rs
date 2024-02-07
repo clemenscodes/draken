@@ -1,12 +1,12 @@
 pub mod black;
 pub mod white;
 
+use crate::Board;
+
+use super::{March, PieceExt};
+use api::Square;
 use black::BlackBishop;
 use white::WhiteBishop;
-
-use crate::March;
-
-use super::PieceExt;
 
 #[derive(Debug)]
 pub enum Bishop {
@@ -32,7 +32,7 @@ impl BishopExt for Bishop {}
 impl PieceExt for Bishop {}
 
 impl March for Bishop {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }

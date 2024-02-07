@@ -1,8 +1,12 @@
 #![feature(variant_count)]
+#![feature(lazy_cell)]
+pub mod fen;
+pub mod pieces;
+
 use api::{Square, SquareExt};
 use bitboard::Bitboard;
 use fen::ForsythEdwardsNotation;
-use pieces::{Pieces, UTF_SYMBOLS};
+use pieces::{March, Pieces, UTF_SYMBOLS};
 use std::{
     fmt::{Debug, Display},
     mem::variant_count,

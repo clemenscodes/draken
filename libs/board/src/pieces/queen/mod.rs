@@ -1,12 +1,12 @@
 pub mod black;
 pub mod white;
 
+use crate::Board;
+
+use super::{March, PieceExt};
+use api::Square;
 use black::BlackQueen;
 use white::WhiteQueen;
-
-use crate::March;
-
-use super::PieceExt;
 
 #[derive(Debug)]
 pub enum Queen {
@@ -32,7 +32,7 @@ impl QueenExt for Queen {}
 impl PieceExt for Queen {}
 
 impl March for Queen {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }

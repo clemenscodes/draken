@@ -1,15 +1,18 @@
-use crate::{March, PieceExt, Rook};
-
-use super::RookExt;
+use super::{Queen, QueenExt};
+use crate::{
+    pieces::{March, PieceExt},
+    Board,
+};
+use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
-pub struct WhiteRook {
+pub struct BlackQueen {
     bitboard: Bitboard,
 }
 
-impl WhiteRook {
+impl BlackQueen {
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -23,37 +26,36 @@ impl WhiteRook {
     }
 
     pub const fn symbol() -> char {
-        'R'
+        'q'
     }
 
     pub const fn utf_symbol() -> char {
-        '♖'
+        '♛'
     }
 }
 
-impl From<Bitboard> for WhiteRook {
+impl From<Bitboard> for BlackQueen {
     fn from(value: Bitboard) -> Self {
         Self::new(value)
     }
 }
-
-impl Display for WhiteRook {
+impl Display for BlackQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteRook::symbol())
+        write!(f, "{}", BlackQueen::symbol())
     }
 }
 
-impl Debug for WhiteRook {
+impl Debug for BlackQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
     }
 }
 
-impl RookExt for WhiteRook {}
-impl PieceExt for WhiteRook {}
+impl QueenExt for BlackQueen {}
+impl PieceExt for BlackQueen {}
 
-impl March for WhiteRook {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
-        Rook::from(*self).march(source, destination)
+impl March for BlackQueen {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Queen::from(*self).march(source, destination, board)
     }
 }

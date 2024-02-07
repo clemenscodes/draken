@@ -1,15 +1,18 @@
-use super::KingExt;
-
-use crate::{King, March, PieceExt};
+use super::{Pawn, PawnExt};
+use crate::{
+    pieces::{March, PieceExt},
+    Board,
+};
+use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
-pub struct WhiteKing {
+pub struct BlackPawn {
     bitboard: Bitboard,
 }
 
-impl WhiteKing {
+impl BlackPawn {
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -23,37 +26,36 @@ impl WhiteKing {
     }
 
     pub const fn symbol() -> char {
-        'K'
+        'p'
     }
 
     pub const fn utf_symbol() -> char {
-        '♔'
+        '♟'
     }
 }
 
-impl From<Bitboard> for WhiteKing {
+impl From<Bitboard> for BlackPawn {
     fn from(value: Bitboard) -> Self {
         Self::new(value)
     }
 }
-
-impl Display for WhiteKing {
+impl Display for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteKing::symbol())
+        write!(f, "{}", BlackPawn::symbol())
     }
 }
 
-impl Debug for WhiteKing {
+impl Debug for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
     }
 }
 
-impl KingExt for WhiteKing {}
-impl PieceExt for WhiteKing {}
+impl PawnExt for BlackPawn {}
+impl PieceExt for BlackPawn {}
 
-impl March for WhiteKing {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
-        King::from(*self).march(source, destination)
+impl March for BlackPawn {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Pawn::from(*self).march(source, destination, board)
     }
 }

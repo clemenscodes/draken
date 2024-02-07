@@ -4,9 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
 bitboard = { path = "../bitboard" }
-fen = { path = "../fen" }
 api = { path = "../api" }
 game = { path = "../game" }
 engine = { path = "../engine" }

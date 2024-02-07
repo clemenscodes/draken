@@ -10,8 +10,6 @@ members = [
     'libs/api',
     'libs/engine',
     'libs/uci',
-    'libs/fen',
-    'libs/pieces',
     'libs/bitboard',
     'libs/board',
     'libs/moves',

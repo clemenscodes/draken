@@ -3,7 +3,7 @@ use std::{
     str::Split,
 };
 
-use pieces::{PIECE_BYTES, PIECE_INDEX_LOOKUP_MAP};
+use crate::pieces::{PIECE_BYTES, PIECE_INDEX_LOOKUP_MAP};
 
 type Position = [[u8; NUM_FILES]; NUM_RANKS];
 

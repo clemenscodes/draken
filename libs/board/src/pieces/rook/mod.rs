@@ -1,13 +1,11 @@
 pub mod black;
 pub mod white;
 
+use super::{March, PieceExt};
+use crate::{fen::ForsythEdwardsNotation, Board};
 use api::Square;
 use black::BlackRook;
 use white::WhiteRook;
-
-use crate::March;
-
-use super::PieceExt;
 
 #[derive(Debug)]
 pub enum Rook {
@@ -33,7 +31,7 @@ impl RookExt for Rook {}
 impl PieceExt for Rook {}
 
 impl March for Rook {
-    fn march(&self, source: Square, destination: Square) -> Result<u16, ()> {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }

@@ -1,14 +1,18 @@
-use super::BishopExt;
-use crate::{Bishop, March, PieceExt};
+use super::{Knight, KnightExt};
+use crate::{
+    pieces::{March, PieceExt},
+    Board,
+};
+use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
-pub struct WhiteBishop {
+pub struct BlackKnight {
     bitboard: Bitboard,
 }
 
-impl WhiteBishop {
+impl BlackKnight {
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -22,37 +26,37 @@ impl WhiteBishop {
     }
 
     pub const fn symbol() -> char {
-        'B'
+        'n'
     }
 
     pub const fn utf_symbol() -> char {
-        '♗'
+        '♞'
     }
 }
 
-impl From<Bitboard> for WhiteBishop {
+impl From<Bitboard> for BlackKnight {
     fn from(value: Bitboard) -> Self {
         Self::new(value)
     }
 }
 
-impl Display for WhiteBishop {
+impl Display for BlackKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteBishop::symbol())
+        write!(f, "{}", BlackKnight::symbol())
     }
 }
 
-impl Debug for WhiteBishop {
+impl Debug for BlackKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
     }
 }
 
-impl BishopExt for WhiteBishop {}
-impl PieceExt for WhiteBishop {}
+impl KnightExt for BlackKnight {}
+impl PieceExt for BlackKnight {}
 
-impl March for WhiteBishop {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
-        Bishop::from(*self).march(source, destination)
+impl March for BlackKnight {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+        Knight::from(*self).march(source, destination, board)
     }
 }

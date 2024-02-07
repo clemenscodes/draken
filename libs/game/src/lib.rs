@@ -2,9 +2,8 @@ use std::fmt::{Debug, Display};
 
 use api::{GameExt, MoveListExt, Square, State};
 use bitboard::{Bitboard, BitboardExt};
-use board::Board;
+use board::{pieces::March, Board};
 use moves::list::MoveList;
-use pieces::March;
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Game {
@@ -44,31 +43,33 @@ impl Game {
 
     fn perform_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
         let piece_index = self.get_piece_index(source)?;
+        let board = self.board();
         let pieces = self.board_mut().pieces_mut();
         match piece_index {
-            0 => pieces.black_pieces_mut().rook_mut().march(source, destination),
-            1 => pieces.black_pieces_mut().knight_mut().march(source, destination),
-            2 => pieces.black_pieces_mut().bishop_mut().march(source, destination),
-            3 => pieces.black_pieces_mut().queen_mut().march(source, destination),
-            4 => pieces.black_pieces_mut().king_mut().march(source, destination),
-            5 => pieces.black_pieces_mut().pawn().march(source, destination),
-            6 => pieces.white_pieces_mut().rook_mut().march(source, destination),
-            7 => pieces.white_pieces_mut().knight_mut().march(source, destination),
-            8 => pieces.white_pieces_mut().bishop_mut().march(source, destination),
-            9 => pieces.white_pieces_mut().queen_mut().march(source, destination),
-            10 => pieces.white_pieces_mut().king_mut().march(source, destination),
-            11 => pieces.white_pieces_mut().pawn_mut().march(source, destination),
+            0 => pieces.black_pieces_mut().rook_mut().march(source, destination, board),
+            1 => pieces.black_pieces_mut().knight_mut().march(source, destination, board),
+            2 => pieces.black_pieces_mut().bishop_mut().march(source, destination, board),
+            3 => pieces.black_pieces_mut().queen_mut().march(source, destination, board),
+            4 => pieces.black_pieces_mut().king_mut().march(source, destination, board),
+            5 => pieces.black_pieces_mut().pawn().march(source, destination, board),
+            6 => pieces.white_pieces_mut().rook_mut().march(source, destination, board),
+            7 => pieces.white_pieces_mut().knight_mut().march(source, destination, board),
+            8 => pieces.white_pieces_mut().bishop_mut().march(source, destination, board),
+            9 => pieces.white_pieces_mut().queen_mut().march(source, destination, board),
+            10 => pieces.white_pieces_mut().king_mut().march(source, destination, board),
+            11 => pieces.white_pieces_mut().pawn_mut().march(source, destination, board),
             _ => Err(()),
         }
     }
 
     fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
         let pieces = self.board().pieces().get_all_pieces();
-        for i in 0..pieces.len() {
-            if Bitboard::overlap(Bitboard::from(source), pieces[i]) {
-                return Ok(i);
+        for index in 0..pieces.len() {
+            if Bitboard::overlap(Bitboard::from(source), pieces[index]) {
+                return Ok(index);
             }
         }
+        eprintln!("No piece found on {source}");
         Err(())
     }
 

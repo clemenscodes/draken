@@ -1,12 +1,12 @@
 pub mod black;
 pub mod white;
 
+use crate::Board;
+
+use super::{March, PieceExt};
+use api::Square;
 use black::BlackPawn;
 use white::WhitePawn;
-
-use crate::March;
-
-use super::PieceExt;
 
 #[derive(Debug)]
 pub enum Pawn {
@@ -32,7 +32,7 @@ impl PawnExt for Pawn {}
 impl PieceExt for Pawn {}
 
 impl March for Pawn {
-    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+    fn march(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }
