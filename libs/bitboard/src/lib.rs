@@ -158,6 +158,12 @@ impl ShrAssign<usize> for Bitboard {
     }
 }
 
+impl From<Square> for Bitboard {
+    fn from(value: Square) -> Self {
+        Bitboard::new(value.into())
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum BitboardError {
     InvalidIndex,

@@ -31,6 +31,12 @@ impl WhiteKing {
     }
 }
 
+impl From<Bitboard> for WhiteKing {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
+
 impl Display for WhiteKing {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", WhiteKing::symbol())

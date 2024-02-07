@@ -102,6 +102,13 @@ impl From<usize> for Square {
     }
 }
 
+impl From<u64> for Square {
+    fn from(index: u64) -> Self {
+        assert!(index < 64, "Invalid index for square array");
+        SQUARES[index as usize]
+    }
+}
+
 impl From<u32> for Square {
     fn from(index: u32) -> Self {
         assert!(index < 64, "Invalid index for square array");
@@ -126,6 +133,12 @@ impl From<u8> for Square {
 impl Into<usize> for Square {
     fn into(self) -> usize {
         *&self as usize
+    }
+}
+
+impl Into<u64> for Square {
+    fn into(self) -> u64 {
+        *&self as u64
     }
 }
 

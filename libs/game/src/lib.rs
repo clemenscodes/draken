@@ -1,6 +1,7 @@
 use std::fmt::{Debug, Display};
 
-use api::{GameExt, MoveListExt, State};
+use api::{GameExt, MoveListExt, Square, State};
+use bitboard::{Bitboard, BitboardExt};
 use board::Board;
 use moves::list::MoveList;
 
@@ -38,6 +39,15 @@ impl Game {
 
     pub fn state_mut(&mut self) -> &mut State {
         &mut self.state
+    }
+
+    fn perform_move(&mut self, source: Square, destination: Square) -> u16 {
+        let board = self.board();
+        0
+    }
+
+    fn piece_on_source(&self, source: Square) -> bool {
+        Bitboard::overlap(Bitboard::from(source), self.board().into())
     }
 }
 
@@ -109,12 +119,21 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn is_own_piece_on_square(&self, _square: api::Square) -> bool {
+    fn is_own_piece_on_square(&self, _square: Square) -> bool {
         todo!()
     }
 
-    fn make_move(&mut self, source: api::Square, destination: api::Square) -> Result<(), ()> {
-        self.move_list_mut().add(source, destination)
+    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()> {
+        if !self.move_list().validate(source, destination) {
+            eprintln!("Source square can not be equal to destination square");
+            return Err(());
+        }
+        if !self.piece_on_source(source) {
+            eprintln!("Source square can not be unoccupied");
+            return Err(());
+        }
+        let encoded_move: u16 = self.perform_move(source, destination);
+        self.move_list_mut().add(encoded_move)
     }
 
     fn ply(&self) -> u16 {

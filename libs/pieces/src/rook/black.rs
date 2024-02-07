@@ -30,6 +30,11 @@ impl BlackRook {
     }
 }
 
+impl From<Bitboard> for BlackRook {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
 impl Display for BlackRook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackRook::symbol())

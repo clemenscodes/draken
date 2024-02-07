@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display};
 
 use api::{MoveListExt, Square};
 
-use crate::{encoded_move::EncodedMove, reversible::quiet::QuietMove};
+use crate::encoded_move::EncodedMove;
 
 pub const MAX_PLY: usize = 512;
 
@@ -19,7 +19,11 @@ impl MoveList {
         Self { ply, moves }
     }
 
-    pub fn set_ply(&mut self, ply: u16) {
+    fn ply(&self) -> u16 {
+        self.ply
+    }
+
+    fn set_ply(&mut self, ply: u16) {
         self.ply = ply;
     }
 
@@ -65,20 +69,14 @@ impl Debug for MoveList {
 
 impl MoveListExt for MoveList {
     fn ply(&self) -> u16 {
-        self.ply
+        self.ply()
     }
 
-    fn add(&mut self, source: Square, destination: Square) -> Result<(), ()> {
-        println!("Making move from {source} to {destination}");
-        if self.validate(source, destination) {
-            let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
-            let ply = self.ply();
-            self.moves_mut()[ply as usize] = encoded_move;
-            self.set_ply(ply + 1);
-            Ok(())
-        } else {
-            Err(())
-        }
+    fn add(&mut self, encoded_move: u16) -> Result<(), ()> {
+        let ply = self.ply();
+        self.moves_mut()[ply as usize] = EncodedMove::new(encoded_move);
+        self.set_ply(ply + 1);
+        Ok(())
     }
 
     fn validate(&self, source: Square, destination: Square) -> bool {
@@ -89,18 +87,17 @@ impl MoveListExt for MoveList {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use api::Square::*;
 
     #[test]
     fn test_add() {
         let mut move_list = MoveList::default();
-        move_list.add(A1, A2).unwrap();
+        move_list.add(0).unwrap();
         println!("{move_list}");
     }
 
     #[test]
     fn test_validate() {
         let mut move_list = MoveList::default();
-        move_list.add(A1, A1).unwrap_err();
+        move_list.add(0).unwrap_err();
     }
 }

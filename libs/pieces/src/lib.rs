@@ -112,42 +112,6 @@ impl TryFrom<char> for Piece {
     }
 }
 
-impl From<Pawn> for Piece {
-    fn from(v: Pawn) -> Self {
-        Self::Pawn(v)
-    }
-}
-
-impl From<King> for Piece {
-    fn from(v: King) -> Self {
-        Self::King(v)
-    }
-}
-
-impl From<Queen> for Piece {
-    fn from(v: Queen) -> Self {
-        Self::Queen(v)
-    }
-}
-
-impl From<Bishop> for Piece {
-    fn from(v: Bishop) -> Self {
-        Self::Bishop(v)
-    }
-}
-
-impl From<Knight> for Piece {
-    fn from(v: Knight) -> Self {
-        Self::Knight(v)
-    }
-}
-
-impl From<Rook> for Piece {
-    fn from(v: Rook) -> Self {
-        Self::Rook(v)
-    }
-}
-
 pub trait PieceExt {}
 
 impl PieceExt for Piece {}
@@ -456,6 +420,12 @@ impl From<[[u8; 8]; 8]> for Pieces {
             occupied_squares,
             empty_squares,
         }
+    }
+}
+
+impl Into<Bitboard> for Pieces {
+    fn into(self) -> Bitboard {
+        Bitboard::merge_many(vec![self.white_pieces().into(), self.black_pieces().into()])
     }
 }
 

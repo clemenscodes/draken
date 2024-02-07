@@ -12,18 +12,6 @@ pub enum King {
     White(WhiteKing),
 }
 
-impl From<WhiteKing> for King {
-    fn from(v: WhiteKing) -> Self {
-        Self::White(v)
-    }
-}
-
-impl From<BlackKing> for King {
-    fn from(v: BlackKing) -> Self {
-        Self::Black(v)
-    }
-}
-
 pub trait KingExt: PieceExt {}
 
 impl KingExt for King {}

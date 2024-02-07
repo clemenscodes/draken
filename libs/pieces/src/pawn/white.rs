@@ -31,6 +31,12 @@ impl WhitePawn {
     }
 }
 
+impl From<Bitboard> for WhitePawn {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
+
 impl Display for WhitePawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", WhitePawn::symbol())

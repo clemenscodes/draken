@@ -12,18 +12,6 @@ pub enum Queen {
     White(WhiteQueen),
 }
 
-impl From<WhiteQueen> for Queen {
-    fn from(v: WhiteQueen) -> Self {
-        Self::White(v)
-    }
-}
-
-impl From<BlackQueen> for Queen {
-    fn from(v: BlackQueen) -> Self {
-        Self::Black(v)
-    }
-}
-
 pub trait QueenExt: PieceExt {}
 
 impl QueenExt for Queen {}

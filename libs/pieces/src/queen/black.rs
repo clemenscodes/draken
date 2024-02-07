@@ -30,6 +30,11 @@ impl BlackQueen {
     }
 }
 
+impl From<Bitboard> for BlackQueen {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
 impl Display for BlackQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackQueen::symbol())

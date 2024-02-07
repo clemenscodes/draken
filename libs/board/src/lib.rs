@@ -112,6 +112,13 @@ impl From<ForsythEdwardsNotation> for Board {
     }
 }
 
+impl Into<Bitboard> for Board {
+    fn into(self) -> Bitboard {
+        let pieces = *self.pieces();
+        pieces.into()
+    }
+}
+
 pub trait BoardExt {}
 
 impl BoardExt for Board {}

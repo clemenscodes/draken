@@ -7,4 +7,5 @@ edition = "2021"
 
 board = { path = "../board" }
 moves = { path = "../moves" }
+bitboard = { path = "../bitboard" }
 api = { path = "../api" }

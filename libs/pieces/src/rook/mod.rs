@@ -12,18 +12,6 @@ pub enum Rook {
     White(WhiteRook),
 }
 
-impl From<WhiteRook> for Rook {
-    fn from(v: WhiteRook) -> Self {
-        Self::White(v)
-    }
-}
-
-impl From<BlackRook> for Rook {
-    fn from(v: BlackRook) -> Self {
-        Self::Black(v)
-    }
-}
-
 pub trait RookExt: PieceExt {}
 
 impl RookExt for Rook {}

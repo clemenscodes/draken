@@ -31,6 +31,12 @@ impl BlackKnight {
     }
 }
 
+impl From<Bitboard> for BlackKnight {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
+
 impl Display for BlackKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackKnight::symbol())

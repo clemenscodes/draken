@@ -31,6 +31,12 @@ impl BlackBishop {
     }
 }
 
+impl From<Bitboard> for BlackBishop {
+    fn from(value: Bitboard) -> Self {
+        Self::new(value)
+    }
+}
+
 impl Display for BlackBishop {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackBishop::symbol())
