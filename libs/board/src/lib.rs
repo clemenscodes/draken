@@ -105,6 +105,10 @@ impl Board {
         &self.fen
     }
 
+    pub fn fen_mut(&mut self) -> &mut ForsythEdwardsNotation {
+        &mut self.fen
+    }
+
     pub fn pieces(&self) -> &Pieces {
         &self.pieces
     }

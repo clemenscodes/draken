@@ -1,9 +1,9 @@
-mod active_color;
-mod castling;
-mod enpassant;
-mod full_move_clock;
-mod half_move_clock;
-mod placements;
+pub mod active_color;
+pub mod castling;
+pub mod enpassant;
+pub mod full_move_clock;
+pub mod half_move_clock;
+pub mod placements;
 
 use api::ForsythEdwardsNotationExt;
 
@@ -63,6 +63,30 @@ impl ForsythEdwardsNotation {
 
     pub fn full_move_clock(&self) -> &FullMoveClock {
         &self.full_move_clock
+    }
+
+    pub fn placements_mut(&mut self) -> &mut Placements {
+        &mut self.placements
+    }
+
+    pub fn active_color_mut(&mut self) -> &mut ActiveColor {
+        &mut self.active_color
+    }
+
+    pub fn castling_mut(&mut self) -> &mut Castling {
+        &mut self.castling
+    }
+
+    pub fn enpassant_mut(&mut self) -> &mut EnPassant {
+        &mut self.enpassant
+    }
+
+    pub fn half_move_clock_mut(&mut self) -> &mut HalfMoveClock {
+        &mut self.half_move_clock
+    }
+
+    pub fn full_move_clock_mut(&mut self) -> &mut FullMoveClock {
+        &mut self.full_move_clock
     }
 }
 

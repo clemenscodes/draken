@@ -5,7 +5,7 @@ use crate::{
 
 use super::ReversibleMoveExt;
 use api::Square;
-use bitboard::{Bitboard, BitboardExt};
+use bitboard::BitboardExt;
 use std::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -41,6 +41,7 @@ impl MoveExt for QuietMove {
         let piece = board.get_piece_board_mut(source).unwrap();
         piece.self_unset_bit(source.into());
         piece.self_set_bit(destination.into());
+        self.increment_half_move_clock(board);
     }
 }
 

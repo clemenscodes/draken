@@ -8,7 +8,7 @@ use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
 
-use crate::Board;
+use crate::{fen::active_color::ActiveColorExt, Board};
 
 pub const QUIET_MOVE: u16 = 0b0000;
 pub const DOUBLE_PAWN_PUSH: u16 = 0b0001;
@@ -37,6 +37,9 @@ pub enum Move {
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
     fn march(&self, board: &mut Board);
+    fn switch(&self, board: &mut Board) {
+        board.fen_mut().active_color_mut().switch();
+    }
 }
 
 pub trait Encode: MoveExt {

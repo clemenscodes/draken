@@ -121,6 +121,7 @@ impl Display for Game {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "Game!")?;
         writeln!(f, "{}", self.board())?;
+        writeln!(f, "{}", self.board().fen())?;
         writeln!(f, "{}", self.move_list())?;
         writeln!(f, "{}", self.state())
     }
