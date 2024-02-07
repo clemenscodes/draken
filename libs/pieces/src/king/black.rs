@@ -1,6 +1,6 @@
 use super::KingExt;
 
-use crate::PieceExt;
+use crate::{King, March, PieceExt};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -49,8 +49,11 @@ impl Debug for BlackKing {
     }
 }
 
-pub trait BlackKingExt: KingExt {}
-
-impl BlackKingExt for BlackKing {}
 impl KingExt for BlackKing {}
 impl PieceExt for BlackKing {}
+
+impl March for BlackKing {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        King::from(*self).march(source, destination)
+    }
+}

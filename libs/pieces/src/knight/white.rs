@@ -1,5 +1,5 @@
 use super::KnightExt;
-use crate::PieceExt;
+use crate::{Knight, March, PieceExt};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -47,8 +47,11 @@ impl Debug for WhiteKnight {
     }
 }
 
-pub trait WhiteKnightExt: KnightExt {}
-
-impl WhiteKnightExt for WhiteKnight {}
 impl KnightExt for WhiteKnight {}
 impl PieceExt for WhiteKnight {}
+
+impl March for WhiteKnight {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Knight::from(*self).march(source, destination)
+    }
+}

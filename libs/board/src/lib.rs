@@ -103,6 +103,10 @@ impl Board {
     pub fn pieces(&self) -> &Pieces {
         &self.pieces
     }
+
+    pub fn pieces_mut(&mut self) -> &mut Pieces {
+        &mut self.pieces
+    }
 }
 
 impl From<ForsythEdwardsNotation> for Board {

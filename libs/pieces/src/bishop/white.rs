@@ -1,5 +1,5 @@
 use super::BishopExt;
-use crate::PieceExt;
+use crate::{Bishop, March, PieceExt};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -48,8 +48,11 @@ impl Debug for WhiteBishop {
     }
 }
 
-pub trait WhiteBishopExt: BishopExt {}
-
-impl WhiteBishopExt for WhiteBishop {}
 impl BishopExt for WhiteBishop {}
 impl PieceExt for WhiteBishop {}
+
+impl March for WhiteBishop {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Bishop::from(*self).march(source, destination)
+    }
+}

@@ -1,5 +1,5 @@
 use super::PawnExt;
-use crate::PieceExt;
+use crate::{March, Pawn, PieceExt};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -47,8 +47,11 @@ impl Debug for BlackPawn {
     }
 }
 
-pub trait BlackPawnExt: PawnExt {}
-
-impl BlackPawnExt for BlackPawn {}
 impl PawnExt for BlackPawn {}
 impl PieceExt for BlackPawn {}
+
+impl March for BlackPawn {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Pawn::from(*self).march(source, destination)
+    }
+}

@@ -1,4 +1,4 @@
-use crate::PieceExt;
+use crate::{March, PieceExt, Rook};
 
 use super::RookExt;
 use bitboard::Bitboard;
@@ -49,8 +49,11 @@ impl Debug for WhiteRook {
     }
 }
 
-pub trait WhiteRookExt: RookExt {}
-
-impl WhiteRookExt for WhiteRook {}
 impl RookExt for WhiteRook {}
 impl PieceExt for WhiteRook {}
+
+impl March for WhiteRook {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Rook::from(*self).march(source, destination)
+    }
+}

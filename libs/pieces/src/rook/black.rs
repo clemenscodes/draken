@@ -1,5 +1,5 @@
-use crate::rook::RookExt;
-use crate::PieceExt;
+use crate::{rook::RookExt, March};
+use crate::{PieceExt, Rook};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -49,6 +49,11 @@ impl Debug for BlackRook {
 
 pub trait BlackRookExt: RookExt {}
 
-impl BlackRookExt for BlackRook {}
 impl RookExt for BlackRook {}
 impl PieceExt for BlackRook {}
+
+impl March for BlackRook {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Rook::from(*self).march(source, destination)
+    }
+}

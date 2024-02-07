@@ -1,5 +1,5 @@
 use super::QueenExt;
-use crate::PieceExt;
+use crate::{March, PieceExt, Queen};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -48,8 +48,11 @@ impl Debug for WhiteQueen {
     }
 }
 
-pub trait WhiteQueenExt: QueenExt {}
-
-impl WhiteQueenExt for WhiteQueen {}
 impl QueenExt for WhiteQueen {}
 impl PieceExt for WhiteQueen {}
+
+impl March for WhiteQueen {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Queen::from(*self).march(source, destination)
+    }
+}

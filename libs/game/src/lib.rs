@@ -4,6 +4,7 @@ use api::{GameExt, MoveListExt, Square, State};
 use bitboard::{Bitboard, BitboardExt};
 use board::Board;
 use moves::list::MoveList;
+use pieces::March;
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Game {
@@ -41,13 +42,38 @@ impl Game {
         &mut self.state
     }
 
-    fn perform_move(&mut self, source: Square, destination: Square) -> u16 {
-        let board = self.board();
-        0
+    fn perform_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
+        let piece_index = self.get_piece_index(source)?;
+        let pieces = self.board_mut().pieces_mut();
+        match piece_index {
+            0 => pieces.black_pieces_mut().rook_mut().march(source, destination),
+            1 => pieces.black_pieces_mut().knight_mut().march(source, destination),
+            2 => pieces.black_pieces_mut().bishop_mut().march(source, destination),
+            3 => pieces.black_pieces_mut().queen_mut().march(source, destination),
+            4 => pieces.black_pieces_mut().king_mut().march(source, destination),
+            5 => pieces.black_pieces_mut().pawn().march(source, destination),
+            6 => pieces.white_pieces_mut().rook_mut().march(source, destination),
+            7 => pieces.white_pieces_mut().knight_mut().march(source, destination),
+            8 => pieces.white_pieces_mut().bishop_mut().march(source, destination),
+            9 => pieces.white_pieces_mut().queen_mut().march(source, destination),
+            10 => pieces.white_pieces_mut().king_mut().march(source, destination),
+            11 => pieces.white_pieces_mut().pawn_mut().march(source, destination),
+            _ => Err(()),
+        }
     }
 
-    fn piece_on_source(&self, source: Square) -> bool {
-        Bitboard::overlap(Bitboard::from(source), self.board().into())
+    fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
+        let pieces = self.board().pieces().get_all_pieces();
+        for i in 0..pieces.len() {
+            if Bitboard::overlap(Bitboard::from(source), pieces[i]) {
+                return Ok(i);
+            }
+        }
+        Err(())
+    }
+
+    fn piece_on_source(&self, source: Bitboard) -> bool {
+        Bitboard::overlap(source, self.board().into())
     }
 }
 
@@ -124,15 +150,16 @@ impl GameExt for Game {
     }
 
     fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()> {
+        let bitsource = Bitboard::from(source);
         if !self.move_list().validate(source, destination) {
             eprintln!("Source square can not be equal to destination square");
             return Err(());
         }
-        if !self.piece_on_source(source) {
+        if !self.piece_on_source(bitsource) {
             eprintln!("Source square can not be unoccupied");
             return Err(());
         }
-        let encoded_move: u16 = self.perform_move(source, destination);
+        let encoded_move: u16 = self.perform_move(source, destination)?;
         self.move_list_mut().add(encoded_move)
     }
 

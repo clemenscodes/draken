@@ -1367,6 +1367,7 @@ dependencies = [
  "bitboard",
  "board",
  "moves",
+ "pieces",
 ]
 
 [[package]]

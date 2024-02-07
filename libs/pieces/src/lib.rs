@@ -6,14 +6,15 @@ mod pawn;
 mod queen;
 mod rook;
 
-use bishop::{black::*, white::*, Bishop};
-use bitboard::{Bitboard, BitboardExt};
-use king::{black::*, white::*, King};
-use knight::{black::*, white::*, Knight};
-use pawn::{black::*, white::*, Pawn};
-use queen::{black::*, white::*, Queen};
-use rook::{black::*, white::*, Rook};
-use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
+use api::Square;
+pub use bishop::{black::*, white::*, Bishop};
+pub use bitboard::{Bitboard, BitboardExt};
+pub use king::{black::*, white::*, King};
+pub use knight::{black::*, white::*, Knight};
+pub use pawn::{black::*, white::*, Pawn};
+pub use queen::{black::*, white::*, Queen};
+pub use rook::{black::*, white::*, Rook};
+pub use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
 
 pub const NUM_COLOR_PIECES: usize = 6;
 pub const NUM_COLORS: usize = 2;
@@ -112,9 +113,26 @@ impl TryFrom<char> for Piece {
     }
 }
 
-pub trait PieceExt {}
+pub trait March {
+    fn march(&self, source: Square, destination: Square) -> Result<u16, ()>;
+}
+
+pub trait PieceExt: March {}
 
 impl PieceExt for Piece {}
+
+impl March for Piece {
+    fn march(&self, source: Square, destination: Square) -> Result<u16, ()> {
+        match self {
+            Piece::Rook(rook) => rook.march(source, destination),
+            Piece::Knight(knight) => knight.march(source, destination),
+            Piece::Bishop(bishop) => bishop.march(source, destination),
+            Piece::Queen(queen) => queen.march(source, destination),
+            Piece::King(king) => king.march(source, destination),
+            Piece::Pawn(pawn) => pawn.march(source, destination),
+        }
+    }
+}
 
 impl Piece {
     fn get_board(&mut self) -> &mut Bitboard {
@@ -153,7 +171,7 @@ impl Piece {
 }
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
-struct WhitePieces {
+pub struct WhitePieces {
     rook: WhiteRook,
     knight: WhiteKnight,
     bishop: WhiteBishop,
@@ -163,51 +181,51 @@ struct WhitePieces {
 }
 
 impl WhitePieces {
-    fn rook(&self) -> WhiteRook {
+    pub fn rook(&self) -> WhiteRook {
         self.rook
     }
 
-    fn rook_mut(&mut self) -> &mut WhiteRook {
+    pub fn rook_mut(&mut self) -> &mut WhiteRook {
         &mut self.rook
     }
 
-    fn knight(&self) -> WhiteKnight {
+    pub fn knight(&self) -> WhiteKnight {
         self.knight
     }
 
-    fn knight_mut(&mut self) -> &mut WhiteKnight {
+    pub fn knight_mut(&mut self) -> &mut WhiteKnight {
         &mut self.knight
     }
 
-    fn bishop(&self) -> WhiteBishop {
+    pub fn bishop(&self) -> WhiteBishop {
         self.bishop
     }
 
-    fn bishop_mut(&mut self) -> &mut WhiteBishop {
+    pub fn bishop_mut(&mut self) -> &mut WhiteBishop {
         &mut self.bishop
     }
 
-    fn queen(&self) -> WhiteQueen {
+    pub fn queen(&self) -> WhiteQueen {
         self.queen
     }
 
-    fn queen_mut(&mut self) -> &mut WhiteQueen {
+    pub fn queen_mut(&mut self) -> &mut WhiteQueen {
         &mut self.queen
     }
 
-    fn king(&self) -> WhiteKing {
+    pub fn king(&self) -> WhiteKing {
         self.king
     }
 
-    fn king_mut(&mut self) -> &mut WhiteKing {
+    pub fn king_mut(&mut self) -> &mut WhiteKing {
         &mut self.king
     }
 
-    fn pawn(&self) -> WhitePawn {
+    pub fn pawn(&self) -> WhitePawn {
         self.pawn
     }
 
-    fn pawn_mut(&mut self) -> &mut WhitePawn {
+    pub fn pawn_mut(&mut self) -> &mut WhitePawn {
         &mut self.pawn
     }
 }
@@ -226,7 +244,7 @@ impl Into<Bitboard> for WhitePieces {
 }
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
-struct BlackPieces {
+pub struct BlackPieces {
     rook: BlackRook,
     knight: BlackKnight,
     bishop: BlackBishop,
@@ -236,51 +254,51 @@ struct BlackPieces {
 }
 
 impl BlackPieces {
-    fn rook(&self) -> BlackRook {
+    pub fn rook(&self) -> BlackRook {
         self.rook
     }
 
-    fn rook_mut(&mut self) -> &mut BlackRook {
+    pub fn rook_mut(&mut self) -> &mut BlackRook {
         &mut self.rook
     }
 
-    fn knight(&self) -> BlackKnight {
+    pub fn knight(&self) -> BlackKnight {
         self.knight
     }
 
-    fn knight_mut(&mut self) -> &mut BlackKnight {
+    pub fn knight_mut(&mut self) -> &mut BlackKnight {
         &mut self.knight
     }
 
-    fn bishop(&self) -> BlackBishop {
+    pub fn bishop(&self) -> BlackBishop {
         self.bishop
     }
 
-    fn bishop_mut(&mut self) -> &mut BlackBishop {
+    pub fn bishop_mut(&mut self) -> &mut BlackBishop {
         &mut self.bishop
     }
 
-    fn queen(&self) -> BlackQueen {
+    pub fn queen(&self) -> BlackQueen {
         self.queen
     }
 
-    fn queen_mut(&mut self) -> &mut BlackQueen {
+    pub fn queen_mut(&mut self) -> &mut BlackQueen {
         &mut self.queen
     }
 
-    fn king(&self) -> BlackKing {
+    pub fn king(&self) -> BlackKing {
         self.king
     }
 
-    fn king_mut(&mut self) -> &mut BlackKing {
+    pub fn king_mut(&mut self) -> &mut BlackKing {
         &mut self.king
     }
 
-    fn pawn(&self) -> BlackPawn {
+    pub fn pawn(&self) -> BlackPawn {
         self.pawn
     }
 
-    fn pawn_mut(&mut self) -> &mut BlackPawn {
+    pub fn pawn_mut(&mut self) -> &mut BlackPawn {
         &mut self.pawn
     }
 }
@@ -307,19 +325,19 @@ pub struct Pieces {
 }
 
 impl Pieces {
-    fn white_pieces(&self) -> WhitePieces {
+    pub fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
     }
 
-    fn white_pieces_mut(&mut self) -> &mut WhitePieces {
+    pub fn white_pieces_mut(&mut self) -> &mut WhitePieces {
         &mut self.white_pieces
     }
 
-    fn black_pieces(&self) -> BlackPieces {
+    pub fn black_pieces(&self) -> BlackPieces {
         self.black_pieces
     }
 
-    fn black_pieces_mut(&mut self) -> &mut BlackPieces {
+    pub fn black_pieces_mut(&mut self) -> &mut BlackPieces {
         &mut self.black_pieces
     }
 
@@ -345,6 +363,23 @@ impl Pieces {
             self.white_pieces().queen().bitboard(),
             self.white_pieces().king().bitboard(),
             self.white_pieces().pawn().bitboard(),
+        ]
+    }
+
+    pub fn get_all_pieces_mut(&mut self) -> [Bitboard; NUM_PIECES] {
+        [
+            self.black_pieces_mut().rook_mut().bitboard(),
+            self.black_pieces_mut().knight_mut().bitboard(),
+            self.black_pieces_mut().bishop_mut().bitboard(),
+            self.black_pieces_mut().queen_mut().bitboard(),
+            self.black_pieces_mut().king_mut().bitboard(),
+            self.black_pieces_mut().pawn_mut().bitboard(),
+            self.white_pieces_mut().rook_mut().bitboard(),
+            self.white_pieces_mut().knight_mut().bitboard(),
+            self.white_pieces_mut().bishop_mut().bitboard(),
+            self.white_pieces_mut().queen_mut().bitboard(),
+            self.white_pieces_mut().king_mut().bitboard(),
+            self.white_pieces_mut().pawn_mut().bitboard(),
         ]
     }
 

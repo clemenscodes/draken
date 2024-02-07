@@ -1,5 +1,5 @@
 use super::QueenExt;
-use crate::PieceExt;
+use crate::{March, PieceExt, Queen};
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
@@ -47,8 +47,11 @@ impl Debug for BlackQueen {
     }
 }
 
-pub trait BlackQueenExt: QueenExt {}
-
-impl BlackQueenExt for BlackQueen {}
 impl QueenExt for BlackQueen {}
 impl PieceExt for BlackQueen {}
+
+impl March for BlackQueen {
+    fn march(&self, source: api::Square, destination: api::Square) -> Result<u16, ()> {
+        Queen::from(*self).march(source, destination)
+    }
+}
