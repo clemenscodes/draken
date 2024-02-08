@@ -53,7 +53,11 @@ impl Debug for BlackKing {
 }
 
 impl KingExt for BlackKing {}
-impl PieceExt for BlackKing {}
+impl PieceExt for BlackKing {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        King::from(*self).is_illegal_move(source, destination, board)
+    }
+}
 
 impl Verify for BlackKing {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

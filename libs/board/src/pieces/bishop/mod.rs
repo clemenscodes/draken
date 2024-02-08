@@ -28,7 +28,11 @@ impl From<WhiteBishop> for Bishop {
 pub trait BishopExt: PieceExt {}
 
 impl BishopExt for Bishop {}
-impl PieceExt for Bishop {}
+impl PieceExt for Bishop {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+}
 
 impl Verify for Bishop {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

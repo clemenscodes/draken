@@ -28,7 +28,11 @@ impl From<BlackQueen> for Queen {
 pub trait QueenExt: PieceExt {}
 
 impl QueenExt for Queen {}
-impl PieceExt for Queen {}
+impl PieceExt for Queen {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+}
 
 impl Verify for Queen {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

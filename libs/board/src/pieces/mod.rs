@@ -118,9 +118,22 @@ pub trait Verify {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
 }
 
-pub trait PieceExt: Verify {}
+pub trait PieceExt: Verify {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool;
+}
 
-impl PieceExt for Piece {}
+impl PieceExt for Piece {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        match self {
+            Piece::Rook(rook) => rook.is_illegal_move(source, destination, board),
+            Piece::Knight(knight) => knight.is_illegal_move(source, destination, board),
+            Piece::Bishop(bishop) => bishop.is_illegal_move(source, destination, board),
+            Piece::Queen(queen) => queen.is_illegal_move(source, destination, board),
+            Piece::King(king) => king.is_illegal_move(source, destination, board),
+            Piece::Pawn(pawn) => pawn.is_illegal_move(source, destination, board),
+        }
+    }
+}
 
 impl Verify for Piece {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

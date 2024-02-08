@@ -52,7 +52,11 @@ impl Debug for BlackRook {
 }
 
 impl RookExt for BlackRook {}
-impl PieceExt for BlackRook {}
+impl PieceExt for BlackRook {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        Rook::from(*self).is_illegal_move(source, destination, board)
+    }
+}
 
 impl Verify for BlackRook {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

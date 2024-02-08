@@ -52,7 +52,11 @@ impl Debug for BlackPawn {
 }
 
 impl PawnExt for BlackPawn {}
-impl PieceExt for BlackPawn {}
+impl PieceExt for BlackPawn {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+}
 
 impl Verify for BlackPawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

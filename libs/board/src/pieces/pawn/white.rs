@@ -54,7 +54,11 @@ impl Debug for WhitePawn {
 }
 
 impl PawnExt for WhitePawn {}
-impl PieceExt for WhitePawn {}
+impl PieceExt for WhitePawn {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+}
 
 impl Verify for WhitePawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

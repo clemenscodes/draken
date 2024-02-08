@@ -52,7 +52,11 @@ impl Debug for WhiteKnight {
 }
 
 impl KnightExt for WhiteKnight {}
-impl PieceExt for WhiteKnight {}
+impl PieceExt for WhiteKnight {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        Knight::from(*self).is_illegal_move(source, destination, board)
+    }
+}
 
 impl Verify for WhiteKnight {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {

@@ -28,7 +28,11 @@ impl From<BlackRook> for Rook {
 pub trait RookExt: PieceExt {}
 
 impl RookExt for Rook {}
-impl PieceExt for Rook {}
+impl PieceExt for Rook {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+}
 
 impl Verify for Rook {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
