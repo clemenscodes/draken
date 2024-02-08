@@ -1,0 +1,37 @@
+{
+    "productName": "draken",
+    "version": "0.0.0",
+    "identifier": "draken.chess",
+    "build": {
+        "beforeDevCommand": "pnpm nx dev ui",
+        "beforeBuildCommand": "pnpm nx build ui",
+        "devUrl": "http://localhost:3000",
+        "frontendDist": "../../dist/apps/ui"
+    },
+    "app": {
+        "security": {
+            "csp": null
+        },
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "draken",
+                "width": 800,
+                "height": 600
+            }
+        ],
+        "withGlobalTauri": true
+    },
+    "bundle": {
+        "active": true,
+        "targets": ["deb", "msi", "app", "dmg", "updater"],
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ]
+    }
+}

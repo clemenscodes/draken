@@ -1,0 +1,28 @@
+[package]
+name = "gui"
+version = "0.1.0"
+edition = "2021"
+description = "draken GUI"
+authors = ["Clemens Horn <me@clemenshorn.com>"]
+license = "MIT"
+repository = "https://github.com/clemenscodes/draken"
+default-run = "gui"
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-beta", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.0.0-beta", features = [] }
+api = { path = "../../libs/api" }
+draken = { path = "../../libs/draken" }
+model = { path = "../../libs/model" }
+view = { path = "../../libs/view" }
+controller = { path = "../../libs/controller" }
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]

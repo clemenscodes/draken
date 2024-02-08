@@ -1,0 +1,10 @@
+[package]
+name = "model"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bitboard = { path = "../bitboard" }
+api = { path = "../api" }
+game = { path = "../game" }
+engine = { path = "../engine" }

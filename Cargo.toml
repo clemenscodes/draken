@@ -2,19 +2,17 @@
 [workspace]
 resolver = '2'
 members = [
-	'bin/gui',
-	'bin/draken',
-	'lib/view',
-	'lib/controller',
-	'lib/model',
-	'lib/api',
-	'lib/engine',
-	'lib/uci',
-	'lib/fen',
-	'lib/pieces',
-	'lib/bitboard',
-	'lib/board',
-	'lib/moves',
+    'apps/gui',
+    'libs/draken',
+    'libs/view',
+    'libs/controller',
+    'libs/model',
+    'libs/api',
+    'libs/engine',
+    'libs/uci',
+    'libs/bitboard',
+    'libs/board',
+    'libs/game',
 ]
 
 [profile.release]
