@@ -1,8 +1,8 @@
 use super::PawnExt;
 use crate::{
     moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
-    pieces::{PieceExt, Verify},
-    Board,
+    pieces::PieceExt,
+    Board, Verify,
 };
 use api::Square;
 use bitboard::Bitboard;

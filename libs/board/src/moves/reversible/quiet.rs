@@ -1,6 +1,6 @@
 use crate::{
     moves::{coordinates::Coordinates, Encode, MoveExt},
-    Board,
+    Board, Verify,
 };
 
 use super::ReversibleMoveExt;
@@ -29,6 +29,7 @@ pub trait QuietMoveExt: ReversibleMoveExt {}
 
 impl QuietMoveExt for QuietMove {}
 impl ReversibleMoveExt for QuietMove {}
+impl Encode for QuietMove {}
 
 impl MoveExt for QuietMove {
     fn coordinates(&self) -> Coordinates {
@@ -43,8 +44,6 @@ impl MoveExt for QuietMove {
         *piece ^= Bitboard::move_mask(source, destination);
     }
 }
-
-impl Encode for QuietMove {}
 
 impl Display for QuietMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

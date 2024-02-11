@@ -1,8 +1,8 @@
 pub mod black;
 pub mod white;
 
-use super::{PieceExt, Verify};
-use crate::{Board, EIGHTH_RANK, FIRST_RANK};
+use super::PieceExt;
+use crate::{Board, Verify, EIGHTH_RANK, FIRST_RANK};
 use api::Square;
 use bitboard::Bitboard;
 use black::BlackPawn;
@@ -12,6 +12,18 @@ use white::WhitePawn;
 pub enum Pawn {
     Black(BlackPawn),
     White(WhitePawn),
+}
+
+impl From<WhitePawn> for Pawn {
+    fn from(v: WhitePawn) -> Self {
+        Self::White(v)
+    }
+}
+
+impl From<BlackPawn> for Pawn {
+    fn from(v: BlackPawn) -> Self {
+        Self::Black(v)
+    }
 }
 
 pub trait PawnExt: PieceExt {

@@ -24,8 +24,7 @@ use board::moves::{
     reversible::quiet::QuietMove,
     *,
 };
-use board::pieces::Verify;
-use board::Board;
+use board::{Board, Verify};
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]

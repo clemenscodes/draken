@@ -7,7 +7,7 @@ pub mod pieces;
 use api::{Square, SquareExt};
 use bitboard::{Bitboard, BitboardExt};
 use fen::ForsythEdwardsNotation;
-use pieces::{Pieces, UTF_SYMBOLS};
+use pieces::{piece::Piece, Pieces, UTF_SYMBOLS};
 use std::{
     fmt::{Debug, Display},
     mem::variant_count,
@@ -88,6 +88,12 @@ pub struct Board {
     pieces: Pieces,
 }
 
+pub trait BoardExt {}
+
+pub trait Verify {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
+}
+
 impl Default for Board {
     fn default() -> Self {
         let fen = ForsythEdwardsNotation::default();
@@ -129,6 +135,28 @@ impl Board {
         Err(())
     }
 
+    pub fn get_piece(&self, source: Square) -> Result<Piece, ()> {
+        let piece_index = self.get_piece_index(source).unwrap();
+        let pieces = self.pieces();
+        let black_pieces = pieces.black_pieces();
+        let white_pieces = pieces.white_pieces();
+        match piece_index {
+            0 => Ok(Piece::from(black_pieces.rook())),
+            1 => Ok(Piece::from(black_pieces.knight())),
+            2 => Ok(Piece::from(black_pieces.bishop())),
+            3 => Ok(Piece::from(black_pieces.queen())),
+            4 => Ok(Piece::from(black_pieces.king())),
+            5 => Ok(Piece::from(black_pieces.pawn())),
+            6 => Ok(Piece::from(white_pieces.rook())),
+            7 => Ok(Piece::from(white_pieces.knight())),
+            8 => Ok(Piece::from(white_pieces.bishop())),
+            9 => Ok(Piece::from(white_pieces.queen())),
+            10 => Ok(Piece::from(white_pieces.king())),
+            11 => Ok(Piece::from(white_pieces.pawn())),
+            _ => Err(()),
+        }
+    }
+
     pub fn get_piece_board_mut(&mut self, source: Square) -> Result<&mut Bitboard, ()> {
         let piece_index = self.get_piece_index(source).unwrap();
         let pieces = self.pieces_mut();
@@ -163,8 +191,6 @@ impl Into<Bitboard> for Board {
         pieces.into()
     }
 }
-
-pub trait BoardExt {}
 
 impl BoardExt for Board {}
 

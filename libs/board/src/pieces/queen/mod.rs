@@ -1,8 +1,8 @@
 pub mod black;
 pub mod white;
 
-use super::{PieceExt, Verify};
-use crate::Board;
+use super::PieceExt;
+use crate::{Board, Verify};
 use api::Square;
 use black::BlackQueen;
 use white::WhiteQueen;

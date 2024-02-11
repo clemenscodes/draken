@@ -1,8 +1,5 @@
 use super::{King, KingExt};
-use crate::{
-    pieces::{PieceExt, Verify},
-    Board,
-};
+use crate::{pieces::PieceExt, Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};

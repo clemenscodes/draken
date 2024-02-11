@@ -4,11 +4,12 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
+use crate::{fen::active_color::ActiveColorExt, pieces::piece::Piece, Board, Verify};
+use api::ForsythEdwardsNotationExt;
+use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
-
-use crate::{fen::active_color::ActiveColorExt, Board};
 
 pub const QUIET_MOVE: u16 = 0b0000;
 pub const DOUBLE_PAWN_PUSH: u16 = 0b0001;
@@ -36,7 +37,20 @@ pub enum Move {
 
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
+    fn verify(&self, board: &mut Board) -> bool {
+        let player: Bitboard = if board.fen().is_white() {
+            board.pieces().white_pieces().into()
+        } else {
+            board.pieces().black_pieces().into()
+        };
+        let source = self.coordinates().source();
+        let piece = Bitboard::get_single_bit(source.into());
+        Bitboard::overlap(player, piece)
+    }
     fn march(&self, board: &mut Board);
+    fn piece(&self, board: &mut Board) -> Piece {
+        board.get_piece(self.coordinates().source()).expect("No piece on {source}")
+    }
     fn switch(&self, board: &mut Board) {
         board.fen_mut().active_color_mut().switch();
     }

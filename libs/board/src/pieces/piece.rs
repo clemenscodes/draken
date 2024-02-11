@@ -1,5 +1,5 @@
 use super::*;
-use crate::Board;
+use crate::{Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 
@@ -11,6 +11,114 @@ pub enum Piece {
     Queen(Queen),
     King(King),
     Pawn(Pawn),
+}
+
+impl From<Pawn> for Piece {
+    fn from(v: Pawn) -> Self {
+        Self::Pawn(v)
+    }
+}
+
+impl From<WhitePawn> for Piece {
+    fn from(v: WhitePawn) -> Self {
+        Self::Pawn(Pawn::from(v))
+    }
+}
+
+impl From<BlackPawn> for Piece {
+    fn from(v: BlackPawn) -> Self {
+        Self::Pawn(Pawn::from(v))
+    }
+}
+
+impl From<King> for Piece {
+    fn from(v: King) -> Self {
+        Self::King(v)
+    }
+}
+
+impl From<WhiteKing> for Piece {
+    fn from(v: WhiteKing) -> Self {
+        Self::King(King::from(v))
+    }
+}
+
+impl From<BlackKing> for Piece {
+    fn from(v: BlackKing) -> Self {
+        Self::King(King::from(v))
+    }
+}
+
+impl From<Queen> for Piece {
+    fn from(v: Queen) -> Self {
+        Self::Queen(v)
+    }
+}
+
+impl From<WhiteQueen> for Piece {
+    fn from(v: WhiteQueen) -> Self {
+        Self::Queen(Queen::from(v))
+    }
+}
+
+impl From<BlackQueen> for Piece {
+    fn from(v: BlackQueen) -> Self {
+        Self::Queen(Queen::from(v))
+    }
+}
+
+impl From<Bishop> for Piece {
+    fn from(v: Bishop) -> Self {
+        Self::Bishop(v)
+    }
+}
+
+impl From<BlackBishop> for Piece {
+    fn from(v: BlackBishop) -> Self {
+        Self::Bishop(Bishop::from(v))
+    }
+}
+
+impl From<WhiteBishop> for Piece {
+    fn from(v: WhiteBishop) -> Self {
+        Self::Bishop(Bishop::from(v))
+    }
+}
+
+impl From<Knight> for Piece {
+    fn from(v: Knight) -> Self {
+        Self::Knight(v)
+    }
+}
+
+impl From<WhiteKnight> for Piece {
+    fn from(v: WhiteKnight) -> Self {
+        Self::Knight(Knight::from(v))
+    }
+}
+
+impl From<BlackKnight> for Piece {
+    fn from(v: BlackKnight) -> Self {
+        Self::Knight(Knight::from(v))
+    }
+}
+
+impl From<Rook> for Piece {
+    fn from(v: Rook) -> Self {
+        Self::Rook(v)
+    }
+}
+
+impl From<WhiteRook> for Piece {
+    fn from(v: WhiteRook) -> Self {
+        Self::Rook(Rook::from(v))
+    }
+}
+
+impl From<BlackRook> for Piece {
+    fn from(v: BlackRook) -> Self {
+        Self::Rook(Rook::from(v))
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -78,6 +186,54 @@ impl Piece {
     pub fn set_on_square(&mut self, rank: u8, file: u8) {
         let board = Bitboard::try_from((rank as usize, file as usize)).unwrap();
         self.get_board().self_merge(board);
+    }
+
+    /// Returns `true` if the piece is [`Rook`].
+    ///
+    /// [`Rook`]: Piece::Rook
+    #[must_use]
+    pub fn is_rook(&self) -> bool {
+        matches!(self, Self::Rook(..))
+    }
+
+    /// Returns `true` if the piece is [`Knight`].
+    ///
+    /// [`Knight`]: Piece::Knight
+    #[must_use]
+    pub fn is_knight(&self) -> bool {
+        matches!(self, Self::Knight(..))
+    }
+
+    /// Returns `true` if the piece is [`Bishop`].
+    ///
+    /// [`Bishop`]: Piece::Bishop
+    #[must_use]
+    pub fn is_bishop(&self) -> bool {
+        matches!(self, Self::Bishop(..))
+    }
+
+    /// Returns `true` if the piece is [`Queen`].
+    ///
+    /// [`Queen`]: Piece::Queen
+    #[must_use]
+    pub fn is_queen(&self) -> bool {
+        matches!(self, Self::Queen(..))
+    }
+
+    /// Returns `true` if the piece is [`King`].
+    ///
+    /// [`King`]: Piece::King
+    #[must_use]
+    pub fn is_king(&self) -> bool {
+        matches!(self, Self::King(..))
+    }
+
+    /// Returns `true` if the piece is [`Pawn`].
+    ///
+    /// [`Pawn`]: Piece::Pawn
+    #[must_use]
+    pub fn is_pawn(&self) -> bool {
+        matches!(self, Self::Pawn(..))
     }
 }
 

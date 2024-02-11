@@ -1,5 +1,5 @@
 use super::{Bishop, BishopExt, PieceExt};
-use crate::{pieces::Verify, Board};
+use crate::{Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};

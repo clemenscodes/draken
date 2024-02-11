@@ -152,7 +152,7 @@ impl ForsythEdwardsNotationExt for ForsythEdwardsNotation {
     }
 
     fn is_white(&self) -> bool {
-        todo!()
+        self.active_color().is_white()
     }
 
     fn get_castling(&self) -> String {

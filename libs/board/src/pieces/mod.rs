@@ -3,7 +3,7 @@ mod black_pieces;
 mod king;
 mod knight;
 mod pawn;
-mod piece;
+pub mod piece;
 mod queen;
 mod rook;
 mod white_pieces;
@@ -230,7 +230,3 @@ impl Into<Bitboard> for Pieces {
 pub trait PiecesExt {}
 
 impl PiecesExt for Pieces {}
-
-pub trait Verify {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
-}
