@@ -93,20 +93,20 @@ impl Game {
         let destination = encoded_move.destination();
         let board = self.board_mut();
         match encoded_move.kind() {
-            QUIET_MOVE => QuietMove::new(source, destination).march(board),
-            DOUBLE_PAWN_PUSH => DoublePushMove::new(source, destination).march(board),
-            KING_CASTLE => KingCastleMove::new(source, destination).march(board),
-            QUEEN_CASTLE => QueenCastleMove::new(source, destination).march(board),
-            CAPTURE => CaptureMove::new(source, destination).march(board),
-            ENPASSANT => EnPassantMove::new(source, destination).march(board),
-            KNIGHT_PROMOTION => KnightPromotionMove::new(source, destination).march(board),
-            BISHOP_PROMOTION => BishopPromotionMove::new(source, destination).march(board),
-            ROOK_PROMOTION => RookPromotionMove::new(source, destination).march(board),
-            QUEEN_PROMOTION => QueenPromotionMove::new(source, destination).march(board),
-            KNIGHT_PROMOTION_CAPTURE => KnightPromotionCaptureMove::new(source, destination).march(board),
-            BISHOP_PROMOTION_CAPTURE => BishopPromotionCaptureMove::new(source, destination).march(board),
-            ROOK_PROMOTION_CAPTURE => RookPromotionCaptureMove::new(source, destination).march(board),
-            QUEEN_PROMOTION_CAPTURE => QueenPromotionCaptureMove::new(source, destination).march(board),
+            QUIET_MOVE => QuietMove::new(source, destination).march(board)?,
+            DOUBLE_PAWN_PUSH => DoublePushMove::new(source, destination).march(board)?,
+            KING_CASTLE => KingCastleMove::new(source, destination).march(board)?,
+            QUEEN_CASTLE => QueenCastleMove::new(source, destination).march(board)?,
+            CAPTURE => CaptureMove::new(source, destination).march(board)?,
+            ENPASSANT => EnPassantMove::new(source, destination).march(board)?,
+            KNIGHT_PROMOTION => KnightPromotionMove::new(source, destination).march(board)?,
+            BISHOP_PROMOTION => BishopPromotionMove::new(source, destination).march(board)?,
+            ROOK_PROMOTION => RookPromotionMove::new(source, destination).march(board)?,
+            QUEEN_PROMOTION => QueenPromotionMove::new(source, destination).march(board)?,
+            KNIGHT_PROMOTION_CAPTURE => KnightPromotionCaptureMove::new(source, destination).march(board)?,
+            BISHOP_PROMOTION_CAPTURE => BishopPromotionCaptureMove::new(source, destination).march(board)?,
+            ROOK_PROMOTION_CAPTURE => RookPromotionCaptureMove::new(source, destination).march(board)?,
+            QUEEN_PROMOTION_CAPTURE => QueenPromotionCaptureMove::new(source, destination).march(board)?,
             _ => return Err(()),
         };
         self.move_list_mut().add(encoded_move.data());
@@ -221,7 +221,7 @@ mod tests {
     fn test_make_move() {
         let mut game = Game::default();
         assert_eq!(game.ply(), 0);
-        game.make_move(E2, E4).unwrap();
+        game.make_move(E2, E7).unwrap();
         assert_eq!(game.ply(), 1);
         println!("{game}");
     }

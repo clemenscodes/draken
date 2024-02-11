@@ -28,7 +28,7 @@ impl MoveExt for CastleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             CastleMove::King(king) => king.march(board),
             CastleMove::Queen(queen) => queen.march(board),

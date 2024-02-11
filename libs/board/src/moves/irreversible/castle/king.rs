@@ -35,7 +35,7 @@ impl MoveExt for KingCastleMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         todo!()
     }
 }

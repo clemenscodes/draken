@@ -44,7 +44,7 @@ impl MoveExt for BishopPromotionCaptureMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         todo!()
     }
 }

@@ -16,13 +16,15 @@ pub enum IrreversibleMove {
 }
 
 pub trait IrreversibleMoveExt: MoveExt {
-    fn make(&self, board: &mut Board) {
+    fn make(&self, board: &mut Board) -> Result<(), ()> {
+        self.switch(board)?;
         let piece = self.piece(board);
         if piece.is_king() {
             board.fen_mut().half_move_clock_mut().increment();
         } else {
             board.fen_mut().half_move_clock_mut().reset()
         }
+        Ok(())
     }
 }
 
@@ -37,7 +39,7 @@ impl MoveExt for IrreversibleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             IrreversibleMove::Capture(capture) => capture.march(board),
             IrreversibleMove::Pawn(pawn) => pawn.march(board),

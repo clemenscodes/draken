@@ -39,7 +39,7 @@ impl MoveExt for QueenPromotionMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         todo!()
     }
 }

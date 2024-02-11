@@ -135,25 +135,26 @@ impl Board {
         Err(())
     }
 
-    pub fn get_piece(&self, source: Square) -> Result<Piece, ()> {
+    pub fn get_piece_mut(&mut self, source: Square) -> Result<Piece, ()> {
         let piece_index = self.get_piece_index(source).unwrap();
-        let pieces = self.pieces();
-        let black_pieces = pieces.black_pieces();
-        let white_pieces = pieces.white_pieces();
+        let pieces = self.pieces_mut();
         match piece_index {
-            0 => Ok(Piece::from(black_pieces.rook())),
-            1 => Ok(Piece::from(black_pieces.knight())),
-            2 => Ok(Piece::from(black_pieces.bishop())),
-            3 => Ok(Piece::from(black_pieces.queen())),
-            4 => Ok(Piece::from(black_pieces.king())),
-            5 => Ok(Piece::from(black_pieces.pawn())),
-            6 => Ok(Piece::from(white_pieces.rook())),
-            7 => Ok(Piece::from(white_pieces.knight())),
-            8 => Ok(Piece::from(white_pieces.bishop())),
-            9 => Ok(Piece::from(white_pieces.queen())),
-            10 => Ok(Piece::from(white_pieces.king())),
-            11 => Ok(Piece::from(white_pieces.pawn())),
-            _ => Err(()),
+            0 => Ok(Piece::from(pieces.black_pieces().rook())),
+            1 => Ok(Piece::from(pieces.black_pieces().knight())),
+            2 => Ok(Piece::from(pieces.black_pieces().bishop())),
+            3 => Ok(Piece::from(pieces.black_pieces().queen())),
+            4 => Ok(Piece::from(pieces.black_pieces().king())),
+            5 => Ok(Piece::from(pieces.black_pieces().pawn())),
+            6 => Ok(Piece::from(pieces.white_pieces().rook())),
+            7 => Ok(Piece::from(pieces.white_pieces().knight())),
+            8 => Ok(Piece::from(pieces.white_pieces().bishop())),
+            9 => Ok(Piece::from(pieces.white_pieces().queen())),
+            10 => Ok(Piece::from(pieces.white_pieces().king())),
+            11 => Ok(Piece::from(pieces.white_pieces().pawn())),
+            _ => {
+                eprintln!("No piece found on {source} but expected it to exist");
+                Err(())
+            }
         }
     }
 
@@ -175,6 +176,12 @@ impl Board {
             11 => Ok(pieces.white_pieces_mut().pawn_mut().bitboard_mut()),
             _ => Err(()),
         }
+    }
+
+    pub fn capture_piece(&mut self, square: Square) -> Result<(), ()> {
+        let piece = self.get_piece_board_mut(square)?;
+        *piece ^= Bitboard::get_single_bit(square.into());
+        Ok(())
     }
 }
 

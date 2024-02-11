@@ -42,7 +42,7 @@ impl MoveExt for PromotionCaptureMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             PromotionCaptureMove::Queen(queen) => queen.march(board),
             PromotionCaptureMove::Rook(rook) => rook.march(board),

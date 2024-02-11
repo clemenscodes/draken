@@ -33,7 +33,7 @@ impl MoveExt for PawnMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             PawnMove::Push(push) => push.march(board),
             PawnMove::EnPassant(enpassant) => enpassant.march(board),

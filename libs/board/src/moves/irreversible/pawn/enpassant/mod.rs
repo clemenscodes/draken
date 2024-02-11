@@ -34,7 +34,7 @@ impl MoveExt for EnPassantMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         todo!()
     }
 }

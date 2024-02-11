@@ -4,7 +4,7 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
-use crate::{fen::active_color::ActiveColorExt, pieces::piece::Piece, Board, Verify};
+use crate::{fen::active_color::ActiveColorExt, pieces::piece::Piece, Board};
 use api::ForsythEdwardsNotationExt;
 use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
@@ -37,6 +37,10 @@ pub enum Move {
 
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
+    fn march(&self, board: &mut Board) -> Result<(), ()>;
+    fn piece(&self, board: &mut Board) -> Piece {
+        board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
+    }
     fn verify(&self, board: &mut Board) -> bool {
         let player: Bitboard = if board.fen().is_white() {
             board.pieces().white_pieces().into()
@@ -47,12 +51,13 @@ pub trait MoveExt {
         let piece = Bitboard::get_single_bit(source.into());
         Bitboard::overlap(player, piece)
     }
-    fn march(&self, board: &mut Board);
-    fn piece(&self, board: &mut Board) -> Piece {
-        board.get_piece(self.coordinates().source()).expect("No piece on {source}")
-    }
-    fn switch(&self, board: &mut Board) {
+    fn switch(&self, board: &mut Board) -> Result<(), ()> {
+        if !self.verify(board) {
+            eprintln!("Can not move opponents piece");
+            return Err(());
+        }
         board.fen_mut().active_color_mut().switch();
+        Ok(())
     }
 }
 
@@ -74,7 +79,7 @@ impl MoveExt for Move {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             Move::Reversible(reversible) => reversible.march(board),
             Move::Irreversible(irreversible) => irreversible.march(board),

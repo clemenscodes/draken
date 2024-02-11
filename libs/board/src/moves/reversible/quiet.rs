@@ -36,12 +36,13 @@ impl MoveExt for QuietMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
-        self.increment_half_move_clock(board);
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
+        self.increment_half_move_clock(board)?;
         let source = self.coordinates().source();
         let destination = self.coordinates().destination();
         let piece = board.get_piece_board_mut(source).unwrap();
         *piece ^= Bitboard::move_mask(source, destination);
+        Ok(())
     }
 }
 
@@ -68,7 +69,7 @@ mod tests {
     fn test_quiet_move() {
         let mut board = Board::default();
         let quiet_move = QuietMove::new(E2, E4);
-        quiet_move.march(&mut board);
+        quiet_move.march(&mut board).unwrap();
         let expected = "\
             [♜][♞][♝][♛][♚][♝][♞][♜]\n\
             [♟][♟][♟][♟][♟][♟][♟][♟]\n\
