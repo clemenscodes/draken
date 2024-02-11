@@ -1,9 +1,8 @@
+use super::ReversibleMoveExt;
 use crate::{
     moves::{coordinates::Coordinates, Encode, MoveExt},
-    Board, Verify,
+    Board,
 };
-
-use super::ReversibleMoveExt;
 use api::Square;
 use bitboard::{Bitboard, BitboardExt};
 use std::fmt::{Debug, Display};

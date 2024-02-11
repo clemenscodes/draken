@@ -45,7 +45,8 @@ impl MoveExt for KnightPromotionCaptureMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        todo!()
+        self.capture(board)?;
+        Ok(())
     }
 }
 

@@ -35,7 +35,8 @@ impl MoveExt for DoublePushMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        todo!()
+        self.push(self.coordinates().source(), board)?;
+        Ok(())
     }
 }
 

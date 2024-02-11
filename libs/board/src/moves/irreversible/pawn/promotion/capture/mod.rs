@@ -25,7 +25,12 @@ pub enum PromotionCaptureMove {
     Bishop(BishopPromotionCaptureMove),
 }
 
-pub trait PromotionCaptureMoveExt: PromotionMoveExt {}
+pub trait PromotionCaptureMoveExt: PromotionMoveExt {
+    fn capture(&self, board: &mut Board) -> Result<(), ()> {
+        self.promote(board)?;
+        Ok(())
+    }
+}
 
 impl PromotionCaptureMoveExt for PromotionCaptureMove {}
 impl PromotionMoveExt for PromotionCaptureMove {}

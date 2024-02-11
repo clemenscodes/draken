@@ -40,7 +40,8 @@ impl MoveExt for RookPromotionMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        todo!()
+        self.promote(board)?;
+        Ok(())
     }
 }
 

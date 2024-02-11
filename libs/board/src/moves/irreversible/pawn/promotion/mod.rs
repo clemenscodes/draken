@@ -24,7 +24,12 @@ pub enum PromotionMove {
     Bishop(BishopPromotionMove),
 }
 
-pub trait PromotionMoveExt: PawnMoveExt {}
+pub trait PromotionMoveExt: PawnMoveExt {
+    fn promote(&self, board: &mut Board) -> Result<(), ()> {
+        self.push(self.coordinates().source(), board)?;
+        Ok(())
+    }
+}
 
 impl PromotionMoveExt for PromotionMove {}
 impl PawnMoveExt for PromotionMove {}

@@ -40,7 +40,8 @@ impl MoveExt for BishopPromotionMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        todo!()
+        self.promote(board)?;
+        Ok(())
     }
 }
 

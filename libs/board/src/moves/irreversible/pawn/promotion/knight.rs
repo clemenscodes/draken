@@ -41,7 +41,8 @@ impl MoveExt for KnightPromotionMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        todo!()
+        self.promote(board)?;
+        Ok(())
     }
 }
 

@@ -15,7 +15,12 @@ pub enum CastleMove {
     Queen(QueenCastleMove),
 }
 
-pub trait CastleMoveExt: IrreversibleMoveExt {}
+pub trait CastleMoveExt: IrreversibleMoveExt {
+    fn castle(&self, board: &mut Board) -> Result<(), ()> {
+        self.make(board)?;
+        Ok(())
+    }
+}
 
 impl CastleMoveExt for CastleMove {}
 impl IrreversibleMoveExt for CastleMove {}

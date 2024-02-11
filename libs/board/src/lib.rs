@@ -151,10 +151,7 @@ impl Board {
             9 => Ok(Piece::from(pieces.white_pieces().queen())),
             10 => Ok(Piece::from(pieces.white_pieces().king())),
             11 => Ok(Piece::from(pieces.white_pieces().pawn())),
-            _ => {
-                eprintln!("No piece found on {source} but expected it to exist");
-                Err(())
-            }
+            _ => Err(()),
         }
     }
 

@@ -8,6 +8,8 @@ use crate::{
 };
 
 use super::IrreversibleMoveExt;
+use api::Square;
+use bitboard::BitboardExt;
 use enpassant::EnPassantMove;
 use promotion::PromotionMove;
 use push::DoublePushMove;
@@ -19,7 +21,14 @@ pub enum PawnMove {
     Promotion(PromotionMove),
 }
 
-pub trait PawnMoveExt: IrreversibleMoveExt {}
+pub trait PawnMoveExt: IrreversibleMoveExt {
+    fn push(&self, source: Square, board: &mut Board) -> Result<(), ()> {
+        self.make(board)?;
+        let piece = board.get_piece_board_mut(source)?;
+        piece.self_unset_bit(source.into());
+        Ok(())
+    }
+}
 
 impl PawnMoveExt for PawnMove {}
 impl IrreversibleMoveExt for PawnMove {}
