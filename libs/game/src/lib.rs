@@ -1,33 +1,31 @@
 use api::{GameExt, MoveListExt, Square, State};
 use bitboard::{Bitboard, BitboardExt};
-use board::Board;
-use board::{
-    moves::{
-        encoded_move::{EncodedMove, EncodedMoveExt},
-        irreversible::{
-            capture::CaptureMove,
-            castle::{king::KingCastleMove, queen::QueenCastleMove},
-            pawn::{
-                enpassant::EnPassantMove,
-                promotion::{
-                    bishop::BishopPromotionMove,
-                    capture::{
-                        bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
-                        rook::RookPromotionCaptureMove,
-                    },
-                    knight::KnightPromotionMove,
-                    queen::QueenPromotionMove,
-                    rook::RookPromotionMove,
+use board::moves::{
+    encoded_move::{EncodedMove, EncodedMoveExt},
+    irreversible::{
+        capture::CaptureMove,
+        castle::{king::KingCastleMove, queen::QueenCastleMove},
+        pawn::{
+            enpassant::EnPassantMove,
+            promotion::{
+                bishop::BishopPromotionMove,
+                capture::{
+                    bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
+                    rook::RookPromotionCaptureMove,
                 },
-                push::DoublePushMove,
+                knight::KnightPromotionMove,
+                queen::QueenPromotionMove,
+                rook::RookPromotionMove,
             },
+            push::DoublePushMove,
         },
-        list::MoveList,
-        reversible::quiet::QuietMove,
-        *,
     },
-    pieces::Verify,
+    list::MoveList,
+    reversible::quiet::QuietMove,
+    *,
 };
+use board::pieces::Verify;
+use board::Board;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]

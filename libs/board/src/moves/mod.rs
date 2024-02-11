@@ -48,8 +48,7 @@ pub trait Encode: MoveExt {
         let destination_index: u16 = self.coordinates().destination().into();
         let source = source_index << SOURCE_SHIFT;
         let destination = destination_index << DESTINATION_SHIFT;
-        let data = source | destination | kind_mask;
-        data
+        source | destination | kind_mask
     }
 }
 

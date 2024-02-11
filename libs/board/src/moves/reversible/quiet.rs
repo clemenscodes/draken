@@ -36,11 +36,11 @@ impl MoveExt for QuietMove {
     }
 
     fn march(&self, board: &mut Board) {
+        self.increment_half_move_clock(board);
         let source = self.coordinates().source();
         let destination = self.coordinates().destination();
         let piece = board.get_piece_board_mut(source).unwrap();
         *piece ^= Bitboard::move_mask(source, destination);
-        self.increment_half_move_clock(board);
     }
 }
 
