@@ -94,6 +94,73 @@ pub trait Verify {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
 }
 
+pub trait Shift {
+    #[inline(always)]
+    fn shift_north(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, NORTH)
+    }
+    #[inline(always)]
+    fn shift_north_east(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, NORTH_EAST) & !FIRST_FILE
+    }
+    #[inline(always)]
+    fn shift_north_west(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, NORTH_WEST) & !EIGHTH_FILE
+    }
+    #[inline(always)]
+    fn shift_north_north_west(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, NORTH_NORTH_WEST) & !EIGHTH_FILE
+    }
+    #[inline(always)]
+    fn shift_north_north_east(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, NORTH_NORTH_EAST) & !FIRST_FILE
+    }
+    #[inline(always)]
+    fn shift_east(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, EAST) & !FIRST_FILE
+    }
+    #[inline(always)]
+    fn shift_east_east_north(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, EAST_EAST_NORTH) & !(FIRST_FILE | SECOND_FILE)
+    }
+    #[inline(always)]
+    fn shift_east_east_south(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, EAST_EAST_SOUTH) & !(FIRST_FILE | SECOND_FILE)
+    }
+    #[inline(always)]
+    fn shift_south(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, SOUTH)
+    }
+    #[inline(always)]
+    fn shift_south_east(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, SOUTH_EAST) & !FIRST_FILE
+    }
+    #[inline(always)]
+    fn shift_south_west(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, SOUTH_WEST) & EIGHTH_FILE
+    }
+    #[inline(always)]
+    fn shift_south_south_east(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, SOUTH_SOUTH_EAST) & !FIRST_FILE
+    }
+    #[inline(always)]
+    fn shift_south_south_west(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, SOUTH_SOUTH_WEST) & !EIGHTH_FILE
+    }
+    #[inline(always)]
+    fn shift_west(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, WEST) & !EIGHTH_FILE
+    }
+    #[inline(always)]
+    fn shift_west_west_north(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, WEST_WEST_NORTH) & !(SEVENTH_FILE | EIGHTH_FILE)
+    }
+    #[inline(always)]
+    fn shift_west_west_south(bitboard: Bitboard) -> Bitboard {
+        Bitboard::shift(bitboard, WEST_WEST_SOUTH) & !(SEVENTH_FILE | EIGHTH_FILE)
+    }
+}
+
 impl Default for Board {
     fn default() -> Self {
         let fen = ForsythEdwardsNotation::default();
@@ -196,8 +263,6 @@ impl Into<Bitboard> for Board {
     }
 }
 
-impl BoardExt for Board {}
-
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Square::iterate_square_indices(|rank, file| {
@@ -217,6 +282,10 @@ impl Debug for Board {
         Display::fmt(&self, f)
     }
 }
+
+impl BoardExt for Board {}
+
+impl Shift for Bitboard {}
 
 #[cfg(test)]
 mod tests {

@@ -20,8 +20,8 @@ pub trait PawnExt: PieceExt {
     fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard;
     fn get_single_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard;
     fn get_double_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard;
-    fn get_single_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard;
-    fn get_double_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard;
+    fn get_single_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
+    fn get_double_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
     fn get_promotion_pieces(&self) -> [Piece; 4];
     fn march(&mut self, source: Square, destination: Square, board: &mut Board) -> Result<(), ()> {
         if self.is_illegal_move(source, destination, *board) {
