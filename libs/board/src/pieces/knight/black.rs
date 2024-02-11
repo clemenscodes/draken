@@ -49,7 +49,6 @@ impl Debug for BlackKnight {
     }
 }
 
-impl KnightExt for BlackKnight {}
 impl PieceExt for BlackKnight {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         Knight::from(*self).is_illegal_move(source, destination, board)
@@ -61,3 +60,5 @@ impl Verify for BlackKnight {
         Knight::from(*self).verify(source, destination, board)
     }
 }
+
+impl KnightExt for BlackKnight {}

@@ -1,5 +1,8 @@
 use super::PawnExt;
-use crate::{pieces::PieceExt, Board, Verify};
+use crate::{
+    pieces::{BlackBishop, BlackKnight, BlackQueen, BlackRook, Piece, PieceExt},
+    Board, Verify,
+};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
@@ -36,6 +39,7 @@ impl From<Bitboard> for BlackPawn {
         Self::new(value)
     }
 }
+
 impl Display for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackPawn::symbol())
@@ -48,7 +52,6 @@ impl Debug for BlackPawn {
     }
 }
 
-impl PawnExt for BlackPawn {}
 impl PieceExt for BlackPawn {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         todo!()
@@ -58,5 +61,44 @@ impl PieceExt for BlackPawn {
 impl Verify for BlackPawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!();
+    }
+}
+
+impl PawnExt for BlackPawn {
+    fn get_west_attacks(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_east_attacks(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_attacking_pawns(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_single_push_targets(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_double_push_targets(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_single_pushable_pawns(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_double_pushable_pawns(&self) -> Bitboard {
+        todo!()
+    }
+
+    fn get_promotion_pieces(&self) -> [Piece; 4] {
+        [
+            Piece::from(BlackBishop::default()),
+            Piece::from(BlackRook::default()),
+            Piece::from(BlackKnight::default()),
+            Piece::from(BlackQueen::default()),
+        ]
     }
 }

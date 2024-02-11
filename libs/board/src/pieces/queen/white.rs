@@ -49,7 +49,6 @@ impl Debug for WhiteQueen {
     }
 }
 
-impl QueenExt for WhiteQueen {}
 impl PieceExt for WhiteQueen {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         Queen::from(*self).is_illegal_move(source, destination, board)
@@ -61,3 +60,5 @@ impl Verify for WhiteQueen {
         Queen::from(*self).verify(source, destination, board)
     }
 }
+
+impl QueenExt for WhiteQueen {}

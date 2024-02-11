@@ -13,6 +13,8 @@ pub enum Bishop {
     White(WhiteBishop),
 }
 
+pub trait BishopExt: PieceExt {}
+
 impl From<BlackBishop> for Bishop {
     fn from(v: BlackBishop) -> Self {
         Self::Black(v)
@@ -25,9 +27,6 @@ impl From<WhiteBishop> for Bishop {
     }
 }
 
-pub trait BishopExt: PieceExt {}
-
-impl BishopExt for Bishop {}
 impl PieceExt for Bishop {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         todo!()
@@ -39,3 +38,5 @@ impl Verify for Bishop {
         todo!()
     }
 }
+
+impl BishopExt for Bishop {}

@@ -13,6 +13,38 @@ pub enum Piece {
     Pawn(Pawn),
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum PieceError {
+    Invalid,
+}
+
+pub trait PieceExt: Verify {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool;
+}
+
+impl TryFrom<char> for Piece {
+    type Error = PieceError;
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        let piece: Piece = match value {
+            piece if piece == PIECE_SYMBOLS[0] => Piece::Rook(Rook::Black(BlackRook::default())),
+            piece if piece == PIECE_SYMBOLS[1] => Piece::Knight(Knight::Black(BlackKnight::default())),
+            piece if piece == PIECE_SYMBOLS[2] => Piece::Bishop(Bishop::Black(BlackBishop::default())),
+            piece if piece == PIECE_SYMBOLS[3] => Piece::Queen(Queen::Black(BlackQueen::default())),
+            piece if piece == PIECE_SYMBOLS[4] => Piece::King(King::Black(BlackKing::default())),
+            piece if piece == PIECE_SYMBOLS[5] => Piece::Pawn(Pawn::Black(BlackPawn::default())),
+            piece if piece == PIECE_SYMBOLS[6] => Piece::Rook(Rook::White(WhiteRook::default())),
+            piece if piece == PIECE_SYMBOLS[7] => Piece::Knight(Knight::White(WhiteKnight::default())),
+            piece if piece == PIECE_SYMBOLS[8] => Piece::Bishop(Bishop::White(WhiteBishop::default())),
+            piece if piece == PIECE_SYMBOLS[9] => Piece::Queen(Queen::White(WhiteQueen::default())),
+            piece if piece == PIECE_SYMBOLS[10] => Piece::King(King::White(WhiteKing::default())),
+            piece if piece == PIECE_SYMBOLS[11] => Piece::Pawn(Pawn::White(WhitePawn::default())),
+            _ => return Err(Self::Error::Invalid),
+        };
+        Ok(piece)
+    }
+}
+
 impl From<Pawn> for Piece {
     fn from(v: Pawn) -> Self {
         Self::Pawn(v)
@@ -118,38 +150,6 @@ impl From<WhiteRook> for Piece {
 impl From<BlackRook> for Piece {
     fn from(v: BlackRook) -> Self {
         Self::Rook(Rook::from(v))
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum PieceError {
-    Invalid,
-}
-
-pub trait PieceExt: Verify {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool;
-}
-
-impl TryFrom<char> for Piece {
-    type Error = PieceError;
-
-    fn try_from(value: char) -> Result<Self, Self::Error> {
-        let piece: Piece = match value {
-            piece if piece == PIECE_SYMBOLS[0] => Piece::Rook(Rook::Black(BlackRook::default())),
-            piece if piece == PIECE_SYMBOLS[1] => Piece::Knight(Knight::Black(BlackKnight::default())),
-            piece if piece == PIECE_SYMBOLS[2] => Piece::Bishop(Bishop::Black(BlackBishop::default())),
-            piece if piece == PIECE_SYMBOLS[3] => Piece::Queen(Queen::Black(BlackQueen::default())),
-            piece if piece == PIECE_SYMBOLS[4] => Piece::King(King::Black(BlackKing::default())),
-            piece if piece == PIECE_SYMBOLS[5] => Piece::Pawn(Pawn::Black(BlackPawn::default())),
-            piece if piece == PIECE_SYMBOLS[6] => Piece::Rook(Rook::White(WhiteRook::default())),
-            piece if piece == PIECE_SYMBOLS[7] => Piece::Knight(Knight::White(WhiteKnight::default())),
-            piece if piece == PIECE_SYMBOLS[8] => Piece::Bishop(Bishop::White(WhiteBishop::default())),
-            piece if piece == PIECE_SYMBOLS[9] => Piece::Queen(Queen::White(WhiteQueen::default())),
-            piece if piece == PIECE_SYMBOLS[10] => Piece::King(King::White(WhiteKing::default())),
-            piece if piece == PIECE_SYMBOLS[11] => Piece::Pawn(Pawn::White(WhitePawn::default())),
-            _ => return Err(Self::Error::Invalid),
-        };
-        Ok(piece)
     }
 }
 

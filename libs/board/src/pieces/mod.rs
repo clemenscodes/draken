@@ -9,8 +9,6 @@ mod rook;
 mod white_pieces;
 
 use self::{piece::*, white_pieces::WhitePieces};
-use crate::Board;
-use api::Square;
 pub use bishop::{black::*, white::*, Bishop};
 pub use bitboard::{Bitboard, BitboardExt};
 use black_pieces::BlackPieces;

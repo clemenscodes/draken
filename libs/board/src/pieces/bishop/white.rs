@@ -49,7 +49,6 @@ impl Debug for WhiteBishop {
     }
 }
 
-impl BishopExt for WhiteBishop {}
 impl PieceExt for WhiteBishop {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         Bishop::from(*self).is_illegal_move(source, destination, board)
@@ -61,3 +60,5 @@ impl Verify for WhiteBishop {
         Bishop::from(*self).verify(source, destination, board)
     }
 }
+
+impl BishopExt for WhiteBishop {}
