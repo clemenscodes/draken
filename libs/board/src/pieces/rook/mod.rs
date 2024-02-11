@@ -4,6 +4,7 @@ pub mod white;
 use super::PieceExt;
 use crate::{Board, Verify};
 use api::Square;
+use bitboard::Bitboard;
 use black::BlackRook;
 use white::WhiteRook;
 
@@ -12,6 +13,8 @@ pub enum Rook {
     Black(BlackRook),
     White(WhiteRook),
 }
+
+pub trait RookExt: PieceExt {}
 
 impl From<WhiteRook> for Rook {
     fn from(v: WhiteRook) -> Self {
@@ -25,10 +28,12 @@ impl From<BlackRook> for Rook {
     }
 }
 
-pub trait RookExt: PieceExt {}
-
 impl PieceExt for Rook {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> bitboard::Bitboard {
         todo!()
     }
 }

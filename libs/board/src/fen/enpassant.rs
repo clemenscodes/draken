@@ -2,6 +2,7 @@ use std::fmt::{Debug, Display};
 
 use api::Square;
 use api::Square::{A3, A6, H3, H6};
+use bitboard::Bitboard;
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct EnPassant {
@@ -32,6 +33,10 @@ impl EnPassant {
 
     pub fn square(&self) -> Option<Square> {
         self.square
+    }
+
+    pub fn mask(&self) -> Bitboard {
+        todo!()
     }
 }
 

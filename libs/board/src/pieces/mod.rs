@@ -189,6 +189,23 @@ impl Pieces {
             },
         };
     }
+
+    fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
+        self.occupied_squares = occupied_squares;
+    }
+
+    fn set_empty_squares(&mut self, empty_squares: Bitboard) {
+        self.empty_squares = empty_squares;
+    }
+
+    fn update_occupied_squares(&mut self) {
+        self.set_occupied_squares(Bitboard::merge_many(self.get_all_pieces().to_vec()));
+    }
+
+    fn update_empty_squares(&mut self) {
+        let occupied_squares = self.occupied_squares();
+        self.set_empty_squares(!occupied_squares);
+    }
 }
 
 impl From<[[u8; 8]; 8]> for Pieces {

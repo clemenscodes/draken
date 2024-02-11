@@ -1,6 +1,6 @@
 use super::*;
 use crate::{Board, Verify};
-use api::Square;
+use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::Bitboard;
 
 #[derive(Debug)]
@@ -20,6 +20,16 @@ pub enum PieceError {
 
 pub trait PieceExt: Verify {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool;
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard;
+    fn remove_friendly_pieces(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        let friendly_pieces: Bitboard = if board.fen().is_white() {
+            board.pieces().white_pieces().into()
+        } else {
+            board.pieces().black_pieces().into()
+        };
+        let not_friendly_pieces = !friendly_pieces;
+        piece & not_friendly_pieces
+    }
 }
 
 impl TryFrom<char> for Piece {
@@ -246,6 +256,17 @@ impl PieceExt for Piece {
             Piece::Queen(queen) => queen.is_illegal_move(source, destination, board),
             Piece::King(king) => king.is_illegal_move(source, destination, board),
             Piece::Pawn(pawn) => pawn.is_illegal_move(source, destination, board),
+        }
+    }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        match self {
+            Piece::Rook(rook) => rook.get_attacks(piece, board),
+            Piece::Knight(knight) => knight.get_attacks(piece, board),
+            Piece::Bishop(bishop) => bishop.get_attacks(piece, board),
+            Piece::Queen(queen) => queen.get_attacks(piece, board),
+            Piece::King(king) => king.get_attacks(piece, board),
+            Piece::Pawn(pawn) => pawn.get_attacks(piece, board),
         }
     }
 }

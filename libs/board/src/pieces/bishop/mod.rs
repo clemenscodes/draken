@@ -4,6 +4,7 @@ pub mod white;
 use super::PieceExt;
 use crate::{Board, Verify};
 use api::Square;
+use bitboard::Bitboard;
 use black::BlackBishop;
 use white::WhiteBishop;
 
@@ -29,6 +30,10 @@ impl From<WhiteBishop> for Bishop {
 
 impl PieceExt for Bishop {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> bitboard::Bitboard {
         todo!()
     }
 }

@@ -480,8 +480,8 @@ mod tests {
 
     #[test]
     fn test_empty_squares_on_board() {
-        let board = Board::from(ForsythEdwardsNotation::default());
-        let empty = board.pieces().empty_squares();
+        let mut board = Board::from(ForsythEdwardsNotation::default());
+        let empty = board.pieces_mut().empty_squares();
         let expected_empty = "\
             00000000\n\
             00000000\n\
@@ -497,8 +497,8 @@ mod tests {
 
     #[test]
     fn test_occupied_squares_on_board() {
-        let board = Board::from(ForsythEdwardsNotation::default());
-        let occupied = board.pieces().occupied_squares();
+        let mut board = Board::from(ForsythEdwardsNotation::default());
+        let occupied = board.pieces_mut().occupied_squares();
         let expected_occupied = "\
             11111111\n\
             11111111\n\

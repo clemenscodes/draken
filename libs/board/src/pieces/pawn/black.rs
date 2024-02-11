@@ -1,4 +1,4 @@
-use super::PawnExt;
+use super::{Pawn, PawnExt};
 use crate::{
     pieces::{BlackBishop, BlackKnight, BlackQueen, BlackRook, Piece, PieceExt},
     Board, Verify,
@@ -56,6 +56,10 @@ impl PieceExt for BlackPawn {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         todo!()
     }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        Pawn::from(*self).get_attacks(piece, board)
+    }
 }
 
 impl Verify for BlackPawn {
@@ -65,31 +69,31 @@ impl Verify for BlackPawn {
 }
 
 impl PawnExt for BlackPawn {
-    fn get_west_attacks(&self) -> Bitboard {
+    fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard {
         todo!()
     }
 
-    fn get_east_attacks(&self) -> Bitboard {
+    fn get_east_attacks(&self, pawns: Bitboard) -> Bitboard {
         todo!()
     }
 
-    fn get_attacking_pawns(&self) -> Bitboard {
+    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard {
         todo!()
     }
 
-    fn get_single_push_targets(&self) -> Bitboard {
+    fn get_single_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
         todo!()
     }
 
-    fn get_double_push_targets(&self) -> Bitboard {
+    fn get_double_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
         todo!()
     }
 
-    fn get_single_pushable_pawns(&self) -> Bitboard {
+    fn get_single_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard {
         todo!()
     }
 
-    fn get_double_pushable_pawns(&self) -> Bitboard {
+    fn get_double_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard {
         todo!()
     }
 

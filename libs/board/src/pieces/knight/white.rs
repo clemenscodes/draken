@@ -52,6 +52,10 @@ impl PieceExt for WhiteKnight {
     fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
         Knight::from(*self).is_illegal_move(source, destination, board)
     }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        Knight::from(*self).get_attacks(piece, board)
+    }
 }
 
 impl Verify for WhiteKnight {
