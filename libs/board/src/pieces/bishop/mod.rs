@@ -1,9 +1,10 @@
 pub mod black;
 pub mod white;
 
-use super::{PieceExt, Verify};
-use crate::Board;
+use super::PieceExt;
+use crate::{Board, Verify};
 use api::Square;
+use bitboard::Bitboard;
 use black::BlackBishop;
 use white::WhiteBishop;
 
@@ -12,6 +13,8 @@ pub enum Bishop {
     Black(BlackBishop),
     White(WhiteBishop),
 }
+
+pub trait BishopExt: PieceExt {}
 
 impl From<BlackBishop> for Bishop {
     fn from(v: BlackBishop) -> Self {
@@ -25,13 +28,20 @@ impl From<WhiteBishop> for Bishop {
     }
 }
 
-pub trait BishopExt: PieceExt {}
+impl PieceExt for Bishop {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
 
-impl BishopExt for Bishop {}
-impl PieceExt for Bishop {}
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> bitboard::Bitboard {
+        todo!()
+    }
+}
 
 impl Verify for Bishop {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }
+
+impl BishopExt for Bishop {}

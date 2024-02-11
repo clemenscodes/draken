@@ -208,6 +208,10 @@ pub trait BitboardExt {
         (lhs & rhs).bits != 0
     }
     #[inline(always)]
+    fn move_mask(source: Square, destination: Square) -> Bitboard {
+        Bitboard::get_single_bit(source.into()) | Bitboard::get_single_bit(destination.into())
+    }
+    #[inline(always)]
     fn shift(bitboard: Bitboard, steps: i8) -> Bitboard {
         let abs_steps = steps.abs() as u32;
         if steps < 0 {

@@ -53,11 +53,16 @@ impl TryFrom<String> for ActiveColor {
 
 pub trait ActiveColorExt {
     fn switch(&mut self);
+    fn is_white(&self) -> bool;
 }
 
 impl ActiveColorExt for ActiveColor {
     fn switch(&mut self) {
         self.color = if self.color == COLORS[0] { COLORS[1] } else { COLORS[0] }
+    }
+
+    fn is_white(&self) -> bool {
+        self.color == COLORS[0]
     }
 }
 

@@ -7,7 +7,7 @@ pub mod pieces;
 use api::{Square, SquareExt};
 use bitboard::{Bitboard, BitboardExt};
 use fen::ForsythEdwardsNotation;
-use pieces::{Pieces, UTF_SYMBOLS};
+use pieces::{piece::Piece, Pieces, UTF_SYMBOLS};
 use std::{
     fmt::{Debug, Display},
     mem::variant_count,
@@ -88,6 +88,12 @@ pub struct Board {
     pieces: Pieces,
 }
 
+pub trait BoardExt {}
+
+pub trait Verify {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
+}
+
 impl Default for Board {
     fn default() -> Self {
         let fen = ForsythEdwardsNotation::default();
@@ -129,6 +135,26 @@ impl Board {
         Err(())
     }
 
+    pub fn get_piece_mut(&mut self, source: Square) -> Result<Piece, ()> {
+        let piece_index = self.get_piece_index(source).unwrap();
+        let pieces = self.pieces_mut();
+        match piece_index {
+            0 => Ok(Piece::from(pieces.black_pieces().rook())),
+            1 => Ok(Piece::from(pieces.black_pieces().knight())),
+            2 => Ok(Piece::from(pieces.black_pieces().bishop())),
+            3 => Ok(Piece::from(pieces.black_pieces().queen())),
+            4 => Ok(Piece::from(pieces.black_pieces().king())),
+            5 => Ok(Piece::from(pieces.black_pieces().pawn())),
+            6 => Ok(Piece::from(pieces.white_pieces().rook())),
+            7 => Ok(Piece::from(pieces.white_pieces().knight())),
+            8 => Ok(Piece::from(pieces.white_pieces().bishop())),
+            9 => Ok(Piece::from(pieces.white_pieces().queen())),
+            10 => Ok(Piece::from(pieces.white_pieces().king())),
+            11 => Ok(Piece::from(pieces.white_pieces().pawn())),
+            _ => Err(()),
+        }
+    }
+
     pub fn get_piece_board_mut(&mut self, source: Square) -> Result<&mut Bitboard, ()> {
         let piece_index = self.get_piece_index(source).unwrap();
         let pieces = self.pieces_mut();
@@ -148,6 +174,12 @@ impl Board {
             _ => Err(()),
         }
     }
+
+    pub fn capture_piece(&mut self, square: Square) -> Result<(), ()> {
+        let piece = self.get_piece_board_mut(square)?;
+        *piece ^= Bitboard::get_single_bit(square.into());
+        Ok(())
+    }
 }
 
 impl From<ForsythEdwardsNotation> for Board {
@@ -163,8 +195,6 @@ impl Into<Bitboard> for Board {
         pieces.into()
     }
 }
-
-pub trait BoardExt {}
 
 impl BoardExt for Board {}
 
@@ -450,8 +480,8 @@ mod tests {
 
     #[test]
     fn test_empty_squares_on_board() {
-        let board = Board::from(ForsythEdwardsNotation::default());
-        let empty = board.pieces().empty_squares();
+        let mut board = Board::from(ForsythEdwardsNotation::default());
+        let empty = board.pieces_mut().empty_squares();
         let expected_empty = "\
             00000000\n\
             00000000\n\
@@ -467,8 +497,8 @@ mod tests {
 
     #[test]
     fn test_occupied_squares_on_board() {
-        let board = Board::from(ForsythEdwardsNotation::default());
-        let occupied = board.pieces().occupied_squares();
+        let mut board = Board::from(ForsythEdwardsNotation::default());
+        let occupied = board.pieces_mut().occupied_squares();
         let expected_occupied = "\
             11111111\n\
             11111111\n\

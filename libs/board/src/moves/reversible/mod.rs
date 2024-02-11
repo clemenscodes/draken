@@ -10,9 +10,9 @@ pub enum ReversibleMove {
 }
 
 pub trait ReversibleMoveExt: MoveExt {
-    fn increment_half_move_clock(&self, board: &mut Board) {
-        self.switch(board);
+    fn increment_half_move_clock(&self, board: &mut Board) -> Result<(), ()> {
         board.fen_mut().half_move_clock_mut().increment();
+        self.switch(board)
     }
 }
 
@@ -25,7 +25,7 @@ impl MoveExt for ReversibleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             ReversibleMove::Quiet(quiet) => quiet.march(board),
         }

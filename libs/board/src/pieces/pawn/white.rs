@@ -1,8 +1,8 @@
-use super::PawnExt;
+use super::{Pawn, PawnExt};
 use crate::{
     moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
-    pieces::{PieceExt, Verify},
-    Board,
+    pieces::{Piece, PieceExt, WhiteBishop, WhiteKnight, WhiteQueen, WhiteRook},
+    Board, Verify,
 };
 use api::Square;
 use bitboard::Bitboard;
@@ -53,13 +53,59 @@ impl Debug for WhitePawn {
     }
 }
 
-impl PawnExt for WhitePawn {}
-impl PieceExt for WhitePawn {}
+impl PieceExt for WhitePawn {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        Pawn::from(*self).get_attacks(piece, board)
+    }
+}
 
 impl Verify for WhitePawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         println!("Verifying white pawn move from {source} to {destination}");
         let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
         Ok(encoded_move.data())
+    }
+}
+
+impl PawnExt for WhitePawn {
+    fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_east_attacks(&self, pawns: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard {
+        todo!()
+    }
+
+    fn get_single_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_double_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_single_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_double_pushable_pawns(&self, empty_squres: Bitboard) -> Bitboard {
+        todo!()
+    }
+
+    fn get_promotion_pieces(&self) -> [Piece; 4] {
+        [
+            Piece::from(WhiteBishop::default()),
+            Piece::from(WhiteRook::default()),
+            Piece::from(WhiteKnight::default()),
+            Piece::from(WhiteQueen::default()),
+        ]
     }
 }

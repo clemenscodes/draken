@@ -58,6 +58,7 @@ impl TryFrom<String> for HalfMoveClock {
 
 pub(crate) trait HalfMoveClockExt {
     fn increment(&mut self);
+    fn reset(&mut self);
 }
 
 impl HalfMoveClockExt for HalfMoveClock {
@@ -65,6 +66,10 @@ impl HalfMoveClockExt for HalfMoveClock {
         if self.clock < MAX_HALF_MOVE_CLOCK {
             self.clock += 1;
         }
+    }
+
+    fn reset(&mut self) {
+        self.clock = MIN_HALF_MOVE_CLOCK;
     }
 }
 

@@ -2,9 +2,8 @@ pub mod capture;
 pub mod castle;
 pub mod pawn;
 
-use crate::Board;
-
 use super::{coordinates::Coordinates, MoveExt};
+use crate::{fen::half_move_clock::HalfMoveClockExt, Board};
 use capture::CaptureMove;
 use castle::CastleMove;
 use pawn::PawnMove;
@@ -16,7 +15,17 @@ pub enum IrreversibleMove {
     Castle(CastleMove),
 }
 
-pub trait IrreversibleMoveExt: MoveExt {}
+pub trait IrreversibleMoveExt: MoveExt {
+    fn make(&self, board: &mut Board) -> Result<(), ()> {
+        let piece = self.piece(board);
+        if piece.is_king() {
+            board.fen_mut().half_move_clock_mut().increment();
+        } else {
+            board.fen_mut().half_move_clock_mut().reset()
+        }
+        self.switch(board)
+    }
+}
 
 impl IrreversibleMoveExt for IrreversibleMove {}
 
@@ -29,7 +38,7 @@ impl MoveExt for IrreversibleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) {
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
         match *self {
             IrreversibleMove::Capture(capture) => capture.march(board),
             IrreversibleMove::Pawn(pawn) => pawn.march(board),

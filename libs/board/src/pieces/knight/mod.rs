@@ -1,9 +1,10 @@
 pub mod black;
 pub mod white;
 
-use super::{PieceExt, Verify};
-use crate::Board;
+use super::PieceExt;
+use crate::{Board, Verify};
 use api::Square;
+use bitboard::Bitboard;
 use black::BlackKnight;
 use white::WhiteKnight;
 
@@ -12,6 +13,8 @@ pub enum Knight {
     Black(BlackKnight),
     White(WhiteKnight),
 }
+
+pub trait KnightExt: PieceExt {}
 
 impl From<WhiteKnight> for Knight {
     fn from(v: WhiteKnight) -> Self {
@@ -25,13 +28,20 @@ impl From<BlackKnight> for Knight {
     }
 }
 
-pub trait KnightExt: PieceExt {}
+impl PieceExt for Knight {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        todo!()
+    }
 
-impl KnightExt for Knight {}
-impl PieceExt for Knight {}
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> bitboard::Bitboard {
+        todo!()
+    }
+}
 
 impl Verify for Knight {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         todo!()
     }
 }
+
+impl KnightExt for Knight {}

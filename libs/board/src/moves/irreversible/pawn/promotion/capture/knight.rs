@@ -44,8 +44,8 @@ impl MoveExt for KnightPromotionCaptureMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) {
-        todo!()
+    fn march(&self, board: &mut Board) -> Result<(), ()> {
+        self.capture(board)
     }
 }
 

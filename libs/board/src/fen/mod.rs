@@ -6,6 +6,7 @@ pub mod half_move_clock;
 pub mod placements;
 
 use api::ForsythEdwardsNotationExt;
+use bitboard::Bitboard;
 
 use self::{active_color::*, castling::*, enpassant::*, full_move_clock::*, half_move_clock::*, placements::*};
 use std::fmt::{Debug, Display};
@@ -88,6 +89,10 @@ impl ForsythEdwardsNotation {
     pub fn full_move_clock_mut(&mut self) -> &mut FullMoveClock {
         &mut self.full_move_clock
     }
+
+    pub fn enpassant_mask(&self) -> Bitboard {
+        self.enpassant().mask()
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -148,11 +153,11 @@ impl Debug for ForsythEdwardsNotation {
 
 impl ForsythEdwardsNotationExt for ForsythEdwardsNotation {
     fn get_piece_placement_data(&self) -> Vec<String> {
-        todo!()
+        self.placements().to_string().split("/").map(String::from).collect()
     }
 
     fn is_white(&self) -> bool {
-        todo!()
+        self.active_color().is_white()
     }
 
     fn get_castling(&self) -> String {

@@ -1,9 +1,5 @@
-use crate::{
-    pieces::{PieceExt, Verify},
-    Board,
-};
-
 use super::{Queen, QueenExt};
+use crate::{pieces::PieceExt, Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
@@ -53,11 +49,20 @@ impl Debug for WhiteQueen {
     }
 }
 
-impl QueenExt for WhiteQueen {}
-impl PieceExt for WhiteQueen {}
+impl PieceExt for WhiteQueen {
+    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+        Queen::from(*self).is_illegal_move(source, destination, board)
+    }
+
+    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+        Queen::from(*self).get_attacks(piece, board)
+    }
+}
 
 impl Verify for WhiteQueen {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
         Queen::from(*self).verify(source, destination, board)
     }
 }
+
+impl QueenExt for WhiteQueen {}
