@@ -58,14 +58,14 @@ impl PieceExt for BlackPawn {
     }
 
     #[inline(always)]
-    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+    fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)
     }
 }
 
 impl Verify for BlackPawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        todo!();
+        Pawn::from(*self).verify(source, destination, board)
     }
 }
 
@@ -81,7 +81,7 @@ impl PawnExt for BlackPawn {
     }
 
     #[inline(always)]
-    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard {
+    fn get_attacking_pawns(&self, board: Board) -> Bitboard {
         let attacks = self.get_attacks(self.bitboard(), board);
         Bitboard::shift_north_west(attacks) | Bitboard::shift_north_east(attacks)
     }

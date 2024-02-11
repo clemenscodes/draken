@@ -2,7 +2,10 @@ pub mod black;
 pub mod white;
 
 use super::{Piece, PieceExt};
-use crate::{Board, Verify, EIGHTH_FILE, EIGHTH_RANK, FIFTH_FILE, FIRST_RANK};
+use crate::{
+    moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
+    Board, Verify, EIGHTH_FILE, EIGHTH_RANK, FIFTH_FILE, FIRST_RANK,
+};
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use black::BlackPawn;
@@ -17,7 +20,7 @@ pub enum Pawn {
 pub trait PawnExt: PieceExt {
     fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard;
     fn get_east_attacks(&self, pawns: Bitboard) -> Bitboard;
-    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard;
+    fn get_attacking_pawns(&self, board: Board) -> Bitboard;
     fn get_single_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard;
     fn get_double_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard;
     fn get_single_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
@@ -33,8 +36,8 @@ pub trait PawnExt: PieceExt {
     fn get_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
         self.get_single_push_targets(pawn, empty_squares) | self.get_double_push_targets(pawn, empty_squares)
     }
-    fn get_targets(&self, pawn: Bitboard, board: &mut Board) -> Bitboard {
-        self.get_push_targets(pawn, board.pieces_mut().empty_squares()) | self.get_attacks(pawn, board)
+    fn get_targets(&self, pawn: Bitboard, board: Board) -> Bitboard {
+        self.get_push_targets(pawn, board.pieces().empty_squares()) | self.get_attacks(pawn, board)
     }
     fn promotion_mask() -> Bitboard {
         FIRST_RANK | EIGHTH_RANK
@@ -61,10 +64,12 @@ impl From<BlackPawn> for Pawn {
 
 impl Verify for Pawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        match self {
-            Pawn::Black(pawn) => pawn.verify(source, destination, board),
-            Pawn::White(pawn) => pawn.verify(source, destination, board),
+        let pawn = Bitboard::get_single_bit(source.into());
+        if !Bitboard::check_bit(self.get_targets(pawn, board), destination.into()) {
+            return Err(());
         }
+        let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
+        Ok(encoded_move.data())
     }
 }
 
@@ -76,7 +81,7 @@ impl PieceExt for Pawn {
         }
     }
 
-    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+    fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         let enpassant_mask = board.fen().enpassant_mask();
         let west_attacks = self.get_west_attacks(piece);
         let east_attacks = self.get_east_attacks(piece);
@@ -116,7 +121,7 @@ impl PawnExt for Pawn {
         }
     }
 
-    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard {
+    fn get_attacking_pawns(&self, board: Board) -> Bitboard {
         match self {
             Pawn::Black(pawn) => pawn.get_attacking_pawns(board),
             Pawn::White(pawn) => pawn.get_attacking_pawns(board),

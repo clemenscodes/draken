@@ -54,7 +54,7 @@ impl PieceExt for WhiteKing {
         King::from(*self).is_illegal_move(source, destination, board)
     }
 
-    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+    fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         King::from(*self).get_attacks(piece, board)
     }
 }

@@ -5,7 +5,7 @@ use crate::{
     Board, Shift, Verify, FOURTH_RANK,
 };
 use api::Square;
-use bitboard::Bitboard;
+use bitboard::{Bitboard, BitboardExt};
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
@@ -58,16 +58,14 @@ impl PieceExt for WhitePawn {
         todo!()
     }
 
-    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> Bitboard {
+    fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)
     }
 }
 
 impl Verify for WhitePawn {
     fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        println!("Verifying white pawn move from {source} to {destination}");
-        let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
-        Ok(encoded_move.data())
+        Pawn::from(*self).verify(source, destination, board)
     }
 }
 
@@ -83,7 +81,7 @@ impl PawnExt for WhitePawn {
     }
 
     #[inline(always)]
-    fn get_attacking_pawns(&self, board: &mut Board) -> Bitboard {
+    fn get_attacking_pawns(&self, board: Board) -> Bitboard {
         let attacks = self.get_attacks(self.bitboard(), board);
         Bitboard::shift_south_west(attacks) | Bitboard::shift_south_east(attacks)
     }

@@ -4,7 +4,11 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
-use crate::{fen::active_color::ActiveColorExt, pieces::piece::Piece, Board};
+use crate::{
+    fen::active_color::ActiveColorExt,
+    pieces::{piece::Piece, Pawn, PawnExt},
+    Board,
+};
 use api::ForsythEdwardsNotationExt;
 use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
@@ -40,6 +44,25 @@ pub trait MoveExt {
     fn march(&self, board: &mut Board) -> Result<(), ()>;
     fn piece(&self, board: &mut Board) -> Piece {
         board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
+    }
+    fn is_capture(&self, board: Board) -> bool {
+        let destination: Bitboard = self.coordinates().destination().into();
+        let pieces: Bitboard = if board.fen().is_white() {
+            board.pieces().black_pieces().into()
+        } else {
+            board.pieces().white_pieces().into()
+        };
+        Bitboard::overlap(destination, pieces)
+    }
+    fn is_promotion(&self) -> bool {
+        let destination: Bitboard = self.coordinates().destination().into();
+        let mask = Pawn::promotion_mask();
+        Bitboard::overlap(destination, mask)
+    }
+    fn is_enpassant(&self, board: Board) -> bool {
+        let mask = board.fen().enpassant_mask();
+        let destination: Bitboard = self.coordinates().destination().into();
+        Bitboard::overlap(destination, mask)
     }
     fn verify(&self, board: &mut Board) -> bool {
         let player: Bitboard = if board.fen().is_white() {

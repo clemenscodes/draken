@@ -33,7 +33,7 @@ impl PieceExt for Queen {
         todo!()
     }
 
-    fn get_attacks(&self, piece: Bitboard, board: &mut Board) -> bitboard::Bitboard {
+    fn get_attacks(&self, piece: Bitboard, board: Board) -> bitboard::Bitboard {
         todo!()
     }
 }
