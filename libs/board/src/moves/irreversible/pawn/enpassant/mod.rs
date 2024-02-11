@@ -25,8 +25,7 @@ impl EnPassantMove {
 
 pub trait EnPassantMoveExt: PawnMoveExt {
     fn pass(&self, board: &mut Board) -> Result<(), ()> {
-        self.push(self.coordinates().source(), board)?;
-        Ok(())
+        self.push(self.coordinates().source(), board)
     }
 }
 

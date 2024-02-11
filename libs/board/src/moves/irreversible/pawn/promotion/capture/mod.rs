@@ -27,8 +27,7 @@ pub enum PromotionCaptureMove {
 
 pub trait PromotionCaptureMoveExt: PromotionMoveExt {
     fn capture(&self, board: &mut Board) -> Result<(), ()> {
-        self.promote(board)?;
-        Ok(())
+        self.promote(board)
     }
 }
 

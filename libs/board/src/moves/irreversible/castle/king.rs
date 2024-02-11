@@ -36,8 +36,7 @@ impl MoveExt for KingCastleMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        self.castle(board)?;
-        Ok(())
+        self.castle(board)
     }
 }
 

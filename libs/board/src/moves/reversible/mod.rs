@@ -11,9 +11,8 @@ pub enum ReversibleMove {
 
 pub trait ReversibleMoveExt: MoveExt {
     fn increment_half_move_clock(&self, board: &mut Board) -> Result<(), ()> {
-        self.switch(board)?;
         board.fen_mut().half_move_clock_mut().increment();
-        Ok(())
+        self.switch(board)
     }
 }
 

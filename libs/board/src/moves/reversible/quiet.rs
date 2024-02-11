@@ -24,7 +24,15 @@ impl QuietMove {
     }
 }
 
-pub trait QuietMoveExt: ReversibleMoveExt {}
+pub trait QuietMoveExt: ReversibleMoveExt {
+    fn quiet(&self, board: &mut Board) -> Result<(), ()> {
+        let source = self.coordinates().source();
+        let destination = self.coordinates().destination();
+        let piece = board.get_piece_board_mut(source)?;
+        *piece ^= Bitboard::move_mask(source, destination);
+        self.increment_half_move_clock(board)
+    }
+}
 
 impl QuietMoveExt for QuietMove {}
 impl ReversibleMoveExt for QuietMove {}
@@ -36,12 +44,7 @@ impl MoveExt for QuietMove {
     }
 
     fn march(&self, board: &mut Board) -> Result<(), ()> {
-        self.increment_half_move_clock(board)?;
-        let source = self.coordinates().source();
-        let destination = self.coordinates().destination();
-        let piece = board.get_piece_board_mut(source).unwrap();
-        *piece ^= Bitboard::move_mask(source, destination);
-        Ok(())
+        self.quiet(board)
     }
 }
 

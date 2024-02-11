@@ -40,8 +40,7 @@ impl MoveExt for CaptureMove {
         let destination = self.coordinates().destination();
         let piece = board.get_piece_board_mut(source)?;
         *piece ^= Bitboard::move_mask(source, destination);
-        board.capture_piece(destination)?;
-        Ok(())
+        board.capture_piece(destination)
     }
 }
 

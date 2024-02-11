@@ -26,8 +26,7 @@ pub enum PromotionMove {
 
 pub trait PromotionMoveExt: PawnMoveExt {
     fn promote(&self, board: &mut Board) -> Result<(), ()> {
-        self.push(self.coordinates().source(), board)?;
-        Ok(())
+        self.push(self.coordinates().source(), board)
     }
 }
 

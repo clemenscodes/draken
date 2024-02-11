@@ -17,14 +17,13 @@ pub enum IrreversibleMove {
 
 pub trait IrreversibleMoveExt: MoveExt {
     fn make(&self, board: &mut Board) -> Result<(), ()> {
-        self.switch(board)?;
         let piece = self.piece(board);
         if piece.is_king() {
             board.fen_mut().half_move_clock_mut().increment();
         } else {
             board.fen_mut().half_move_clock_mut().reset()
         }
-        Ok(())
+        self.switch(board)
     }
 }
 

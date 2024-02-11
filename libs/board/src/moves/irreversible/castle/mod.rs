@@ -17,8 +17,7 @@ pub enum CastleMove {
 
 pub trait CastleMoveExt: IrreversibleMoveExt {
     fn castle(&self, board: &mut Board) -> Result<(), ()> {
-        self.make(board)?;
-        Ok(())
+        self.make(board)
     }
 }
 
