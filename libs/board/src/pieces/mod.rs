@@ -14,7 +14,7 @@ pub use bitboard::{Bitboard, BitboardExt};
 use black_pieces::BlackPieces;
 pub use king::{black::*, white::*, King};
 pub use knight::{black::*, white::*, Knight};
-pub use pawn::{black::*, white::*, Pawn};
+pub use pawn::{black::*, white::*, Pawn, PawnExt};
 pub use queen::{black::*, white::*, Queen};
 pub use rook::{black::*, white::*, Rook};
 pub use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};

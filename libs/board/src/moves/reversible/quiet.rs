@@ -34,10 +34,6 @@ pub trait QuietMoveExt: ReversibleMoveExt {
     }
 }
 
-impl QuietMoveExt for QuietMove {}
-impl ReversibleMoveExt for QuietMove {}
-impl Encode for QuietMove {}
-
 impl MoveExt for QuietMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
@@ -61,6 +57,10 @@ impl Debug for QuietMove {
         Display::fmt(self, f)
     }
 }
+
+impl QuietMoveExt for QuietMove {}
+impl ReversibleMoveExt for QuietMove {}
+impl Encode for QuietMove {}
 
 #[cfg(test)]
 mod tests {
