@@ -101,6 +101,16 @@ jobs:
             - name: Test
               run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
+            - name: Coverage
+              run: pnpm nx affected -t coverage --nx-bail --base=$NX_BASE --head=$NX_HEAD
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v4.0.1
+              if: matrix.os == 'ubuntu-latest'
+              env:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  slug: ${{ github.repository }}
+
     cleanup:
         name: Cleanup
         runs-on: ubuntu-latest
