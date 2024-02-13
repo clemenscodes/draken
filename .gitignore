@@ -10,8 +10,6 @@ coverage
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# Next.js
 **/.next
 **/out
 **/gen

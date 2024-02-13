@@ -4,38 +4,10 @@
     "projectType": "library",
     "sourceRoot": "lib/bitboard/src",
     "targets": {
-        "build": {
-            "executor": "@monodon/rust:build",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/bitboard"
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
-            }
-        },
-        "test": {
-            "executor": "@monodon/rust:test",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/bitboard",
-                "lib": true
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
-            }
-        },
-        "lint": {
-            "executor": "@monodon/rust:lint",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/bitboard"
-            }
-        }
+        "build": {},
+        "test": {},
+        "coverage": {},
+        "lint": {}
     },
     "tags": []
 }

@@ -41,7 +41,7 @@
           };
         };
         rustToolchain = (pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml).override {
-          extensions = ["rust-src" "clippy"];
+          extensions = ["rust-src" "clippy" "llvm-tools"];
         };
         androidEnv = pkgs.androidenv.override {licenseAccepted = true;};
         androidComposition = androidEnv.composeAndroidPackages {
@@ -88,6 +88,7 @@
             rust-analyzer
             nodejs_20
             corepack_20
+            grcov
           ]
           ++ tauri_packages;
       in
