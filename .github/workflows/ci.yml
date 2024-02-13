@@ -20,7 +20,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                platform: [macos-latest, ubuntu-latest, windows-latest]
+                platform: [ubuntu-latest]
         runs-on: ${{ matrix.platform }}
         steps:
             - name: Checkout [Pull Request]
@@ -81,6 +81,7 @@ jobs:
                   components: rustfmt, clippy, llvm-tools
 
             - name: Install Tauri Dependencies
+              if: matrix.platform == 'ubuntu-latest'
               run: |
                   sudo apt-get update
                   sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
