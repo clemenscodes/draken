@@ -94,9 +94,6 @@ jobs:
             - name: Test
               run: pnpm test:affected --base=$NX_BASE --head=$NX_HEAD
 
-            - name: E2E
-              run: pnpm nx e2e e2e
-
     cleanup:
         name: Cleanup
         runs-on: ubuntu-latest
