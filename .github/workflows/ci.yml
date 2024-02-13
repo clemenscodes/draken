@@ -55,7 +55,7 @@ jobs:
               run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
             - name: pnpm cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               id: cache
               with:
                   path: ${{ env.STORE_PATH }}
@@ -63,7 +63,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-pnpm-store-
 
             - name: cargo cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: ${{ github.workspace }}/dist
                   key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -74,11 +74,7 @@ jobs:
               run: pnpm install
 
             - name: Install Rust
-              uses: actions-rs/toolchain@v1
-              with:
-                  toolchain: nightly-2024-02-05
-                  override: true
-                  components: rustfmt, clippy, llvm-tools
+              uses: moonrepo/setup-rust@v1
 
             - name: Install Tauri Dependencies
               if: matrix.platform == 'ubuntu-latest'

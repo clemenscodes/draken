@@ -6,4 +6,4 @@ targets = [
     "i686-linux-android",
     "x86_64-linux-android",
 ]
-components = ["llvm-tools","clippy"]
+components = ["llvm-tools","clippy","rustfmt"]
