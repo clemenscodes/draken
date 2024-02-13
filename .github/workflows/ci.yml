@@ -88,6 +88,9 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libssl-dev libayatana-appindicator3-dev librsvg2-dev
 
+            - name: Install grcov
+              run: cargo install grcov
+
             - name: Format
               run: pnpm fmt:check
 
