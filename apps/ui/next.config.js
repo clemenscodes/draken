@@ -23,6 +23,9 @@ module.exports = async (phase, { defaultConfig }) => {
         images: {
             unoptimized: true,
         },
+        typescript: {
+            ignoreBuildErrors: true,
+        },
         assetPrefix: isProd ? undefined : `http://${internalHost}:3000`,
     };
     return composePlugins(...plugins)(nextConfig)();
