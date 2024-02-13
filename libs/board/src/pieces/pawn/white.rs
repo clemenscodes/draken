@@ -4,7 +4,7 @@ use crate::{
     Board, Shift, Verify, FOURTH_RANK,
 };
 use api::Square;
-use bitboard::{Bitboard};
+use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]

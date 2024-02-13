@@ -20,6 +20,36 @@ component_management:
               target: auto
 
     individual_components:
+        - component_id: gui
+          paths:
+              - "apps/gui/**"
+        - component_id: api
+          paths:
+              - "libs/api/**"
+        - component_id: bitboard
+          paths:
+              - "libs/bitboard/**"
         - component_id: board
           paths:
               - "libs/board/**"
+        - component_id: controller
+          paths:
+              - "libs/controller/**"
+        - component_id: draken
+          paths:
+              - "libs/draken/**"
+        - component_id: engine
+          paths:
+              - "libs/engine/**"
+        - component_id: game
+          paths:
+              - "libs/game/**"
+        - component_id: model
+          paths:
+              - "libs/model/**"
+        - component_id: uci
+          paths:
+              - "libs/uci/**"
+        - component_id: view
+          paths:
+              - "libs/view/**"
