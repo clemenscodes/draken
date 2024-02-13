@@ -2,7 +2,16 @@
     "name": "e2e",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "apps/e2e/src",
-    "targets": {},
+    "targets": {
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "eslint ."
+            }
+        }
+    },
     "tags": [],
     "implicitDependencies": ["ui"]
 }

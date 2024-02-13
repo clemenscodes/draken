@@ -3,6 +3,23 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "ui",
     "projectType": "application",
-    "targets": {},
+    "targets": {
+        "start": {
+            "executor": "nx:run-commands",
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "next start"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "eslint ."
+            }
+        }
+    },
     "tags": []
 }
