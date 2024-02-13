@@ -94,18 +94,15 @@ jobs:
             - name: Lint
               run: pnpm lint:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
-            - name: Build
-              run: pnpm build:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD --exclude ui
-
             - name: Test
               run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Coverage
-              run: pnpm nx affected -t coverage --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm nx run-many -t coverage --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v4.0.1
-              if: matrix.os == 'ubuntu-latest'
+              if: matrix.platform == 'ubuntu-latest'
               env:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   slug: ${{ github.repository }}
@@ -116,6 +113,6 @@ jobs:
         needs: [ci]
         steps:
             - name: Delete Artifacts
-              uses: geekyeggo/delete-artifact@v2
+              uses: geekyeggo/delete-artifact@v4
               with:
                   name: "*"

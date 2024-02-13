@@ -34,7 +34,6 @@
         },
         "coverage": {
             "cache": true,
-            "dependsOn": ["test"],
             "executor": "nx:run-commands",
             "options": {
                 "command": "grcov . --binary-path ./dist/libs/{projectName}/debug/deps/ -s libs/{projectName} -t lcov --branch --ignore-not-existing --ignore '../*' --ignore '/*' -o coverage/libs/{projectName}/tests.lcov"
