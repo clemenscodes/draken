@@ -1,21 +1,25 @@
+codecov:
+    notify:
+        require_ci_to_pass: yes
+
+comment:
+    layout: "header, diff, flags, components"
+
 coverage:
     precision: 2
     round: down
     status:
-        project:
-            board:
-                target: 90%
-                flags:
-                    - board
-        patch:
-            default:
-                enabled: no
-                if_not_found: success
-        changes:
-            default:
-                enabled: no
-                if_not_found: success
-flags:
-    board:
-        paths:
-            - libs/board/src
+        project: yes
+        patch: yes
+        changes: no
+
+component_management:
+    default_rules:
+        statuses:
+            - type: patch
+              target: auto
+
+    individual_components:
+        - component_id: board
+          paths:
+              - "libs/board/**"

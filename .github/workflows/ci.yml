@@ -77,7 +77,6 @@ jobs:
                   restore-keys: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
 
             - name: Install dependencies
-              if: steps.cache.outputs.cache-hit != 'true'
               run: pnpm install
 
             - name: Install Rust
