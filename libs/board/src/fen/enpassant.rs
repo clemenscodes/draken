@@ -5,6 +5,7 @@ use api::Square::{A3, A6, H3, H6};
 use bitboard::Bitboard;
 
 #[derive(PartialEq, Eq, Clone, Copy)]
+#[derive(Default)]
 pub struct EnPassant {
     square: Option<Square>,
 }
@@ -79,11 +80,7 @@ impl EnPassantExt for EnPassant {
     }
 }
 
-impl Default for EnPassant {
-    fn default() -> Self {
-        Self { square: None }
-    }
-}
+
 
 impl Display for EnPassant {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

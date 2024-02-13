@@ -109,7 +109,7 @@ jobs:
               run: pnpm nx affected -t coverage --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v4.0.1
+              uses: codecov/codecov-action@v3
               if: matrix.platform == 'ubuntu-latest'
               env:
                   token: ${{ secrets.CODECOV_TOKEN }}

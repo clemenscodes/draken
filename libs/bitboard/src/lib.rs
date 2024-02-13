@@ -4,7 +4,7 @@ use std::fmt::{Debug, Display};
 use std::ops::*;
 use std::sync::LazyLock;
 
-const SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| {
+static SINGLE_BITS: LazyLock<[Bitboard; u64::BITS as usize]> = LazyLock::new(|| {
     let mut single_bits = [Bitboard::default(); u64::BITS as usize];
     Square::iterate_square_indices(|rank, file| {
         let index: usize = Square::from_rank_file_to_index(rank, file);
@@ -176,7 +176,7 @@ impl TryFrom<(usize, usize)> for Bitboard {
         if rank * file >= 64 {
             return Err(Self::Error::InvalidIndex);
         }
-        let index = (8 * rank + file) as usize;
+        let index = 8 * rank + file;
         let board = Bitboard::get_single_bit(index);
         Ok(board)
     }
@@ -213,7 +213,7 @@ pub trait BitboardExt {
     }
     #[inline(always)]
     fn shift(bitboard: Bitboard, steps: i8) -> Bitboard {
-        let abs_steps = steps.abs() as u32;
+        let abs_steps = steps.unsigned_abs() as u32;
         if steps < 0 {
             return bitboard >> abs_steps as usize;
         }

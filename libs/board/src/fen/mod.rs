@@ -114,12 +114,12 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
         if parts.len() != FEN_PARTS {
             return Err(Self::Error::Invalid);
         }
-        let placements = Placements::try_from(parts[0]).map_err(|err| Self::Error::InvalidPlacements(err))?;
-        let active_color = ActiveColor::try_from(parts[1]).map_err(|err| Self::Error::InvalidActiveColor(err))?;
-        let castling = Castling::try_from(parts[2]).map_err(|err| Self::Error::InvalidCastling(err))?;
-        let enpassant = EnPassant::try_from(parts[3]).map_err(|err| Self::Error::InvalidEnPassant(err))?;
-        let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(|err| Self::Error::InvalidHalfMoveClock(err))?;
-        let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(|err| Self::Error::InvalidFullMoveClock(err))?;
+        let placements = Placements::try_from(parts[0]).map_err(Self::Error::InvalidPlacements)?;
+        let active_color = ActiveColor::try_from(parts[1]).map_err(Self::Error::InvalidActiveColor)?;
+        let castling = Castling::try_from(parts[2]).map_err(Self::Error::InvalidCastling)?;
+        let enpassant = EnPassant::try_from(parts[3]).map_err(Self::Error::InvalidEnPassant)?;
+        let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(Self::Error::InvalidHalfMoveClock)?;
+        let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(Self::Error::InvalidFullMoveClock)?;
         let fen = Self::new(placements, active_color, castling, enpassant, half_move_clock, full_move_clock);
         Ok(fen)
     }
@@ -153,7 +153,7 @@ impl Debug for ForsythEdwardsNotation {
 
 impl ForsythEdwardsNotationExt for ForsythEdwardsNotation {
     fn get_piece_placement_data(&self) -> Vec<String> {
-        self.placements().to_string().split("/").map(String::from).collect()
+        self.placements().to_string().split('/').map(String::from).collect()
     }
 
     fn is_white(&self) -> bool {
