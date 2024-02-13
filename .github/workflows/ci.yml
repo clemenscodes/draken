@@ -65,7 +65,12 @@ jobs:
             - name: cargo cache
               uses: actions/cache@v4
               with:
-                  path: ${{ github.workspace }}/dist
+                  path: |
+                      ~/.cargo/bin/
+                      ~/.cargo/registry/index/
+                      ~/.cargo/registry/cache/
+                      ~/.cargo/git/db/
+                      dist/
                   key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
                   restore-keys: ${{ runner.os }}-cargo-
 
@@ -108,7 +113,7 @@ jobs:
               if: matrix.platform == 'ubuntu-latest'
               env:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  slug: ${{ github.repository }}
+                  slug: clemenscodes/draken
 
     cleanup:
         name: Cleanup
