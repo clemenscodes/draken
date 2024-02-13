@@ -38,15 +38,24 @@
             }
         },
         "test": {
-            "executor": "@monodon/rust:test",
-            "outputs": ["{options.target-dir}"],
+            "cache": true,
+            "executor": "nx:run-commands",
             "options": {
-                "target-dir": "dist/apps/gui"
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
+                "color": true,
+                "env": {
+                    "CARGO_INCREMENTAL": "0",
+                    "RUSTFLAGS": "-Cinstrument-coverage",
+                    "LLVM_PROFILE_FILE": "../../coverage/apps/{projectName}/%p-%m.profraw"
+                },
+                "command": "cargo test -p {projectName} --lib --target-dir dist/apps/{projectName}"
+            }
+        },
+        "coverage": {
+            "cache": true,
+            "dependsOn": ["test"],
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "grcov . --binary-path ./dist/apps/{projectName}/debug/deps/ -s apps/{projectName} -t lcov --branch --ignore-not-existing --ignore '../*' --ignore '/*' -o coverage/apps/{projectName}/tests.lcov"
             }
         },
         "lint": {

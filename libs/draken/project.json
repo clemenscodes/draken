@@ -4,49 +4,11 @@
     "projectType": "application",
     "sourceRoot": "./draken/src",
     "targets": {
-        "build": {
-            "executor": "@monodon/rust:build",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/draken"
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
-            }
-        },
-        "test": {
-            "executor": "@monodon/rust:test",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/draken"
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
-            }
-        },
-        "lint": {
-            "executor": "@monodon/rust:lint",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/draken"
-            }
-        },
-        "start": {
-            "executor": "@monodon/rust:run",
-            "outputs": ["{options.target-dir}"],
-            "options": {
-                "target-dir": "dist/libs/draken"
-            },
-            "configurations": {
-                "production": {
-                    "release": true
-                }
-            }
-        }
+        "build": {},
+        "test": {},
+        "coverage": {},
+        "lint": {},
+        "start": {}
     },
     "tags": []
 }

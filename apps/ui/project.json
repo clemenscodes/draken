@@ -3,6 +3,43 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "ui",
     "projectType": "application",
-    "targets": {},
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "inputs": ["default", "^default"],
+            "outputs": ["{workspaceRoot}/dist/apps/ui"],
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "next build"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "inputs": ["default", "^default"],
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "jest"
+            }
+        },
+        "start": {
+            "executor": "nx:run-commands",
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "next start"
+            }
+        },
+        "lint": {
+            "executor": "nx:run-commands",
+            "inputs": ["default", "^default"],
+            "options": {
+                "color": true,
+                "cwd": "apps/{projectName}",
+                "command": "eslint ."
+            }
+        }
+    },
     "tags": []
 }

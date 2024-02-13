@@ -4,7 +4,7 @@
     "identifier": "draken.chess",
     "build": {
         "beforeDevCommand": "pnpm nx dev ui",
-        "beforeBuildCommand": "pnpm nx build ui",
+        "beforeBuildCommand": "pnpm nx build ui --skip-nx-cache",
         "devUrl": "http://localhost:3000",
         "frontendDist": "../../dist/apps/ui"
     },

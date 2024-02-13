@@ -8,10 +8,57 @@
     "targetDefaults": {
         "build": {
             "cache": true,
-            "dependsOn": ["^build"]
+            "executor": "@monodon/rust:build",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/libs/{projectName}"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
+        },
+        "test": {
+            "cache": true,
+            "executor": "nx:run-commands",
+            "options": {
+                "color": true,
+                "env": {
+                    "CARGO_INCREMENTAL": "0",
+                    "RUSTFLAGS": "-Cinstrument-coverage",
+                    "LLVM_PROFILE_FILE": "../../coverage/libs/{projectName}/%p-%m.profraw"
+                },
+                "command": "cargo test -p {projectName} --lib --target-dir dist/libs/{projectName}"
+            }
+        },
+        "coverage": {
+            "cache": true,
+            "dependsOn": ["test"],
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "grcov . --binary-path ./dist/libs/{projectName}/debug/deps/ -s libs/{projectName} -t lcov --branch --ignore-not-existing --ignore '../*' --ignore '/*' -o coverage/libs/{projectName}/tests.lcov"
+            }
         },
         "lint": {
-            "cache": true
+            "cache": true,
+            "executor": "@monodon/rust:lint",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/libs/{projectName}"
+            }
+        },
+        "start": {
+            "executor": "@monodon/rust:run",
+            "outputs": ["{options.target-dir}"],
+            "options": {
+                "target-dir": "dist/libs/{projectName}"
+            },
+            "configurations": {
+                "production": {
+                    "release": true
+                }
+            }
         },
         "@nx/eslint:lint": {
             "cache": true,
@@ -31,13 +78,6 @@
                 "buildTargetName": "build",
                 "devTargetName": "dev",
                 "startTargetName": "start"
-            }
-        },
-        {
-            "plugin": "@nx/cypress/plugin",
-            "options": {
-                "targetName": "e2e",
-                "componentTestingTargetName": "component-test"
             }
         },
         {

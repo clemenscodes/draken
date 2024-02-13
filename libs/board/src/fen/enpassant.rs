@@ -36,7 +36,7 @@ impl EnPassant {
     }
 
     pub fn mask(&self) -> Bitboard {
-        todo!()
+        Bitboard::default()
     }
 }
 
