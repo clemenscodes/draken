@@ -53,7 +53,7 @@ impl Debug for BlackPawn {
 }
 
 impl PieceExt for BlackPawn {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
         todo!()
     }
 

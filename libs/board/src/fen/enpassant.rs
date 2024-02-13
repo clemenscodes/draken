@@ -4,7 +4,7 @@ use api::Square;
 use api::Square::{A3, A6, H3, H6};
 use bitboard::Bitboard;
 
-#[derive(PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy, Default)]
 pub struct EnPassant {
     square: Option<Square>,
 }
@@ -76,12 +76,6 @@ impl EnPassantExt for EnPassant {
 
     fn unset(&mut self) {
         self.square = None;
-    }
-}
-
-impl Default for EnPassant {
-    fn default() -> Self {
-        Self { square: None }
     }
 }
 

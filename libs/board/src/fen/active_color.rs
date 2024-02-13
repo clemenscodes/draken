@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display};
 
 pub const NUM_COLORS: usize = 2;
-pub const COLORS: [u8; NUM_COLORS] = ['w' as u8, 'b' as u8];
+pub const COLORS: [u8; NUM_COLORS] = [b'w', b'b'];
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct ActiveColor {
@@ -34,10 +34,10 @@ impl TryFrom<&str> for ActiveColor {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         if value.eq("w") {
-            return Ok(Self { color: 'w' as u8 });
+            return Ok(Self { color: b'w' });
         }
         if value.eq("b") {
-            return Ok(Self { color: 'b' as u8 });
+            return Ok(Self { color: b'b' });
         }
         Err(Self::Error::Invalid)
     }

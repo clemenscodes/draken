@@ -1,11 +1,10 @@
 use super::{Pawn, PawnExt};
 use crate::{
-    moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
     pieces::{Piece, PieceExt, WhiteBishop, WhiteKnight, WhiteQueen, WhiteRook},
     Board, Shift, Verify, FOURTH_RANK,
 };
 use api::Square;
-use bitboard::{Bitboard, BitboardExt};
+use bitboard::Bitboard;
 use std::fmt::{Debug, Display};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
@@ -54,7 +53,7 @@ impl Debug for WhitePawn {
 }
 
 impl PieceExt for WhitePawn {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
         todo!()
     }
 

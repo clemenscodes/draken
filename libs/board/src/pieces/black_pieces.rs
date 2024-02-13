@@ -61,15 +61,15 @@ impl BlackPieces {
     }
 }
 
-impl Into<Bitboard> for BlackPieces {
-    fn into(self) -> Bitboard {
+impl From<BlackPieces> for Bitboard {
+    fn from(val: BlackPieces) -> Self {
         Bitboard::merge_many(vec![
-            self.rook.bitboard(),
-            self.knight.bitboard(),
-            self.bishop.bitboard(),
-            self.queen.bitboard(),
-            self.king.bitboard(),
-            self.pawn.bitboard(),
+            val.rook.bitboard(),
+            val.knight.bitboard(),
+            val.bishop.bitboard(),
+            val.queen.bitboard(),
+            val.king.bitboard(),
+            val.pawn.bitboard(),
         ])
     }
 }
