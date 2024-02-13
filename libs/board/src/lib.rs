@@ -193,8 +193,8 @@ impl Board {
     pub fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
         let bitboard = Bitboard::from(source);
         let pieces = self.pieces().get_all_pieces();
-        for index in 0..pieces.len() {
-            if Bitboard::overlap(bitboard, pieces[index]) {
+        for (index, piece) in pieces.iter().enumerate() {
+            if Bitboard::overlap(bitboard, *piece) {
                 return Ok(index);
             }
         }
@@ -256,9 +256,9 @@ impl From<ForsythEdwardsNotation> for Board {
     }
 }
 
-impl Into<Bitboard> for Board {
-    fn into(self) -> Bitboard {
-        let pieces = *self.pieces();
+impl From<Board> for Bitboard {
+    fn from(val: Board) -> Self {
+        let pieces = *val.pieces();
         pieces.into()
     }
 }
@@ -266,7 +266,7 @@ impl Into<Bitboard> for Board {
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Square::iterate_square_indices(|rank, file| {
-            let bitboard = Bitboard::try_from((rank as usize, file as usize)).unwrap();
+            let bitboard = Bitboard::try_from((rank, file)).unwrap();
             let symbol = self.pieces().get_piece_symbol(bitboard, UTF_SYMBOLS);
             write!(f, "[{symbol}]").unwrap();
             if file == 7 && rank != 0 {

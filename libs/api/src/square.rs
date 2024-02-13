@@ -1,7 +1,4 @@
-use std::{
-    convert::Into,
-    fmt::{Debug, Display},
-};
+use std::fmt::{Debug, Display};
 use Square::*;
 
 pub const NUM_RANKS: usize = 8;
@@ -64,7 +61,7 @@ impl TryFrom<&str> for Square {
         if value.len() != 2 {
             return Err(Self::Error::Invalid);
         }
-        return match value {
+        match value {
             "a1" => Ok(A1), "b1" => Ok(B1), "c1" => Ok(C1), "d1" => Ok(D1),
             "e1" => Ok(E1), "f1" => Ok(F1), "g1" => Ok(G1), "h1" => Ok(H1),
             "a2" => Ok(A2), "b2" => Ok(B2), "c2" => Ok(C2), "d2" => Ok(D2),
@@ -82,7 +79,7 @@ impl TryFrom<&str> for Square {
             "a8" => Ok(A8), "b8" => Ok(B8), "c8" => Ok(C8), "d8" => Ok(D8),
             "e8" => Ok(E8), "f8" => Ok(F8), "g8" => Ok(G8), "h8" => Ok(H8),
             _ => Err(Self::Error::Invalid),
-        };
+        }
     }
 }
 
@@ -130,33 +127,33 @@ impl From<u8> for Square {
     }
 }
 
-impl Into<usize> for Square {
-    fn into(self) -> usize {
-        *&self as usize
+impl From<Square> for usize {
+    fn from(index: Square) -> Self {
+        index as usize
     }
 }
 
-impl Into<u64> for Square {
-    fn into(self) -> u64 {
-        *&self as u64
+impl From<Square> for u64 {
+    fn from(index: Square) -> Self {
+        index as u64
     }
 }
 
-impl Into<u32> for Square {
-    fn into(self) -> u32 {
-        *&self as u32
+impl From<Square> for u32 {
+    fn from(index: Square) -> Self {
+        index as u32
     }
 }
 
-impl Into<u16> for Square {
-    fn into(self) -> u16 {
-        *&self as u16
+impl From<Square> for u16 {
+    fn from(index: Square) -> Self {
+        index as u16
     }
 }
 
-impl Into<u8> for Square {
-    fn into(self) -> u8 {
-        *&self as u8
+impl From<Square> for u8 {
+    fn from(index: Square) -> Self {
+        index as u8
     }
 }
 

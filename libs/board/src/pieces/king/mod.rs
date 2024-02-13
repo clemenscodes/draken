@@ -29,17 +29,17 @@ impl From<BlackKing> for King {
 }
 
 impl PieceExt for King {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
+    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
         todo!()
     }
 
-    fn get_attacks(&self, piece: Bitboard, board: Board) -> bitboard::Bitboard {
+    fn get_attacks(&self, _piece: Bitboard, _board: Board) -> bitboard::Bitboard {
         todo!()
     }
 }
 
 impl Verify for King {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, ()> {
         todo!()
     }
 }

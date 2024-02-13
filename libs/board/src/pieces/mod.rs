@@ -69,7 +69,7 @@ pub const PIECE_BYTES: [u8; NUM_PIECES] = [
     WhitePawn::symbol() as u8,
 ];
 
-pub const PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
+pub static PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
     let mut piece_lookup: HashMap<char, usize> = HashMap::new();
     for (i, &piece) in PIECE_SYMBOLS.iter().enumerate() {
         piece_lookup.insert(piece, i);
@@ -161,7 +161,7 @@ impl Pieces {
     }
 
     fn merge_piece(&mut self, mut piece: Piece) {
-        let board = piece.get_board().clone();
+        let board = *piece.get_board();
         match piece {
             Piece::Rook(rook) => match rook {
                 Rook::Black(_) => self.black_pieces_mut().rook_mut().bitboard_mut().self_merge(board),
@@ -236,9 +236,9 @@ impl From<[[u8; 8]; 8]> for Pieces {
     }
 }
 
-impl Into<Bitboard> for Pieces {
-    fn into(self) -> Bitboard {
-        Bitboard::merge_many(vec![self.white_pieces().into(), self.black_pieces().into()])
+impl From<Pieces> for Bitboard {
+    fn from(val: Pieces) -> Self {
+        Bitboard::merge_many(vec![val.white_pieces().into(), val.black_pieces().into()])
     }
 }
 
