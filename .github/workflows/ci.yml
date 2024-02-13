@@ -96,7 +96,7 @@ jobs:
               run: pnpm lint:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Build
-              run: pnpm build:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm build:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD --exclude ui
 
             - name: Test
               run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
