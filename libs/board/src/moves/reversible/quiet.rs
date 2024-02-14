@@ -5,7 +5,10 @@ use crate::{
 };
 use api::Square;
 use bitboard::{Bitboard, BitboardExt};
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct QuietMove {
@@ -25,7 +28,7 @@ impl QuietMove {
 }
 
 pub trait QuietMoveExt: ReversibleMoveExt {
-    fn quiet(&self, board: &mut Board) -> Result<(), ()> {
+    fn quiet(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.increment_half_move_clock(board)?;
         let source = self.coordinates().source();
         let destination = self.coordinates().destination();
@@ -40,7 +43,7 @@ impl MoveExt for QuietMove {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.quiet(board)
     }
 }

@@ -5,15 +5,17 @@
     "private": true,
     "scripts": {
         "all": "pnpm nx run-many --output-style=stream --skip-nx-cache -t",
-        "affected": "pnpm nx affected --output-style=stream --skip-nx-cache -t",
+        "affected": "pnpm nx affected --output-style=stream -t",
         "test:all": "pnpm all test",
         "test:affected": "pnpm affected test",
         "build:all": "pnpm all build",
         "build:affected": "pnpm affected build",
         "lint:all": "pnpm all lint",
         "lint:affected": "pnpm affected lint",
-        "fmt:check": "pnpm nx format:check --all",
+        "fmt:check": "pnpm nx format:check --all && cargo fmt --all --check",
         "fmt": "cargo fmt --all && pnpm nx format --all",
+        "coverage:all": "pnpm all coverage",
+        "coverage:affected": "pnpm affected coverage",
         "prepare": "husky install"
     },
     "devDependencies": {

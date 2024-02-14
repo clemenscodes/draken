@@ -7,6 +7,7 @@ use crate::{fen::half_move_clock::HalfMoveClockExt, Board};
 use capture::CaptureMove;
 use castle::CastleMove;
 use pawn::PawnMove;
+use std::error::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IrreversibleMove {
@@ -16,8 +17,8 @@ pub enum IrreversibleMove {
 }
 
 pub trait IrreversibleMoveExt: MoveExt {
-    fn make(&self, board: &mut Board) -> Result<(), ()> {
-        let piece = self.piece(board);
+    fn make(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
+        let piece = self.piece(board)?;
         if piece.is_king() {
             board.fen_mut().half_move_clock_mut().increment();
         } else {
@@ -26,8 +27,6 @@ pub trait IrreversibleMoveExt: MoveExt {
         self.switch(board)
     }
 }
-
-impl IrreversibleMoveExt for IrreversibleMove {}
 
 impl MoveExt for IrreversibleMove {
     fn coordinates(&self) -> Coordinates {
@@ -38,7 +37,7 @@ impl MoveExt for IrreversibleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             IrreversibleMove::Capture(capture) => capture.march(board),
             IrreversibleMove::Pawn(pawn) => pawn.march(board),
@@ -46,3 +45,5 @@ impl MoveExt for IrreversibleMove {
         }
     }
 }
+
+impl IrreversibleMoveExt for IrreversibleMove {}

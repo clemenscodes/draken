@@ -2,7 +2,10 @@ use super::{Rook, RookExt};
 use crate::{pieces::PieceExt, Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct BlackRook {
@@ -59,8 +62,8 @@ impl PieceExt for BlackRook {
 }
 
 impl Verify for BlackRook {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
-        Rook::from(*self).verify(source, destination, board)
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
+        Rook::from(*self).verify(source, destination, promotion, board)
     }
 }
 

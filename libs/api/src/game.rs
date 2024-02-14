@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use crate::square::Square;
 
 pub trait GameExt {
@@ -15,6 +17,6 @@ pub trait GameExt {
     fn promote_knight(&mut self);
     fn promote_bishop(&mut self);
     fn is_own_piece_on_square(&self, square: Square) -> bool;
-    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()>;
+    fn make_move(&mut self, source: Square, destination: Square, promotion: Option<char>) -> Result<(), Box<dyn Error>>;
     fn ply(&self) -> u16;
 }

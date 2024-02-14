@@ -85,6 +85,8 @@ pub struct Pieces {
     empty_squares: Bitboard,
 }
 
+pub trait PiecesExt {}
+
 impl Pieces {
     pub fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
@@ -160,8 +162,8 @@ impl Pieces {
         piece
     }
 
-    fn merge_piece(&mut self, mut piece: Piece) {
-        let board = *piece.get_board();
+    fn merge_piece(&mut self, piece: Piece) {
+        let board = piece.get_board();
         match piece {
             Piece::Rook(rook) => match rook {
                 Rook::Black(_) => self.black_pieces_mut().rook_mut().bitboard_mut().self_merge(board),
@@ -190,19 +192,19 @@ impl Pieces {
         };
     }
 
-    fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
+    pub fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
         self.occupied_squares = occupied_squares;
     }
 
-    fn set_empty_squares(&mut self, empty_squares: Bitboard) {
+    pub fn set_empty_squares(&mut self, empty_squares: Bitboard) {
         self.empty_squares = empty_squares;
     }
 
-    fn update_occupied_squares(&mut self) {
+    pub fn update_occupied_squares(&mut self) {
         self.set_occupied_squares(Bitboard::merge_many(self.get_all_pieces().to_vec()));
     }
 
-    fn update_empty_squares(&mut self) {
+    pub fn update_empty_squares(&mut self) {
         let occupied_squares = self.occupied_squares();
         self.set_empty_squares(!occupied_squares);
     }
@@ -241,7 +243,5 @@ impl From<Pieces> for Bitboard {
         Bitboard::merge_many(vec![val.white_pieces().into(), val.black_pieces().into()])
     }
 }
-
-pub trait PiecesExt {}
 
 impl PiecesExt for Pieces {}

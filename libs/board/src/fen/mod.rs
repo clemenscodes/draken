@@ -5,11 +5,13 @@ pub mod full_move_clock;
 pub mod half_move_clock;
 pub mod placements;
 
+use self::{active_color::*, castling::*, enpassant::*, full_move_clock::*, half_move_clock::*, placements::*};
 use api::ForsythEdwardsNotationExt;
 use bitboard::Bitboard;
-
-use self::{active_color::*, castling::*, enpassant::*, full_move_clock::*, half_move_clock::*, placements::*};
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 pub const FEN_PARTS: usize = 6;
 
@@ -106,6 +108,58 @@ pub enum ForsythEdwardsNotationError {
     InvalidFullMoveClock(FullMoveClockError),
 }
 
+impl Display for ForsythEdwardsNotationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ForsythEdwardsNotationError::Invalid => write!(f, "Invalid fen"),
+            ForsythEdwardsNotationError::InvalidPlacements(_) => write!(f, "Invalid placement data"),
+            ForsythEdwardsNotationError::InvalidActiveColor(_) => write!(f, "Invalid active color"),
+            ForsythEdwardsNotationError::InvalidCastling(_) => write!(f, "Invalid castling information"),
+            ForsythEdwardsNotationError::InvalidEnPassant(_) => write!(f, "Invalid en passant square"),
+            ForsythEdwardsNotationError::InvalidHalfMoveClock(_) => write!(f, "Invalid half move clock"),
+            ForsythEdwardsNotationError::InvalidFullMoveClock(_) => write!(f, "Invalid full move clock"),
+        }
+    }
+}
+
+impl Error for ForsythEdwardsNotationError {}
+
+impl From<PlacementError> for ForsythEdwardsNotationError {
+    fn from(value: PlacementError) -> Self {
+        Self::InvalidPlacements(value)
+    }
+}
+
+impl From<ActiveColorError> for ForsythEdwardsNotationError {
+    fn from(value: ActiveColorError) -> Self {
+        Self::InvalidActiveColor(value)
+    }
+}
+
+impl From<CastlingError> for ForsythEdwardsNotationError {
+    fn from(value: CastlingError) -> Self {
+        Self::InvalidCastling(value)
+    }
+}
+
+impl From<EnPassantError> for ForsythEdwardsNotationError {
+    fn from(value: EnPassantError) -> Self {
+        Self::InvalidEnPassant(value)
+    }
+}
+
+impl From<HalfMoveClockError> for ForsythEdwardsNotationError {
+    fn from(value: HalfMoveClockError) -> Self {
+        Self::InvalidHalfMoveClock(value)
+    }
+}
+
+impl From<FullMoveClockError> for ForsythEdwardsNotationError {
+    fn from(value: FullMoveClockError) -> Self {
+        Self::InvalidFullMoveClock(value)
+    }
+}
+
 impl TryFrom<&str> for ForsythEdwardsNotation {
     type Error = ForsythEdwardsNotationError;
 
@@ -114,12 +168,12 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
         if parts.len() != FEN_PARTS {
             return Err(Self::Error::Invalid);
         }
-        let placements = Placements::try_from(parts[0]).map_err(Self::Error::InvalidPlacements)?;
-        let active_color = ActiveColor::try_from(parts[1]).map_err(Self::Error::InvalidActiveColor)?;
-        let castling = Castling::try_from(parts[2]).map_err(Self::Error::InvalidCastling)?;
-        let enpassant = EnPassant::try_from(parts[3]).map_err(Self::Error::InvalidEnPassant)?;
-        let half_move_clock = HalfMoveClock::try_from(parts[4]).map_err(Self::Error::InvalidHalfMoveClock)?;
-        let full_move_clock = FullMoveClock::try_from(parts[5]).map_err(Self::Error::InvalidFullMoveClock)?;
+        let placements = Placements::try_from(parts[0])?;
+        let active_color = ActiveColor::try_from(parts[1])?;
+        let castling = Castling::try_from(parts[2])?;
+        let enpassant = EnPassant::try_from(parts[3])?;
+        let half_move_clock = HalfMoveClock::try_from(parts[4])?;
+        let full_move_clock = FullMoveClock::try_from(parts[5])?;
         let fen = Self::new(placements, active_color, castling, enpassant, half_move_clock, full_move_clock);
         Ok(fen)
     }

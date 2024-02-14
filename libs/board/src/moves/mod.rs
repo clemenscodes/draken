@@ -4,12 +4,14 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
+use std::{error::Error, fmt::Display};
+
 use crate::{
     fen::active_color::ActiveColorExt,
     pieces::{piece::Piece, Pawn, PawnExt},
     Board,
 };
-use api::ForsythEdwardsNotationExt;
+use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
@@ -39,30 +41,40 @@ pub enum Move {
     Irreversible(IrreversibleMove),
 }
 
-pub trait MoveExt {
-    fn coordinates(&self) -> Coordinates;
-    fn march(&self, board: &mut Board) -> Result<(), ()>;
-    fn piece(&self, board: &mut Board) -> Piece {
-        board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
+#[derive(Debug, PartialEq, Eq)]
+pub enum MoveError {
+    OpponentsPiece,
+}
+
+impl Display for MoveError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MoveError::OpponentsPiece => write!(f, "Can not move opponents piece"),
+        }
     }
-    fn is_capture(&self, board: Board) -> bool {
-        let destination: Bitboard = self.coordinates().destination().into();
+}
+
+impl Error for MoveError {}
+
+pub trait MoveExt {
+    fn is_capture(destination: Square, board: Board) -> bool {
         let pieces: Bitboard = if board.fen().is_white() {
             board.pieces().black_pieces().into()
         } else {
             board.pieces().white_pieces().into()
         };
-        Bitboard::overlap(destination, pieces)
+        Bitboard::overlap(destination.into(), pieces)
     }
-    fn is_promotion(&self) -> bool {
-        let destination: Bitboard = self.coordinates().destination().into();
-        let mask = Pawn::promotion_mask();
-        Bitboard::overlap(destination, mask)
+    fn is_promotion(destination: Square) -> bool {
+        Bitboard::overlap(destination.into(), Pawn::promotion_mask())
     }
-    fn is_enpassant(&self, board: Board) -> bool {
-        let mask = board.fen().enpassant_mask();
-        let destination: Bitboard = self.coordinates().destination().into();
-        Bitboard::overlap(destination, mask)
+    fn is_enpassant(destination: Square, board: Board) -> bool {
+        Bitboard::overlap(destination.into(), board.fen().enpassant_mask())
+    }
+    fn coordinates(&self) -> Coordinates;
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>>;
+    fn piece(&self, board: &mut Board) -> Result<Piece, Box<dyn Error>> {
+        board.get_piece_mut(self.coordinates().source())
     }
     fn verify(&self, board: &mut Board) -> bool {
         let player: Bitboard = if board.fen().is_white() {
@@ -74,10 +86,9 @@ pub trait MoveExt {
         let piece = Bitboard::get_single_bit(source.into());
         Bitboard::overlap(player, piece)
     }
-    fn switch(&self, board: &mut Board) -> Result<(), ()> {
+    fn switch(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         if !self.verify(board) {
-            eprintln!("Can not move opponents piece");
-            return Err(());
+            return Err(Box::new(MoveError::OpponentsPiece));
         }
         board.fen_mut().active_color_mut().switch();
         Ok(())
@@ -102,7 +113,7 @@ impl MoveExt for Move {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             Move::Reversible(reversible) => reversible.march(board),
             Move::Irreversible(irreversible) => irreversible.march(board),

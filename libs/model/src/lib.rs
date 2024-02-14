@@ -1,5 +1,6 @@
 use api::{ForsythEdwardsNotationExt, GameExt, Model, MoveListExt, Square};
 use game::Game;
+use std::error::Error;
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ChessModel {
@@ -25,7 +26,7 @@ impl Model for ChessModel {
         self.game().board().fen().to_string()
     }
 
-    fn get_legal_moves(&self, _square: Square) -> Vec<(Square, Square)> {
+    fn get_legal_moves(&self, _square: Square) -> Vec<(Square, Square, Option<char>)> {
         todo!()
     }
 
@@ -91,8 +92,8 @@ impl GameExt for ChessModel {
         self.game().is_own_piece_on_square(square)
     }
 
-    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()> {
-        self.game_mut().make_move(source, destination)
+    fn make_move(&mut self, source: Square, destination: Square, promotion: Option<char>) -> Result<(), Box<dyn Error>> {
+        self.game_mut().make_move(source, destination, promotion)
     }
 
     fn ply(&self) -> u16 {

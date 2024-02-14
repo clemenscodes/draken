@@ -1,9 +1,8 @@
+use crate::pieces::{PIECE_BYTES, PIECE_INDEX_LOOKUP_MAP};
 use std::{
     fmt::{Debug, Display},
     str::Split,
 };
-
-use crate::pieces::{PIECE_BYTES, PIECE_INDEX_LOOKUP_MAP};
 
 type Position = [[u8; NUM_FILES]; NUM_RANKS];
 

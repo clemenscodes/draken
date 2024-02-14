@@ -9,14 +9,15 @@ use bitboard::{Bitboard, BitboardExt};
 use fen::ForsythEdwardsNotation;
 use pieces::{piece::Piece, Pieces, UTF_SYMBOLS};
 use std::{
+    error::Error,
     fmt::{Debug, Display},
     mem::variant_count,
 };
 
-pub const BOARD_SIZE: i8 = 8;
-pub const NORTH: i8 = BOARD_SIZE;
+pub const BOARD_SIZE: u8 = 8;
+pub const NORTH: i8 = BOARD_SIZE as i8;
 pub const EAST: i8 = 1;
-pub const SOUTH: i8 = -BOARD_SIZE;
+pub const SOUTH: i8 = -(BOARD_SIZE as i8);
 pub const WEST: i8 = -EAST;
 pub const NORTH_EAST: i8 = NORTH + EAST;
 pub const SOUTH_EAST: i8 = SOUTH + EAST;
@@ -88,10 +89,25 @@ pub struct Board {
     pieces: Pieces,
 }
 
+#[derive(Debug)]
+pub enum BoardError {
+    MissingPiece,
+}
+
+impl Display for BoardError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BoardError::MissingPiece => write!(f, "No piece found on source square"),
+        }
+    }
+}
+
+impl Error for BoardError {}
+
 pub trait BoardExt {}
 
 pub trait Verify {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()>;
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>>;
 }
 
 pub trait Shift {
@@ -190,7 +206,7 @@ impl Board {
         &mut self.pieces
     }
 
-    pub fn get_piece_index(&self, source: Square) -> Result<usize, ()> {
+    pub fn get_piece_index(&self, source: Square) -> Result<usize, Box<dyn Error>> {
         let bitboard = Bitboard::from(source);
         let pieces = self.pieces().get_all_pieces();
         for (index, piece) in pieces.iter().enumerate() {
@@ -198,11 +214,10 @@ impl Board {
                 return Ok(index);
             }
         }
-        eprintln!("No piece found on {source}");
-        Err(())
+        Err(Box::new(BoardError::MissingPiece))
     }
 
-    pub fn get_piece_mut(&mut self, source: Square) -> Result<Piece, ()> {
+    pub fn get_piece_mut(&mut self, source: Square) -> Result<Piece, Box<dyn Error>> {
         let piece_index = self.get_piece_index(source).unwrap();
         let pieces = self.pieces_mut();
         match piece_index {
@@ -218,11 +233,11 @@ impl Board {
             9 => Ok(Piece::from(pieces.white_pieces().queen())),
             10 => Ok(Piece::from(pieces.white_pieces().king())),
             11 => Ok(Piece::from(pieces.white_pieces().pawn())),
-            _ => Err(()),
+            _ => Err(Box::new(BoardError::MissingPiece)),
         }
     }
 
-    pub fn get_piece_board_mut(&mut self, source: Square) -> Result<&mut Bitboard, ()> {
+    pub fn get_piece_board_mut(&mut self, source: Square) -> Result<&mut Bitboard, Box<dyn Error>> {
         let piece_index = self.get_piece_index(source).unwrap();
         let pieces = self.pieces_mut();
         match piece_index {
@@ -238,11 +253,11 @@ impl Board {
             9 => Ok(pieces.white_pieces_mut().queen_mut().bitboard_mut()),
             10 => Ok(pieces.white_pieces_mut().king_mut().bitboard_mut()),
             11 => Ok(pieces.white_pieces_mut().pawn_mut().bitboard_mut()),
-            _ => Err(()),
+            _ => Err(Box::new(BoardError::MissingPiece)),
         }
     }
 
-    pub fn capture_piece(&mut self, square: Square) -> Result<(), ()> {
+    pub fn capture_piece(&mut self, square: Square) -> Result<(), Box<dyn Error>> {
         let piece = self.get_piece_board_mut(square)?;
         *piece ^= Bitboard::get_single_bit(square.into());
         Ok(())

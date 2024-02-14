@@ -1,11 +1,13 @@
+use super::CastleMoveExt;
 use crate::{
     moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
     Board,
 };
-
-use super::CastleMoveExt;
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct QueenCastleMove {
@@ -26,21 +28,15 @@ impl QueenCastleMove {
 
 pub trait QueenCastleMoveExt: CastleMoveExt {}
 
-impl QueenCastleMoveExt for QueenCastleMove {}
-impl CastleMoveExt for QueenCastleMove {}
-impl IrreversibleMoveExt for QueenCastleMove {}
-
 impl MoveExt for QueenCastleMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.castle(board)
     }
 }
-
-impl Encode for QueenCastleMove {}
 
 impl Display for QueenCastleMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -55,3 +51,8 @@ impl Debug for QueenCastleMove {
         Display::fmt(self, f)
     }
 }
+
+impl QueenCastleMoveExt for QueenCastleMove {}
+impl CastleMoveExt for QueenCastleMove {}
+impl IrreversibleMoveExt for QueenCastleMove {}
+impl Encode for QueenCastleMove {}

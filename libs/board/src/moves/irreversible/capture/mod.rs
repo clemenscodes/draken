@@ -5,7 +5,10 @@ use crate::{
 };
 use api::Square;
 use bitboard::{Bitboard, BitboardExt};
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct CaptureMove {
@@ -26,15 +29,12 @@ impl CaptureMove {
 
 pub trait CaptureMoveExt: IrreversibleMoveExt {}
 
-impl CaptureMoveExt for CaptureMove {}
-impl IrreversibleMoveExt for CaptureMove {}
-
 impl MoveExt for CaptureMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.make(board)?;
         let source = self.coordinates().source();
         let destination = self.coordinates().destination();
@@ -43,8 +43,6 @@ impl MoveExt for CaptureMove {
         board.capture_piece(destination)
     }
 }
-
-impl Encode for CaptureMove {}
 
 impl Display for CaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -59,6 +57,10 @@ impl Debug for CaptureMove {
         Display::fmt(self, f)
     }
 }
+
+impl CaptureMoveExt for CaptureMove {}
+impl IrreversibleMoveExt for CaptureMove {}
+impl Encode for CaptureMove {}
 
 #[cfg(test)]
 mod tests {
