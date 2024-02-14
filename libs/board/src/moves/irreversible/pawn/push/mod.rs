@@ -4,7 +4,10 @@ use crate::{
     Board,
 };
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct DoublePushMove {
@@ -25,21 +28,15 @@ impl DoublePushMove {
 
 pub trait DoublePushMoveExt: PawnMoveExt {}
 
-impl DoublePushMoveExt for DoublePushMove {}
-impl PawnMoveExt for DoublePushMove {}
-impl IrreversibleMoveExt for DoublePushMove {}
-
 impl MoveExt for DoublePushMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.push(self.coordinates().source(), board)
     }
 }
-
-impl Encode for DoublePushMove {}
 
 impl Display for DoublePushMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -54,3 +51,8 @@ impl Debug for DoublePushMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for DoublePushMove {}
+impl DoublePushMoveExt for DoublePushMove {}
+impl PawnMoveExt for DoublePushMove {}
+impl IrreversibleMoveExt for DoublePushMove {}

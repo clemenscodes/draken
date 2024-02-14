@@ -4,7 +4,10 @@ use crate::{
     Board,
 };
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct EnPassantMove {
@@ -24,27 +27,20 @@ impl EnPassantMove {
 }
 
 pub trait EnPassantMoveExt: PawnMoveExt {
-    fn pass(&self, board: &mut Board) -> Result<(), ()> {
+    fn pass(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.push(self.coordinates().source(), board)
     }
 }
-
-impl EnPassantMoveExt for EnPassantMove {}
-impl PawnMoveExt for EnPassantMove {}
-impl IrreversibleMoveExt for EnPassantMove {}
 
 impl MoveExt for EnPassantMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
-        self.pass(board)?;
-        Ok(())
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
+        self.pass(board)
     }
 }
-
-impl Encode for EnPassantMove {}
 
 impl Display for EnPassantMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -59,3 +55,8 @@ impl Debug for EnPassantMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for EnPassantMove {}
+impl EnPassantMoveExt for EnPassantMove {}
+impl PawnMoveExt for EnPassantMove {}
+impl IrreversibleMoveExt for EnPassantMove {}

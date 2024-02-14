@@ -1,6 +1,8 @@
 pub mod king;
 pub mod queen;
 
+use std::error::Error;
+
 use super::IrreversibleMoveExt;
 use crate::{
     moves::{coordinates::Coordinates, MoveExt},
@@ -16,13 +18,10 @@ pub enum CastleMove {
 }
 
 pub trait CastleMoveExt: IrreversibleMoveExt {
-    fn castle(&self, board: &mut Board) -> Result<(), ()> {
+    fn castle(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.make(board)
     }
 }
-
-impl CastleMoveExt for CastleMove {}
-impl IrreversibleMoveExt for CastleMove {}
 
 impl MoveExt for CastleMove {
     fn coordinates(&self) -> Coordinates {
@@ -32,10 +31,14 @@ impl MoveExt for CastleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             CastleMove::King(king) => king.march(board),
             CastleMove::Queen(queen) => queen.march(board),
         }
     }
 }
+
+impl CastleMoveExt for CastleMove {}
+
+impl IrreversibleMoveExt for CastleMove {}

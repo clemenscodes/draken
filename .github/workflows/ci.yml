@@ -106,7 +106,7 @@ jobs:
               run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Coverage
-              run: pnpm nx affected -t coverage --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm coverage:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v3

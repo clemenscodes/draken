@@ -1,5 +1,7 @@
 pub mod quiet;
 
+use std::error::Error;
+
 use super::{coordinates::Coordinates, MoveExt};
 use crate::{fen::half_move_clock::HalfMoveClockExt, Board};
 use quiet::QuietMove;
@@ -10,7 +12,7 @@ pub enum ReversibleMove {
 }
 
 pub trait ReversibleMoveExt: MoveExt {
-    fn increment_half_move_clock(&self, board: &mut Board) -> Result<(), ()> {
+    fn increment_half_move_clock(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.switch(board)?;
         board.fen_mut().half_move_clock_mut().increment();
         Ok(())
@@ -26,7 +28,7 @@ impl MoveExt for ReversibleMove {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             ReversibleMove::Quiet(quiet) => quiet.march(board),
         }

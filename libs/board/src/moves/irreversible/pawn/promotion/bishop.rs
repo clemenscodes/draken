@@ -8,7 +8,10 @@ use crate::{
     Board,
 };
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct BishopPromotionMove {
@@ -29,22 +32,15 @@ impl BishopPromotionMove {
 
 pub trait BishopPromotionMoveExt: PromotionMoveExt {}
 
-impl BishopPromotionMoveExt for BishopPromotionMove {}
-impl PromotionMoveExt for BishopPromotionMove {}
-impl PawnMoveExt for BishopPromotionMove {}
-impl IrreversibleMoveExt for BishopPromotionMove {}
-
 impl MoveExt for BishopPromotionMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.promote(board)
     }
 }
-
-impl Encode for BishopPromotionMove {}
 
 impl Display for BishopPromotionMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -59,3 +55,9 @@ impl Debug for BishopPromotionMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for BishopPromotionMove {}
+impl BishopPromotionMoveExt for BishopPromotionMove {}
+impl PromotionMoveExt for BishopPromotionMove {}
+impl PawnMoveExt for BishopPromotionMove {}
+impl IrreversibleMoveExt for BishopPromotionMove {}

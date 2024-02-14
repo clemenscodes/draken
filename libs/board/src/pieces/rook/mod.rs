@@ -6,6 +6,7 @@ use crate::{Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use black::BlackRook;
+use std::error::Error;
 use white::WhiteRook;
 
 #[derive(Debug)]
@@ -39,7 +40,7 @@ impl PieceExt for Rook {
 }
 
 impl Verify for Rook {
-    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, ()> {
+    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, Box<dyn Error>> {
         todo!()
     }
 }

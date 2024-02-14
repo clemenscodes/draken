@@ -1,3 +1,4 @@
+use super::PromotionCaptureMoveExt;
 use crate::{
     moves::{
         coordinates::Coordinates,
@@ -9,10 +10,11 @@ use crate::{
     },
     Board,
 };
-
-use super::PromotionCaptureMoveExt;
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct BishopPromotionCaptureMove {
@@ -33,23 +35,15 @@ impl BishopPromotionCaptureMove {
 
 pub trait BishopPromotionCaptureMoveExt: PromotionCaptureMoveExt {}
 
-impl BishopPromotionCaptureMoveExt for BishopPromotionCaptureMove {}
-impl PromotionCaptureMoveExt for BishopPromotionCaptureMove {}
-impl PromotionMoveExt for BishopPromotionCaptureMove {}
-impl PawnMoveExt for BishopPromotionCaptureMove {}
-impl IrreversibleMoveExt for BishopPromotionCaptureMove {}
-
 impl MoveExt for BishopPromotionCaptureMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.capture(board)
     }
 }
-
-impl Encode for BishopPromotionCaptureMove {}
 
 impl Display for BishopPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -64,3 +58,10 @@ impl Debug for BishopPromotionCaptureMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for BishopPromotionCaptureMove {}
+impl BishopPromotionCaptureMoveExt for BishopPromotionCaptureMove {}
+impl PromotionCaptureMoveExt for BishopPromotionCaptureMove {}
+impl PromotionMoveExt for BishopPromotionCaptureMove {}
+impl PawnMoveExt for BishopPromotionCaptureMove {}
+impl IrreversibleMoveExt for BishopPromotionCaptureMove {}

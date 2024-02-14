@@ -14,6 +14,7 @@ use capture::PromotionCaptureMove;
 use knight::KnightPromotionMove;
 use queen::QueenPromotionMove;
 use rook::RookPromotionMove;
+use std::error::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PromotionMove {
@@ -25,14 +26,10 @@ pub enum PromotionMove {
 }
 
 pub trait PromotionMoveExt: PawnMoveExt {
-    fn promote(&self, board: &mut Board) -> Result<(), ()> {
+    fn promote(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.push(self.coordinates().source(), board)
     }
 }
-
-impl PromotionMoveExt for PromotionMove {}
-impl PawnMoveExt for PromotionMove {}
-impl IrreversibleMoveExt for PromotionMove {}
 
 impl MoveExt for PromotionMove {
     fn coordinates(&self) -> Coordinates {
@@ -45,7 +42,7 @@ impl MoveExt for PromotionMove {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             PromotionMove::PromotionCapture(promotion) => promotion.march(board),
             PromotionMove::Queen(queen) => queen.march(board),
@@ -55,3 +52,7 @@ impl MoveExt for PromotionMove {
         }
     }
 }
+
+impl PromotionMoveExt for PromotionMove {}
+impl PawnMoveExt for PromotionMove {}
+impl IrreversibleMoveExt for PromotionMove {}

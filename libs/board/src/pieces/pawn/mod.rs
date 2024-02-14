@@ -9,6 +9,7 @@ use crate::{
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use black::BlackPawn;
+use std::{error::Error, fmt::Display};
 use white::WhitePawn;
 
 #[derive(Debug)]
@@ -16,6 +17,21 @@ pub enum Pawn {
     Black(BlackPawn),
     White(WhitePawn),
 }
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum PawnError {
+    Illegal,
+}
+
+impl Display for PawnError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PawnError::Illegal => write!(f, "Illegal pawn move"),
+        }
+    }
+}
+
+impl Error for PawnError {}
 
 pub trait PawnExt: PieceExt {
     fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard;
@@ -26,10 +42,9 @@ pub trait PawnExt: PieceExt {
     fn get_single_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
     fn get_double_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
     fn get_promotion_pieces(&self) -> [Piece; 4];
-    fn march(&mut self, source: Square, destination: Square, board: &mut Board) -> Result<(), ()> {
+    fn march(&mut self, source: Square, destination: Square, board: &mut Board) -> Result<(), Box<dyn Error>> {
         if self.is_illegal_move(source, destination, *board) {
-            eprint!("Illegal pawn move: Can not move from {source} to {destination}");
-            return Err(());
+            return Err(Box::new(PawnError::Illegal));
         }
         Ok(())
     }
@@ -63,10 +78,10 @@ impl From<BlackPawn> for Pawn {
 }
 
 impl Verify for Pawn {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
         let pawn = Bitboard::get_single_bit(source.into());
         if !Bitboard::check_bit(self.get_targets(pawn, board), destination.into()) {
-            return Err(());
+            return Err(Box::new(PawnError::Illegal));
         }
         let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
         Ok(encoded_move.data())

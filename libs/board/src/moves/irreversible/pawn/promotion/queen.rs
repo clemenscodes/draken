@@ -8,7 +8,10 @@ use crate::{
     Board,
 };
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct QueenPromotionMove {
@@ -29,22 +32,15 @@ impl QueenPromotionMove {
 
 pub trait QueenPromotionMoveExt: PromotionMoveExt {}
 
-impl QueenPromotionMoveExt for QueenPromotionMove {}
-impl PromotionMoveExt for QueenPromotionMove {}
-impl PawnMoveExt for QueenPromotionMove {}
-impl IrreversibleMoveExt for QueenPromotionMove {}
-
 impl MoveExt for QueenPromotionMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.promote(board)
     }
 }
-
-impl Encode for QueenPromotionMove {}
 
 impl Display for QueenPromotionMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -59,3 +55,9 @@ impl Debug for QueenPromotionMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for QueenPromotionMove {}
+impl QueenPromotionMoveExt for QueenPromotionMove {}
+impl PromotionMoveExt for QueenPromotionMove {}
+impl PawnMoveExt for QueenPromotionMove {}
+impl IrreversibleMoveExt for QueenPromotionMove {}
