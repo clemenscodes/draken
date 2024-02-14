@@ -7,7 +7,20 @@ use crate::{
         encoded_move::EncodedMove,
         irreversible::{
             capture::CaptureMove,
-            pawn::{enpassant::EnPassantMove, push::DoublePushMove},
+            pawn::{
+                enpassant::EnPassantMove,
+                promotion::{
+                    bishop::BishopPromotionMove,
+                    capture::{
+                        bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
+                        rook::RookPromotionCaptureMove,
+                    },
+                    knight::KnightPromotionMove,
+                    queen::QueenPromotionMove,
+                    rook::RookPromotionMove,
+                },
+                push::DoublePushMove,
+            },
         },
         reversible::quiet::QuietMove,
         Move, MoveExt,
@@ -17,7 +30,7 @@ use crate::{
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use black::BlackPawn;
-use std::{error::Error, fmt::Display};
+use std::{error::Error, fmt::Display, io};
 use white::WhitePawn;
 
 #[derive(Debug)]
@@ -29,12 +42,14 @@ pub enum Pawn {
 #[derive(Debug, PartialEq, Eq)]
 pub enum PawnError {
     Illegal,
+    InvalidPromotion,
 }
 
 impl Display for PawnError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             PawnError::Illegal => write!(f, "Illegal pawn move"),
+            PawnError::InvalidPromotion => write!(f, "Invalid promotion"),
         }
     }
 }
@@ -84,18 +99,38 @@ pub trait PawnExt: PieceExt {
             Err(Box::new(PawnError::Illegal))
         }
     }
+    fn get_selection(&self) -> Result<char, Box<dyn Error>> {
+        let mut input = String::new();
+        println!("Promotion! Select the piece you want: Q (Queen), R (Rook), N (Knight), B (Bishop)");
+        io::stdin().read_line(&mut input)?;
+        let selection = input.chars().next().ok_or_else(|| Box::new(PawnError::InvalidPromotion))?;
+        Ok(selection)
+    }
     fn promote(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+        let selection = self.get_selection()?;
         if Move::is_capture(destination, board) {
-            self.make_promotion_capture(source, destination, board)
+            self.make_promotion_capture(source, destination, selection)
         } else {
-            self.make_promotion(source, destination, board)
+            self.make_promotion(source, destination, selection)
         }
     }
-    fn make_promotion(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        todo!()
+    fn make_promotion(&self, source: Square, destination: Square, selection: char) -> Result<u16, Box<dyn Error>> {
+        match selection {
+            'Q' => Ok(EncodedMove::from(QueenPromotionMove::new(source, destination)).data()),
+            'R' => Ok(EncodedMove::from(RookPromotionMove::new(source, destination)).data()),
+            'N' => Ok(EncodedMove::from(KnightPromotionMove::new(source, destination)).data()),
+            'B' => Ok(EncodedMove::from(BishopPromotionMove::new(source, destination)).data()),
+            _ => Err(Box::new(PawnError::InvalidPromotion)),
+        }
     }
-    fn make_promotion_capture(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        todo!()
+    fn make_promotion_capture(&self, source: Square, destination: Square, selection: char) -> Result<u16, Box<dyn Error>> {
+        match selection {
+            'Q' => Ok(EncodedMove::from(QueenPromotionCaptureMove::new(source, destination)).data()),
+            'R' => Ok(EncodedMove::from(RookPromotionCaptureMove::new(source, destination)).data()),
+            'N' => Ok(EncodedMove::from(KnightPromotionCaptureMove::new(source, destination)).data()),
+            'B' => Ok(EncodedMove::from(BishopPromotionCaptureMove::new(source, destination)).data()),
+            _ => Err(Box::new(PawnError::InvalidPromotion)),
+        }
     }
 }
 
@@ -211,5 +246,18 @@ impl PawnExt for Pawn {
             Pawn::Black(pawn) => pawn.get_double_pushable_pawns(empty_squres),
             Pawn::White(pawn) => pawn.get_double_pushable_pawns(empty_squres),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use api::Square::*;
+
+    #[test]
+    fn test_promote() {
+        let board = Board::default();
+        let pawn = Pawn::from(WhitePawn::default());
+        pawn.promote(E2, E4, board).unwrap();
     }
 }
