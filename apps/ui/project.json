@@ -34,6 +34,11 @@
         "lint": {
             "executor": "nx:run-commands",
             "inputs": ["default", "^default"],
+            "configurations": {
+                "ci": {
+                    "command": "eslint . --max-warnings 0"
+                }
+            },
             "options": {
                 "color": true,
                 "cwd": "apps/{projectName}",
