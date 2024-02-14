@@ -40,7 +40,7 @@ impl PieceExt for Rook {
 }
 
 impl Verify for Rook {
-    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, _source: Square, _destination: Square, _promotion: Option<char>, _board: Board) -> Result<u16, Box<dyn Error>> {
         todo!()
     }
 }

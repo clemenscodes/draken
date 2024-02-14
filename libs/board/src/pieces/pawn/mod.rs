@@ -3,8 +3,29 @@ pub mod white;
 
 use super::{Piece, PieceExt};
 use crate::{
-    moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
-    Board, Verify, EIGHTH_FILE, EIGHTH_RANK, FIFTH_FILE, FIRST_RANK,
+    moves::{
+        encoded_move::EncodedMove,
+        irreversible::{
+            capture::CaptureMove,
+            pawn::{
+                enpassant::EnPassantMove,
+                promotion::{
+                    bishop::BishopPromotionMove,
+                    capture::{
+                        bishop::BishopPromotionCaptureMove, knight::KnightPromotionCaptureMove, queen::QueenPromotionCaptureMove,
+                        rook::RookPromotionCaptureMove,
+                    },
+                    knight::KnightPromotionMove,
+                    queen::QueenPromotionMove,
+                    rook::RookPromotionMove,
+                },
+                push::DoublePushMove,
+            },
+        },
+        reversible::quiet::QuietMove,
+        Move, MoveExt,
+    },
+    Board, Verify, BOARD_SIZE, EIGHTH_FILE, EIGHTH_RANK, FIRST_FILE, FIRST_RANK,
 };
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
@@ -21,12 +42,14 @@ pub enum Pawn {
 #[derive(Debug, PartialEq, Eq)]
 pub enum PawnError {
     Illegal,
+    InvalidPromotion,
 }
 
 impl Display for PawnError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             PawnError::Illegal => write!(f, "Illegal pawn move"),
+            PawnError::InvalidPromotion => write!(f, "Invalid promotion"),
         }
     }
 }
@@ -34,6 +57,15 @@ impl Display for PawnError {
 impl Error for PawnError {}
 
 pub trait PawnExt: PieceExt {
+    fn promotion_mask() -> Bitboard {
+        FIRST_RANK | EIGHTH_RANK
+    }
+    fn west_attack_mask() -> Bitboard {
+        !EIGHTH_FILE
+    }
+    fn east_attack_mask() -> Bitboard {
+        !FIRST_FILE
+    }
     fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard;
     fn get_east_attacks(&self, pawns: Bitboard) -> Bitboard;
     fn get_attacking_pawns(&self, board: Board) -> Bitboard;
@@ -54,14 +86,47 @@ pub trait PawnExt: PieceExt {
     fn get_targets(&self, pawn: Bitboard, board: Board) -> Bitboard {
         self.get_push_targets(pawn, board.pieces().empty_squares()) | self.get_attacks(pawn, board)
     }
-    fn promotion_mask() -> Bitboard {
-        FIRST_RANK | EIGHTH_RANK
+    fn push(&self, source: Square, destination: Square) -> Result<u16, Box<dyn Error>> {
+        let source_index: u8 = source.into();
+        let destination_index: u8 = destination.into();
+        let difference = destination_index.abs_diff(source_index);
+        if difference == BOARD_SIZE {
+            return Ok(EncodedMove::from(QuietMove::new(source, destination)).data());
+        }
+        if difference == 2 * BOARD_SIZE {
+            Ok(EncodedMove::from(DoublePushMove::new(source, destination)).data())
+        } else {
+            Err(Box::new(PawnError::Illegal))
+        }
     }
-    fn west_attack_mask() -> Bitboard {
-        !EIGHTH_FILE
+    fn promote(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
+        if Move::is_capture(destination, board) {
+            self.make_promotion_capture(source, destination, promotion)
+        } else {
+            self.make_promotion(source, destination, promotion)
+        }
     }
-    fn east_attack_mask() -> Bitboard {
-        !FIFTH_FILE
+    fn make_promotion(&self, source: Square, destination: Square, promotion: Option<char>) -> Result<u16, Box<dyn Error>> {
+        promotion
+            .map(|piece| match piece {
+                'q' => Ok(EncodedMove::from(QueenPromotionMove::new(source, destination)).data()),
+                'r' => Ok(EncodedMove::from(RookPromotionMove::new(source, destination)).data()),
+                'n' => Ok(EncodedMove::from(KnightPromotionMove::new(source, destination)).data()),
+                'b' => Ok(EncodedMove::from(BishopPromotionMove::new(source, destination)).data()),
+                _ => Err(Box::new(PawnError::InvalidPromotion))?,
+            })
+            .ok_or_else(|| Box::new(PawnError::InvalidPromotion))?
+    }
+    fn make_promotion_capture(&self, source: Square, destination: Square, promotion: Option<char>) -> Result<u16, Box<dyn Error>> {
+        promotion
+            .map(|piece| match piece {
+                'q' => Ok(EncodedMove::from(QueenPromotionCaptureMove::new(source, destination)).data()),
+                'r' => Ok(EncodedMove::from(RookPromotionCaptureMove::new(source, destination)).data()),
+                'n' => Ok(EncodedMove::from(KnightPromotionCaptureMove::new(source, destination)).data()),
+                'b' => Ok(EncodedMove::from(BishopPromotionCaptureMove::new(source, destination)).data()),
+                _ => Err(Box::new(PawnError::InvalidPromotion))?,
+            })
+            .ok_or_else(|| Box::new(PawnError::InvalidPromotion))?
     }
 }
 
@@ -78,13 +143,21 @@ impl From<BlackPawn> for Pawn {
 }
 
 impl Verify for Pawn {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
         let pawn = Bitboard::get_single_bit(source.into());
         if !Bitboard::check_bit(self.get_targets(pawn, board), destination.into()) {
             return Err(Box::new(PawnError::Illegal));
         }
-        let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
-        Ok(encoded_move.data())
+        if Move::is_promotion(destination) {
+            return self.promote(source, destination, promotion, board);
+        }
+        if Move::is_enpassant(destination, board) {
+            return Ok(EncodedMove::from(EnPassantMove::new(source, destination)).data());
+        }
+        if Move::is_capture(destination, board) {
+            return Ok(EncodedMove::from(CaptureMove::new(source, destination)).data());
+        }
+        self.push(source, destination)
     }
 }
 
@@ -169,5 +242,24 @@ impl PawnExt for Pawn {
             Pawn::Black(pawn) => pawn.get_double_pushable_pawns(empty_squres),
             Pawn::White(pawn) => pawn.get_double_pushable_pawns(empty_squres),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        fen::ForsythEdwardsNotation,
+        moves::{encoded_move::EncodedMoveExt, QUEEN_PROMOTION_CAPTURE},
+    };
+    use api::Square::*;
+
+    #[test]
+    fn test_promote() {
+        let board = Board::from(ForsythEdwardsNotation::try_from("rnbqkbnr/pppp2pP/4p3/8/8/5p2/PPPPPP1P/RNBQKBNR w KQkq - 0 5").unwrap());
+        let pawn = Pawn::from(WhitePawn::default());
+        let data = pawn.promote(H7, G8, Some('q'), board).unwrap();
+        let encoded_move = EncodedMove::new(data);
+        assert_eq!(QUEEN_PROMOTION_CAPTURE, encoded_move.kind());
     }
 }

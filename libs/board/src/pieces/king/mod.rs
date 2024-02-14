@@ -41,7 +41,7 @@ impl PieceExt for King {
 }
 
 impl Verify for King {
-    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, _source: Square, _destination: Square, _promotion: Option<char>, _board: Board) -> Result<u16, Box<dyn Error>> {
         todo!()
     }
 }

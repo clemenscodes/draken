@@ -11,7 +11,7 @@ use crate::{
     pieces::{piece::Piece, Pawn, PawnExt},
     Board,
 };
-use api::ForsythEdwardsNotationExt;
+use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
@@ -57,29 +57,24 @@ impl Display for MoveError {
 impl Error for MoveError {}
 
 pub trait MoveExt {
-    fn coordinates(&self) -> Coordinates;
-    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>>;
-    fn piece(&self, board: &mut Board) -> Piece {
-        board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
-    }
-    fn is_capture(&self, board: Board) -> bool {
-        let destination: Bitboard = self.coordinates().destination().into();
+    fn is_capture(destination: Square, board: Board) -> bool {
         let pieces: Bitboard = if board.fen().is_white() {
             board.pieces().black_pieces().into()
         } else {
             board.pieces().white_pieces().into()
         };
-        Bitboard::overlap(destination, pieces)
+        Bitboard::overlap(destination.into(), pieces)
     }
-    fn is_promotion(&self) -> bool {
-        let destination: Bitboard = self.coordinates().destination().into();
-        let mask = Pawn::promotion_mask();
-        Bitboard::overlap(destination, mask)
+    fn is_promotion(destination: Square) -> bool {
+        Bitboard::overlap(destination.into(), Pawn::promotion_mask())
     }
-    fn is_enpassant(&self, board: Board) -> bool {
-        let mask = board.fen().enpassant_mask();
-        let destination: Bitboard = self.coordinates().destination().into();
-        Bitboard::overlap(destination, mask)
+    fn is_enpassant(destination: Square, board: Board) -> bool {
+        Bitboard::overlap(destination.into(), board.fen().enpassant_mask())
+    }
+    fn coordinates(&self) -> Coordinates;
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>>;
+    fn piece(&self, board: &mut Board) -> Result<Piece, Box<dyn Error>> {
+        board.get_piece_mut(self.coordinates().source())
     }
     fn verify(&self, board: &mut Board) -> bool {
         let player: Bitboard = if board.fen().is_white() {

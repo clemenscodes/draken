@@ -66,8 +66,8 @@ impl PieceExt for WhitePawn {
 }
 
 impl Verify for WhitePawn {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        Pawn::from(*self).verify(source, destination, board)
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
+        Pawn::from(*self).verify(source, destination, promotion, board)
     }
 }
 

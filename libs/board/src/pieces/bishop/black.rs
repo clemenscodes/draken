@@ -63,8 +63,8 @@ impl PieceExt for BlackBishop {
 }
 
 impl Verify for BlackBishop {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        Bishop::from(*self).verify(source, destination, board)
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
+        Bishop::from(*self).verify(source, destination, promotion, board)
     }
 }
 

@@ -2,13 +2,12 @@ pub mod capture;
 pub mod castle;
 pub mod pawn;
 
-use std::error::Error;
-
 use super::{coordinates::Coordinates, MoveExt};
 use crate::{fen::half_move_clock::HalfMoveClockExt, Board};
 use capture::CaptureMove;
 use castle::CastleMove;
 use pawn::PawnMove;
+use std::error::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IrreversibleMove {
@@ -19,7 +18,7 @@ pub enum IrreversibleMove {
 
 pub trait IrreversibleMoveExt: MoveExt {
     fn make(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
-        let piece = self.piece(board);
+        let piece = self.piece(board)?;
         if piece.is_king() {
             board.fen_mut().half_move_clock_mut().increment();
         } else {
@@ -28,8 +27,6 @@ pub trait IrreversibleMoveExt: MoveExt {
         self.switch(board)
     }
 }
-
-impl IrreversibleMoveExt for IrreversibleMove {}
 
 impl MoveExt for IrreversibleMove {
     fn coordinates(&self) -> Coordinates {
@@ -48,3 +45,5 @@ impl MoveExt for IrreversibleMove {
         }
     }
 }
+
+impl IrreversibleMoveExt for IrreversibleMove {}

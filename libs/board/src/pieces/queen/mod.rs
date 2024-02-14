@@ -1,13 +1,12 @@
 pub mod black;
 pub mod white;
 
-use std::error::Error;
-
 use super::PieceExt;
 use crate::{Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use black::BlackQueen;
+use std::error::Error;
 use white::WhiteQueen;
 
 #[derive(Debug)]
@@ -41,7 +40,7 @@ impl PieceExt for Queen {
 }
 
 impl Verify for Queen {
-    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, _source: Square, _destination: Square, _promotion: Option<char>, _board: Board) -> Result<u16, Box<dyn Error>> {
         todo!()
     }
 }

@@ -162,8 +162,8 @@ impl Pieces {
         piece
     }
 
-    fn merge_piece(&mut self, mut piece: Piece) {
-        let board = *piece.get_board();
+    fn merge_piece(&mut self, piece: Piece) {
+        let board = piece.get_board();
         match piece {
             Piece::Rook(rook) => match rook {
                 Rook::Black(_) => self.black_pieces_mut().rook_mut().bitboard_mut().self_merge(board),

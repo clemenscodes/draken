@@ -14,10 +14,10 @@ use std::{
     mem::variant_count,
 };
 
-pub const BOARD_SIZE: i8 = 8;
-pub const NORTH: i8 = BOARD_SIZE;
+pub const BOARD_SIZE: u8 = 8;
+pub const NORTH: i8 = BOARD_SIZE as i8;
 pub const EAST: i8 = 1;
-pub const SOUTH: i8 = -BOARD_SIZE;
+pub const SOUTH: i8 = -(BOARD_SIZE as i8);
 pub const WEST: i8 = -EAST;
 pub const NORTH_EAST: i8 = NORTH + EAST;
 pub const SOUTH_EAST: i8 = SOUTH + EAST;
@@ -107,7 +107,7 @@ impl Error for BoardError {}
 pub trait BoardExt {}
 
 pub trait Verify {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>>;
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>>;
 }
 
 pub trait Shift {
