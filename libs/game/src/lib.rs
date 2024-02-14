@@ -41,7 +41,6 @@ pub struct Game {
 pub enum GameError {
     SourceEqualsDestination,
     SourceUnoccupied,
-    VerificationError,
     Illegal,
 }
 
@@ -50,7 +49,6 @@ impl Display for GameError {
         match self {
             GameError::SourceEqualsDestination => write!(f, "Source square can not equal destination square"),
             GameError::SourceUnoccupied => write!(f, "Source square can not be unoccupied"),
-            GameError::VerificationError => write!(f, "Failed to verify move"),
             GameError::Illegal => write!(f, "Move is illegal"),
         }
     }
@@ -104,7 +102,7 @@ impl Game {
             9 => pieces.white_pieces().queen().verify(source, destination, board),
             10 => pieces.white_pieces().king().verify(source, destination, board),
             11 => pieces.white_pieces().pawn().verify(source, destination, board),
-            _ => Err(Box::new(GameError::VerificationError)),
+            _ => Err(Box::new(GameError::Illegal)),
         }
     }
 

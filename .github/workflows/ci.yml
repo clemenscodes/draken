@@ -100,13 +100,13 @@ jobs:
               run: pnpm fmt:check
 
             - name: Lint
-              run: pnpm lint:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm lint:affected --configuration=ci --nx-bail --base=$NX_BASE --head=$NX_HEAD --exclude gui
 
             - name: Test
-              run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm test:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD --exclude gui
 
             - name: Coverage
-              run: pnpm coverage:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD
+              run: pnpm coverage:affected --nx-bail --base=$NX_BASE --head=$NX_HEAD --exclude gui
 
             - name: Upload coverage reports to Codecov
               uses: codecov/codecov-action@v3

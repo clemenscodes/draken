@@ -70,9 +70,9 @@ impl MoveListExt for MoveList {
         self.ply()
     }
 
-    fn add(&mut self, encoded_move: u16) {
+    fn add(&mut self, data: u16) {
         let ply = self.ply();
-        self.moves_mut()[ply as usize] = EncodedMove::new(encoded_move);
+        self.moves_mut()[ply as usize] = EncodedMove::new(data);
         self.set_ply(ply + 1);
     }
 
