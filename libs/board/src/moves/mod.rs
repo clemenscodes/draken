@@ -4,6 +4,8 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
+use std::{error::Error, fmt::Display};
+
 use crate::{
     fen::active_color::ActiveColorExt,
     pieces::{piece::Piece, Pawn, PawnExt},
@@ -39,9 +41,24 @@ pub enum Move {
     Irreversible(IrreversibleMove),
 }
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum MoveError {
+    OpponentsPiece,
+}
+
+impl Display for MoveError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MoveError::OpponentsPiece => write!(f, "Can not move opponents piece"),
+        }
+    }
+}
+
+impl Error for MoveError {}
+
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
-    fn march(&self, board: &mut Board) -> Result<(), ()>;
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>>;
     fn piece(&self, board: &mut Board) -> Piece {
         board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
     }
@@ -74,10 +91,9 @@ pub trait MoveExt {
         let piece = Bitboard::get_single_bit(source.into());
         Bitboard::overlap(player, piece)
     }
-    fn switch(&self, board: &mut Board) -> Result<(), ()> {
+    fn switch(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         if !self.verify(board) {
-            eprintln!("Can not move opponents piece");
-            return Err(());
+            return Err(Box::new(MoveError::OpponentsPiece));
         }
         board.fen_mut().active_color_mut().switch();
         Ok(())
@@ -102,7 +118,7 @@ impl MoveExt for Move {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             Move::Reversible(reversible) => reversible.march(board),
             Move::Irreversible(irreversible) => irreversible.march(board),

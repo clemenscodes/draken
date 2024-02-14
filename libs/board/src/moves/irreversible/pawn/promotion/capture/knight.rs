@@ -1,3 +1,4 @@
+use super::PromotionCaptureMoveExt;
 use crate::{
     moves::{
         coordinates::Coordinates,
@@ -9,10 +10,11 @@ use crate::{
     },
     Board,
 };
-
-use super::PromotionCaptureMoveExt;
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct KnightPromotionCaptureMove {
@@ -33,23 +35,15 @@ impl KnightPromotionCaptureMove {
 
 pub trait KnightPromotionCaptureMoveExt: PromotionCaptureMoveExt {}
 
-impl KnightPromotionCaptureMoveExt for KnightPromotionCaptureMove {}
-impl PromotionCaptureMoveExt for KnightPromotionCaptureMove {}
-impl PromotionMoveExt for KnightPromotionCaptureMove {}
-impl PawnMoveExt for KnightPromotionCaptureMove {}
-impl IrreversibleMoveExt for KnightPromotionCaptureMove {}
-
 impl MoveExt for KnightPromotionCaptureMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.capture(board)
     }
 }
-
-impl Encode for KnightPromotionCaptureMove {}
 
 impl Display for KnightPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -64,3 +58,10 @@ impl Debug for KnightPromotionCaptureMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for KnightPromotionCaptureMove {}
+impl KnightPromotionCaptureMoveExt for KnightPromotionCaptureMove {}
+impl PromotionCaptureMoveExt for KnightPromotionCaptureMove {}
+impl PromotionMoveExt for KnightPromotionCaptureMove {}
+impl PawnMoveExt for KnightPromotionCaptureMove {}
+impl IrreversibleMoveExt for KnightPromotionCaptureMove {}

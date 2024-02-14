@@ -2,6 +2,8 @@ pub mod enpassant;
 pub mod promotion;
 pub mod push;
 
+use std::error::Error;
+
 use crate::{
     moves::{coordinates::Coordinates, MoveExt},
     Board,
@@ -22,7 +24,7 @@ pub enum PawnMove {
 }
 
 pub trait PawnMoveExt: IrreversibleMoveExt {
-    fn push(&self, source: Square, board: &mut Board) -> Result<(), ()> {
+    fn push(&self, source: Square, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.make(board)?;
         let piece = board.get_piece_board_mut(source)?;
         piece.self_unset_bit(source.into());
@@ -42,7 +44,7 @@ impl MoveExt for PawnMove {
         }
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         match *self {
             PawnMove::Push(push) => push.march(board),
             PawnMove::EnPassant(enpassant) => enpassant.march(board),

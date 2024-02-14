@@ -1,6 +1,8 @@
 pub mod black;
 pub mod white;
 
+use std::error::Error;
+
 use super::PieceExt;
 use crate::{Board, Verify};
 use api::Square;
@@ -39,7 +41,7 @@ impl PieceExt for Knight {
 }
 
 impl Verify for Knight {
-    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, ()> {
+    fn verify(&self, _source: Square, _destination: Square, _board: Board) -> Result<u16, Box<dyn Error>> {
         todo!()
     }
 }

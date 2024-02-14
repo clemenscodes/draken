@@ -85,6 +85,8 @@ pub struct Pieces {
     empty_squares: Bitboard,
 }
 
+pub trait PiecesExt {}
+
 impl Pieces {
     pub fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
@@ -241,7 +243,5 @@ impl From<Pieces> for Bitboard {
         Bitboard::merge_many(vec![val.white_pieces().into(), val.black_pieces().into()])
     }
 }
-
-pub trait PiecesExt {}
 
 impl PiecesExt for Pieces {}

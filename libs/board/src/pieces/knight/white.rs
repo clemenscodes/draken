@@ -2,7 +2,10 @@ use super::{Knight, KnightExt};
 use crate::{pieces::PieceExt, Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct WhiteKnight {
@@ -59,7 +62,7 @@ impl PieceExt for WhiteKnight {
 }
 
 impl Verify for WhiteKnight {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
         Knight::from(*self).verify(source, destination, board)
     }
 }

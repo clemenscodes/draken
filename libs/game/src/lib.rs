@@ -25,7 +25,10 @@ use board::moves::{
     *,
 };
 use board::{Board, Verify};
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Game {
@@ -33,6 +36,27 @@ pub struct Game {
     move_list: MoveList,
     state: State,
 }
+
+#[derive(Debug)]
+pub enum GameError {
+    SourceEqualsDestination,
+    SourceUnoccupied,
+    VerificationError,
+    Illegal,
+}
+
+impl Display for GameError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            GameError::SourceEqualsDestination => write!(f, "Source square can not equal destination square"),
+            GameError::SourceUnoccupied => write!(f, "Source square can not be unoccupied"),
+            GameError::VerificationError => write!(f, "Failed to verify move"),
+            GameError::Illegal => write!(f, "Move is illegal"),
+        }
+    }
+}
+
+impl Error for GameError {}
 
 impl Game {
     pub fn new(board: Board, move_list: MoveList, state: State) -> Self {
@@ -63,7 +87,7 @@ impl Game {
         &mut self.state
     }
 
-    fn calculate_move(&mut self, source: Square, destination: Square) -> Result<u16, ()> {
+    fn calculate_move(&mut self, source: Square, destination: Square) -> Result<u16, Box<dyn Error>> {
         let board = self.board();
         let piece_index = board.get_piece_index(source)?;
         let pieces = board.pieces();
@@ -80,7 +104,7 @@ impl Game {
             9 => pieces.white_pieces().queen().verify(source, destination, board),
             10 => pieces.white_pieces().king().verify(source, destination, board),
             11 => pieces.white_pieces().pawn().verify(source, destination, board),
-            _ => Err(()),
+            _ => Err(Box::new(GameError::VerificationError)),
         }
     }
 
@@ -88,7 +112,7 @@ impl Game {
         Bitboard::overlap(source, self.board().into())
     }
 
-    fn perform_move(&mut self, encoded_move: EncodedMove) -> Result<(), ()> {
+    fn perform_move(&mut self, encoded_move: EncodedMove) -> Result<(), Box<dyn Error>> {
         let source = encoded_move.source();
         let destination = encoded_move.destination();
         let board = self.board_mut();
@@ -107,7 +131,7 @@ impl Game {
             BISHOP_PROMOTION_CAPTURE => BishopPromotionCaptureMove::new(source, destination).march(board)?,
             ROOK_PROMOTION_CAPTURE => RookPromotionCaptureMove::new(source, destination).march(board)?,
             QUEEN_PROMOTION_CAPTURE => QueenPromotionCaptureMove::new(source, destination).march(board)?,
-            _ => return Err(()),
+            _ => return Err(Box::new(GameError::Illegal)),
         };
         self.move_list_mut().add(encoded_move.data());
         Ok(())
@@ -187,15 +211,13 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), ()> {
+    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), Box<dyn Error>> {
         let bitsource = Bitboard::from(source);
         if !self.move_list().validate(source, destination) {
-            eprintln!("Source square can not be equal to destination square");
-            return Err(());
+            return Err(Box::new(GameError::SourceEqualsDestination));
         }
         if !self.piece_on_source(bitsource) {
-            eprintln!("Source square can not be unoccupied");
-            return Err(());
+            return Err(Box::new(GameError::SourceUnoccupied));
         }
         let data = self.calculate_move(source, destination)?;
         self.perform_move(EncodedMove::new(data))

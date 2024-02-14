@@ -2,7 +2,10 @@ use super::{Queen, QueenExt};
 use crate::{pieces::PieceExt, Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct BlackQueen {
@@ -36,6 +39,7 @@ impl From<Bitboard> for BlackQueen {
         Self::new(value)
     }
 }
+
 impl Display for BlackQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", BlackQueen::symbol())
@@ -59,7 +63,7 @@ impl PieceExt for BlackQueen {
 }
 
 impl Verify for BlackQueen {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
         Queen::from(*self).verify(source, destination, board)
     }
 }

@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use super::*;
 use crate::{Board, Verify};
 use api::{ForsythEdwardsNotationExt, Square};
@@ -272,7 +274,7 @@ impl PieceExt for Piece {
 }
 
 impl Verify for Piece {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, ()> {
+    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
         match self {
             Piece::Rook(rook) => rook.verify(source, destination, board),
             Piece::Knight(knight) => knight.verify(source, destination, board),

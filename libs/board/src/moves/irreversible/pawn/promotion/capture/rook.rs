@@ -1,3 +1,4 @@
+use super::PromotionCaptureMoveExt;
 use crate::{
     moves::{
         coordinates::Coordinates,
@@ -9,10 +10,11 @@ use crate::{
     },
     Board,
 };
-
-use super::PromotionCaptureMoveExt;
 use api::Square;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display},
+};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct RookPromotionCaptureMove {
@@ -33,23 +35,15 @@ impl RookPromotionCaptureMove {
 
 pub trait RookPromotionCaptureMoveExt: PromotionCaptureMoveExt {}
 
-impl RookPromotionCaptureMoveExt for RookPromotionCaptureMove {}
-impl PromotionCaptureMoveExt for RookPromotionCaptureMove {}
-impl PromotionMoveExt for RookPromotionCaptureMove {}
-impl PawnMoveExt for RookPromotionCaptureMove {}
-impl IrreversibleMoveExt for RookPromotionCaptureMove {}
-
 impl MoveExt for RookPromotionCaptureMove {
     fn coordinates(&self) -> Coordinates {
         *self.coordinates()
     }
 
-    fn march(&self, board: &mut Board) -> Result<(), ()> {
+    fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>> {
         self.capture(board)
     }
 }
-
-impl Encode for RookPromotionCaptureMove {}
 
 impl Display for RookPromotionCaptureMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -64,3 +58,10 @@ impl Debug for RookPromotionCaptureMove {
         Display::fmt(self, f)
     }
 }
+
+impl Encode for RookPromotionCaptureMove {}
+impl RookPromotionCaptureMoveExt for RookPromotionCaptureMove {}
+impl PromotionCaptureMoveExt for RookPromotionCaptureMove {}
+impl PromotionMoveExt for RookPromotionCaptureMove {}
+impl PawnMoveExt for RookPromotionCaptureMove {}
+impl IrreversibleMoveExt for RookPromotionCaptureMove {}
