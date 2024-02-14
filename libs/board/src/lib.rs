@@ -107,7 +107,7 @@ impl Error for BoardError {}
 pub trait BoardExt {}
 
 pub trait Verify {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>>;
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>>;
 }
 
 pub trait Shift {

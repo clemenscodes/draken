@@ -30,7 +30,7 @@ use crate::{
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
 use black::BlackPawn;
-use std::{error::Error, fmt::Display, io};
+use std::{error::Error, fmt::Display};
 use white::WhitePawn;
 
 #[derive(Debug)]
@@ -99,38 +99,34 @@ pub trait PawnExt: PieceExt {
             Err(Box::new(PawnError::Illegal))
         }
     }
-    fn get_selection(&self) -> Result<char, Box<dyn Error>> {
-        let mut input = String::new();
-        println!("Promotion! Select the piece you want: Q (Queen), R (Rook), N (Knight), B (Bishop)");
-        io::stdin().read_line(&mut input)?;
-        let selection = input.chars().next().ok_or_else(|| Box::new(PawnError::InvalidPromotion))?;
-        Ok(selection)
-    }
-    fn promote(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        let selection = self.get_selection()?;
+    fn promote(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
         if Move::is_capture(destination, board) {
-            self.make_promotion_capture(source, destination, selection)
+            self.make_promotion_capture(source, destination, promotion)
         } else {
-            self.make_promotion(source, destination, selection)
+            self.make_promotion(source, destination, promotion)
         }
     }
-    fn make_promotion(&self, source: Square, destination: Square, selection: char) -> Result<u16, Box<dyn Error>> {
-        match selection {
-            'Q' => Ok(EncodedMove::from(QueenPromotionMove::new(source, destination)).data()),
-            'R' => Ok(EncodedMove::from(RookPromotionMove::new(source, destination)).data()),
-            'N' => Ok(EncodedMove::from(KnightPromotionMove::new(source, destination)).data()),
-            'B' => Ok(EncodedMove::from(BishopPromotionMove::new(source, destination)).data()),
-            _ => Err(Box::new(PawnError::InvalidPromotion)),
-        }
+    fn make_promotion(&self, source: Square, destination: Square, promotion: Option<char>) -> Result<u16, Box<dyn Error>> {
+        promotion
+            .map(|piece| match piece {
+                'q' => Ok(EncodedMove::from(QueenPromotionMove::new(source, destination)).data()),
+                'r' => Ok(EncodedMove::from(RookPromotionMove::new(source, destination)).data()),
+                'n' => Ok(EncodedMove::from(KnightPromotionMove::new(source, destination)).data()),
+                'b' => Ok(EncodedMove::from(BishopPromotionMove::new(source, destination)).data()),
+                _ => Err(Box::new(PawnError::InvalidPromotion))?,
+            })
+            .ok_or_else(|| Box::new(PawnError::InvalidPromotion))?
     }
-    fn make_promotion_capture(&self, source: Square, destination: Square, selection: char) -> Result<u16, Box<dyn Error>> {
-        match selection {
-            'Q' => Ok(EncodedMove::from(QueenPromotionCaptureMove::new(source, destination)).data()),
-            'R' => Ok(EncodedMove::from(RookPromotionCaptureMove::new(source, destination)).data()),
-            'N' => Ok(EncodedMove::from(KnightPromotionCaptureMove::new(source, destination)).data()),
-            'B' => Ok(EncodedMove::from(BishopPromotionCaptureMove::new(source, destination)).data()),
-            _ => Err(Box::new(PawnError::InvalidPromotion)),
-        }
+    fn make_promotion_capture(&self, source: Square, destination: Square, promotion: Option<char>) -> Result<u16, Box<dyn Error>> {
+        promotion
+            .map(|piece| match piece {
+                'q' => Ok(EncodedMove::from(QueenPromotionCaptureMove::new(source, destination)).data()),
+                'r' => Ok(EncodedMove::from(RookPromotionCaptureMove::new(source, destination)).data()),
+                'n' => Ok(EncodedMove::from(KnightPromotionCaptureMove::new(source, destination)).data()),
+                'b' => Ok(EncodedMove::from(BishopPromotionCaptureMove::new(source, destination)).data()),
+                _ => Err(Box::new(PawnError::InvalidPromotion))?,
+            })
+            .ok_or_else(|| Box::new(PawnError::InvalidPromotion))?
     }
 }
 
@@ -147,13 +143,13 @@ impl From<BlackPawn> for Pawn {
 }
 
 impl Verify for Pawn {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
         let pawn = Bitboard::get_single_bit(source.into());
         if !Bitboard::check_bit(self.get_targets(pawn, board), destination.into()) {
             return Err(Box::new(PawnError::Illegal));
         }
         if Move::is_promotion(destination) {
-            return self.promote(source, destination, board);
+            return self.promote(source, destination, promotion, board);
         }
         if Move::is_enpassant(destination, board) {
             return Ok(EncodedMove::from(EnPassantMove::new(source, destination)).data());
@@ -252,12 +248,18 @@ impl PawnExt for Pawn {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::{
+        fen::ForsythEdwardsNotation,
+        moves::{encoded_move::EncodedMoveExt, QUEEN_PROMOTION_CAPTURE},
+    };
     use api::Square::*;
 
     #[test]
     fn test_promote() {
-        let board = Board::default();
+        let board = Board::from(ForsythEdwardsNotation::try_from("rnbqkbnr/pppp2pP/4p3/8/8/5p2/PPPPPP1P/RNBQKBNR w KQkq - 0 5").unwrap());
         let pawn = Pawn::from(WhitePawn::default());
-        pawn.promote(E2, E4, board).unwrap();
+        let data = pawn.promote(H7, G8, Some('q'), board).unwrap();
+        let encoded_move = EncodedMove::new(data);
+        assert_eq!(QUEEN_PROMOTION_CAPTURE, encoded_move.kind());
     }
 }

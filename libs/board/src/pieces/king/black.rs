@@ -63,8 +63,8 @@ impl PieceExt for BlackKing {
 }
 
 impl Verify for BlackKing {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
-        King::from(*self).verify(source, destination, board)
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
+        King::from(*self).verify(source, destination, promotion, board)
     }
 }
 

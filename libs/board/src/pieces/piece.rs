@@ -225,7 +225,7 @@ impl Piece {
 
     pub fn set_on_square(&mut self, rank: u8, file: u8) {
         let board = Bitboard::try_from((rank as usize, file as usize)).unwrap();
-        self.get_board().self_merge(board);
+        self.get_board_mut().self_merge(board);
     }
 
     /// Returns `true` if the piece is [`King`].
@@ -262,14 +262,14 @@ impl PieceExt for Piece {
 }
 
 impl Verify for Piece {
-    fn verify(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+    fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>> {
         match self {
-            Piece::Rook(rook) => rook.verify(source, destination, board),
-            Piece::Knight(knight) => knight.verify(source, destination, board),
-            Piece::Bishop(bishop) => bishop.verify(source, destination, board),
-            Piece::Queen(queen) => queen.verify(source, destination, board),
-            Piece::King(king) => king.verify(source, destination, board),
-            Piece::Pawn(pawn) => pawn.verify(source, destination, board),
+            Piece::Rook(rook) => rook.verify(source, destination, promotion, board),
+            Piece::Knight(knight) => knight.verify(source, destination, promotion, board),
+            Piece::Bishop(bishop) => bishop.verify(source, destination, promotion, board),
+            Piece::Queen(queen) => queen.verify(source, destination, promotion, board),
+            Piece::King(king) => king.verify(source, destination, promotion, board),
+            Piece::Pawn(pawn) => pawn.verify(source, destination, promotion, board),
         }
     }
 }

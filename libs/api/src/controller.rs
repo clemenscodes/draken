@@ -11,5 +11,5 @@ pub trait Controller: GameExt + ForsythEdwardsNotationExt {
     fn get_source(&self) -> Square;
     fn get_destination(&self) -> Square;
     fn get_dragged_square(&self) -> Square;
-    fn get_legal_moves(&self) -> Vec<(Square, Square)>;
+    fn get_legal_moves(&self) -> Vec<(Square, Square, Option<char>)>;
 }

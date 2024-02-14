@@ -85,23 +85,23 @@ impl Game {
         &mut self.state
     }
 
-    fn calculate_move(&mut self, source: Square, destination: Square) -> Result<u16, Box<dyn Error>> {
+    fn calculate_move(&mut self, source: Square, destination: Square, promotion: Option<char>) -> Result<u16, Box<dyn Error>> {
         let board = self.board();
         let piece_index = board.get_piece_index(source)?;
         let pieces = board.pieces();
         match piece_index {
-            0 => pieces.black_pieces().rook().verify(source, destination, board),
-            1 => pieces.black_pieces().knight().verify(source, destination, board),
-            2 => pieces.black_pieces().bishop().verify(source, destination, board),
-            3 => pieces.black_pieces().queen().verify(source, destination, board),
-            4 => pieces.black_pieces().king().verify(source, destination, board),
-            5 => pieces.black_pieces().pawn().verify(source, destination, board),
-            6 => pieces.white_pieces().rook().verify(source, destination, board),
-            7 => pieces.white_pieces().knight().verify(source, destination, board),
-            8 => pieces.white_pieces().bishop().verify(source, destination, board),
-            9 => pieces.white_pieces().queen().verify(source, destination, board),
-            10 => pieces.white_pieces().king().verify(source, destination, board),
-            11 => pieces.white_pieces().pawn().verify(source, destination, board),
+            0 => pieces.black_pieces().rook().verify(source, destination, promotion, board),
+            1 => pieces.black_pieces().knight().verify(source, destination, promotion, board),
+            2 => pieces.black_pieces().bishop().verify(source, destination, promotion, board),
+            3 => pieces.black_pieces().queen().verify(source, destination, promotion, board),
+            4 => pieces.black_pieces().king().verify(source, destination, promotion, board),
+            5 => pieces.black_pieces().pawn().verify(source, destination, promotion, board),
+            6 => pieces.white_pieces().rook().verify(source, destination, promotion, board),
+            7 => pieces.white_pieces().knight().verify(source, destination, promotion, board),
+            8 => pieces.white_pieces().bishop().verify(source, destination, promotion, board),
+            9 => pieces.white_pieces().queen().verify(source, destination, promotion, board),
+            10 => pieces.white_pieces().king().verify(source, destination, promotion, board),
+            11 => pieces.white_pieces().pawn().verify(source, destination, promotion, board),
             _ => Err(Box::new(GameError::Illegal)),
         }
     }
@@ -209,7 +209,7 @@ impl GameExt for Game {
         todo!()
     }
 
-    fn make_move(&mut self, source: Square, destination: Square) -> Result<(), Box<dyn Error>> {
+    fn make_move(&mut self, source: Square, destination: Square, promotion: Option<char>) -> Result<(), Box<dyn Error>> {
         let bitsource = Bitboard::from(source);
         if !self.move_list().validate(source, destination) {
             return Err(Box::new(GameError::SourceEqualsDestination));
@@ -217,7 +217,7 @@ impl GameExt for Game {
         if !self.piece_on_source(bitsource) {
             return Err(Box::new(GameError::SourceUnoccupied));
         }
-        let data = self.calculate_move(source, destination)?;
+        let data = self.calculate_move(source, destination, promotion)?;
         self.perform_move(EncodedMove::new(data))
     }
 
@@ -241,7 +241,7 @@ mod tests {
     fn test_make_move() {
         let mut game = Game::default();
         assert_eq!(game.ply(), 0);
-        game.make_move(E2, E4).unwrap();
+        game.make_move(E2, E4, None).unwrap();
         assert_eq!(game.ply(), 1);
         println!("{game}");
     }
