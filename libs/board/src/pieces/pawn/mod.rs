@@ -3,8 +3,16 @@ pub mod white;
 
 use super::{Piece, PieceExt};
 use crate::{
-    moves::{encoded_move::EncodedMove, reversible::quiet::QuietMove},
-    Board, Verify, EIGHTH_FILE, EIGHTH_RANK, FIFTH_FILE, FIRST_RANK,
+    moves::{
+        encoded_move::EncodedMove,
+        irreversible::{
+            capture::CaptureMove,
+            pawn::{enpassant::EnPassantMove, push::DoublePushMove},
+        },
+        reversible::quiet::QuietMove,
+        Move, MoveExt,
+    },
+    Board, Verify, BOARD_SIZE, EIGHTH_FILE, EIGHTH_RANK, FIRST_FILE, FIRST_RANK,
 };
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::{Bitboard, BitboardExt};
@@ -34,6 +42,15 @@ impl Display for PawnError {
 impl Error for PawnError {}
 
 pub trait PawnExt: PieceExt {
+    fn promotion_mask() -> Bitboard {
+        FIRST_RANK | EIGHTH_RANK
+    }
+    fn west_attack_mask() -> Bitboard {
+        !EIGHTH_FILE
+    }
+    fn east_attack_mask() -> Bitboard {
+        !FIRST_FILE
+    }
     fn get_west_attacks(&self, pawns: Bitboard) -> Bitboard;
     fn get_east_attacks(&self, pawns: Bitboard) -> Bitboard;
     fn get_attacking_pawns(&self, board: Board) -> Bitboard;
@@ -54,14 +71,31 @@ pub trait PawnExt: PieceExt {
     fn get_targets(&self, pawn: Bitboard, board: Board) -> Bitboard {
         self.get_push_targets(pawn, board.pieces().empty_squares()) | self.get_attacks(pawn, board)
     }
-    fn promotion_mask() -> Bitboard {
-        FIRST_RANK | EIGHTH_RANK
+    fn push(&self, source: Square, destination: Square) -> Result<u16, Box<dyn Error>> {
+        let source_index: u8 = source.into();
+        let destination_index: u8 = destination.into();
+        let difference = destination_index.abs_diff(source_index);
+        if difference == BOARD_SIZE {
+            return Ok(EncodedMove::from(QuietMove::new(source, destination)).data());
+        }
+        if difference == 2 * BOARD_SIZE {
+            Ok(EncodedMove::from(DoublePushMove::new(source, destination)).data())
+        } else {
+            Err(Box::new(PawnError::Illegal))
+        }
     }
-    fn west_attack_mask() -> Bitboard {
-        !EIGHTH_FILE
+    fn promote(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+        if Move::is_capture(destination, board) {
+            self.make_promotion_capture(source, destination, board)
+        } else {
+            self.make_promotion(source, destination, board)
+        }
     }
-    fn east_attack_mask() -> Bitboard {
-        !FIFTH_FILE
+    fn make_promotion(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+        todo!()
+    }
+    fn make_promotion_capture(&self, source: Square, destination: Square, board: Board) -> Result<u16, Box<dyn Error>> {
+        todo!()
     }
 }
 
@@ -83,8 +117,16 @@ impl Verify for Pawn {
         if !Bitboard::check_bit(self.get_targets(pawn, board), destination.into()) {
             return Err(Box::new(PawnError::Illegal));
         }
-        let encoded_move = EncodedMove::from(QuietMove::new(source, destination));
-        Ok(encoded_move.data())
+        if Move::is_promotion(destination) {
+            return self.promote(source, destination, board);
+        }
+        if Move::is_enpassant(destination, board) {
+            return Ok(EncodedMove::from(EnPassantMove::new(source, destination)).data());
+        }
+        if Move::is_capture(destination, board) {
+            return Ok(EncodedMove::from(CaptureMove::new(source, destination)).data());
+        }
+        self.push(source, destination)
     }
 }
 
