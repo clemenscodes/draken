@@ -1,9 +1,8 @@
-use std::error::Error;
-
 use super::*;
 use crate::{Board, Verify};
 use api::{ForsythEdwardsNotationExt, Square};
 use bitboard::Bitboard;
+use std::error::Error;
 
 #[derive(Debug)]
 pub enum Piece {
@@ -39,18 +38,18 @@ impl TryFrom<char> for Piece {
 
     fn try_from(value: char) -> Result<Self, Self::Error> {
         let piece: Piece = match value {
-            piece if piece == PIECE_SYMBOLS[0] => Piece::Rook(Rook::Black(BlackRook::default())),
-            piece if piece == PIECE_SYMBOLS[1] => Piece::Knight(Knight::Black(BlackKnight::default())),
-            piece if piece == PIECE_SYMBOLS[2] => Piece::Bishop(Bishop::Black(BlackBishop::default())),
-            piece if piece == PIECE_SYMBOLS[3] => Piece::Queen(Queen::Black(BlackQueen::default())),
-            piece if piece == PIECE_SYMBOLS[4] => Piece::King(King::Black(BlackKing::default())),
-            piece if piece == PIECE_SYMBOLS[5] => Piece::Pawn(Pawn::Black(BlackPawn::default())),
-            piece if piece == PIECE_SYMBOLS[6] => Piece::Rook(Rook::White(WhiteRook::default())),
-            piece if piece == PIECE_SYMBOLS[7] => Piece::Knight(Knight::White(WhiteKnight::default())),
-            piece if piece == PIECE_SYMBOLS[8] => Piece::Bishop(Bishop::White(WhiteBishop::default())),
-            piece if piece == PIECE_SYMBOLS[9] => Piece::Queen(Queen::White(WhiteQueen::default())),
-            piece if piece == PIECE_SYMBOLS[10] => Piece::King(King::White(WhiteKing::default())),
-            piece if piece == PIECE_SYMBOLS[11] => Piece::Pawn(Pawn::White(WhitePawn::default())),
+            piece if piece == PIECE_SYMBOLS[0] => Piece::from(BlackRook::default()),
+            piece if piece == PIECE_SYMBOLS[1] => Piece::from(BlackKnight::default()),
+            piece if piece == PIECE_SYMBOLS[2] => Piece::from(BlackBishop::default()),
+            piece if piece == PIECE_SYMBOLS[3] => Piece::from(BlackQueen::default()),
+            piece if piece == PIECE_SYMBOLS[4] => Piece::from(BlackKing::default()),
+            piece if piece == PIECE_SYMBOLS[5] => Piece::from(BlackPawn::default()),
+            piece if piece == PIECE_SYMBOLS[6] => Piece::from(WhiteRook::default()),
+            piece if piece == PIECE_SYMBOLS[7] => Piece::from(WhiteKnight::default()),
+            piece if piece == PIECE_SYMBOLS[8] => Piece::from(WhiteBishop::default()),
+            piece if piece == PIECE_SYMBOLS[9] => Piece::from(WhiteQueen::default()),
+            piece if piece == PIECE_SYMBOLS[10] => Piece::from(WhiteKing::default()),
+            piece if piece == PIECE_SYMBOLS[11] => Piece::from(WhitePawn::default()),
             _ => return Err(Self::Error::Invalid),
         };
         Ok(piece)
@@ -166,7 +165,7 @@ impl From<BlackRook> for Piece {
 }
 
 impl Piece {
-    pub fn get_board(&mut self) -> &mut Bitboard {
+    pub fn get_board_mut(&mut self) -> &mut Bitboard {
         match self {
             Piece::Rook(rook) => match rook {
                 Rook::Black(rook) => rook.bitboard_mut(),
@@ -195,41 +194,38 @@ impl Piece {
         }
     }
 
+    pub fn get_board(&self) -> Bitboard {
+        match self {
+            Piece::Rook(rook) => match rook {
+                Rook::Black(rook) => rook.bitboard(),
+                Rook::White(rook) => rook.bitboard(),
+            },
+            Piece::Knight(knight) => match knight {
+                Knight::Black(knight) => knight.bitboard(),
+                Knight::White(knight) => knight.bitboard(),
+            },
+            Piece::Bishop(bishop) => match bishop {
+                Bishop::Black(bishop) => bishop.bitboard(),
+                Bishop::White(bishop) => bishop.bitboard(),
+            },
+            Piece::Queen(queen) => match queen {
+                Queen::Black(queen) => queen.bitboard(),
+                Queen::White(queen) => queen.bitboard(),
+            },
+            Piece::King(king) => match king {
+                King::Black(king) => king.bitboard(),
+                King::White(king) => king.bitboard(),
+            },
+            Piece::Pawn(pawn) => match pawn {
+                Pawn::Black(pawn) => pawn.bitboard(),
+                Pawn::White(pawn) => pawn.bitboard(),
+            },
+        }
+    }
+
     pub fn set_on_square(&mut self, rank: u8, file: u8) {
         let board = Bitboard::try_from((rank as usize, file as usize)).unwrap();
         self.get_board().self_merge(board);
-    }
-
-    /// Returns `true` if the piece is [`Rook`].
-    ///
-    /// [`Rook`]: Piece::Rook
-    #[must_use]
-    pub fn is_rook(&self) -> bool {
-        matches!(self, Self::Rook(..))
-    }
-
-    /// Returns `true` if the piece is [`Knight`].
-    ///
-    /// [`Knight`]: Piece::Knight
-    #[must_use]
-    pub fn is_knight(&self) -> bool {
-        matches!(self, Self::Knight(..))
-    }
-
-    /// Returns `true` if the piece is [`Bishop`].
-    ///
-    /// [`Bishop`]: Piece::Bishop
-    #[must_use]
-    pub fn is_bishop(&self) -> bool {
-        matches!(self, Self::Bishop(..))
-    }
-
-    /// Returns `true` if the piece is [`Queen`].
-    ///
-    /// [`Queen`]: Piece::Queen
-    #[must_use]
-    pub fn is_queen(&self) -> bool {
-        matches!(self, Self::Queen(..))
     }
 
     /// Returns `true` if the piece is [`King`].
@@ -238,14 +234,6 @@ impl Piece {
     #[must_use]
     pub fn is_king(&self) -> bool {
         matches!(self, Self::King(..))
-    }
-
-    /// Returns `true` if the piece is [`Pawn`].
-    ///
-    /// [`Pawn`]: Piece::Pawn
-    #[must_use]
-    pub fn is_pawn(&self) -> bool {
-        matches!(self, Self::Pawn(..))
     }
 }
 

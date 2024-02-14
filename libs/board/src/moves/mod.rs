@@ -59,8 +59,8 @@ impl Error for MoveError {}
 pub trait MoveExt {
     fn coordinates(&self) -> Coordinates;
     fn march(&self, board: &mut Board) -> Result<(), Box<dyn Error>>;
-    fn piece(&self, board: &mut Board) -> Piece {
-        board.get_piece_mut(self.coordinates().source()).expect("No piece on {source}")
+    fn piece(&self, board: &mut Board) -> Result<Piece, Box<dyn Error>> {
+        board.get_piece_mut(self.coordinates().source())
     }
     fn is_capture(&self, board: Board) -> bool {
         let destination: Bitboard = self.coordinates().destination().into();
