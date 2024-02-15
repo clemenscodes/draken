@@ -127,7 +127,7 @@ impl TryFrom<String> for Placements {
 impl Display for Placements {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (rank, pieces) in self.position.iter().enumerate() {
-            let mut empty_files = 0;
+            let mut empty_files: u8 = 0;
             for &piece in pieces {
                 if piece == 0 {
                     empty_files += 1;

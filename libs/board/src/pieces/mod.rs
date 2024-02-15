@@ -9,6 +9,7 @@ mod rook;
 mod white_pieces;
 
 use self::{piece::*, white_pieces::WhitePieces};
+use api::Color;
 pub use bishop::{black::*, white::*, Bishop};
 pub use bitboard::{Bitboard, BitboardExt};
 use black_pieces::BlackPieces;
@@ -88,6 +89,14 @@ pub struct Pieces {
 pub trait PiecesExt {}
 
 impl Pieces {
+    pub fn get_pieces(&self, color: Color) -> Bitboard {
+        if color.is_white() {
+            self.white_pieces().into()
+        } else {
+            self.black_pieces().into()
+        }
+    }
+
     pub fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
     }
@@ -239,8 +248,8 @@ impl From<[[u8; 8]; 8]> for Pieces {
 }
 
 impl From<Pieces> for Bitboard {
-    fn from(val: Pieces) -> Self {
-        Bitboard::merge_many(vec![val.white_pieces().into(), val.black_pieces().into()])
+    fn from(value: Pieces) -> Self {
+        Bitboard::merge_many(vec![value.white_pieces().into(), value.black_pieces().into()])
     }
 }
 

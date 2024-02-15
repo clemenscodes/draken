@@ -1,4 +1,5 @@
 #![feature(variant_count)]
+mod color;
 mod controller;
 mod fen;
 mod game;
@@ -8,6 +9,7 @@ mod square;
 mod state;
 mod view;
 
+pub use color::Color;
 pub use controller::Controller;
 pub use fen::ForsythEdwardsNotationExt;
 pub use game::GameExt;

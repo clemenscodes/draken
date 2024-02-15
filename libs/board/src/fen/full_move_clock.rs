@@ -1,7 +1,5 @@
 use std::fmt::{Debug, Display};
 
-pub const MIN_FULL_MOVE_CLOCK: u16 = 1;
-
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct FullMoveClock {
     clock: u16,
@@ -14,6 +12,8 @@ pub enum FullMoveClockError {
 }
 
 impl FullMoveClock {
+    pub const MIN: u16 = 1;
+
     pub fn new(clock: u16) -> Self {
         Self { clock }
     }
@@ -25,9 +25,7 @@ impl FullMoveClock {
 
 impl Default for FullMoveClock {
     fn default() -> Self {
-        Self {
-            clock: MIN_FULL_MOVE_CLOCK,
-        }
+        Self { clock: Self::MIN }
     }
 }
 
@@ -36,7 +34,7 @@ impl TryFrom<&str> for FullMoveClock {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         if let Ok(parsed_value) = value.parse::<u16>() {
-            if parsed_value < MIN_FULL_MOVE_CLOCK {
+            if parsed_value < Self::MIN {
                 Err(Self::Error::TooLow)
             } else {
                 Ok(Self::new(parsed_value))

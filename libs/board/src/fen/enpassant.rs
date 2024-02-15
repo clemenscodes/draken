@@ -1,8 +1,6 @@
+use api::{Square, Square::*};
+use bitboard::{Bitboard, BitboardExt};
 use std::fmt::{Debug, Display};
-
-use api::Square;
-use api::Square::{A3, A6, H3, H6};
-use bitboard::Bitboard;
 
 #[derive(PartialEq, Eq, Clone, Copy, Default)]
 pub struct EnPassant {
@@ -12,6 +10,11 @@ pub struct EnPassant {
 #[derive(Debug, PartialEq, Eq)]
 pub enum EnPassantError {
     Invalid,
+}
+
+pub trait EnPassantExt {
+    fn set_square(&mut self, square: Option<Square>);
+    fn unset(&mut self);
 }
 
 impl EnPassant {
@@ -36,7 +39,11 @@ impl EnPassant {
     }
 
     pub fn mask(&self) -> Bitboard {
-        Bitboard::default()
+        if let Some(square) = self.square() {
+            Bitboard::get_single_bit(square.into())
+        } else {
+            Bitboard::default()
+        }
     }
 }
 
@@ -60,11 +67,6 @@ impl TryFrom<String> for EnPassant {
     fn try_from(value: String) -> Result<Self, Self::Error> {
         Self::try_from(value.as_str())
     }
-}
-
-pub(crate) trait EnPassantExt {
-    fn set_square(&mut self, square: Option<Square>);
-    fn unset(&mut self);
 }
 
 impl EnPassantExt for EnPassant {
