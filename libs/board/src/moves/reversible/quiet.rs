@@ -62,8 +62,7 @@ impl Debug for QuietMove {
     }
 }
 
-impl QuietMoveExt for QuietMove {}
-impl ReversibleMoveExt for QuietMove {}
+impl<T: ReversibleMoveExt> QuietMoveExt for T {}
 
 #[cfg(test)]
 mod tests {

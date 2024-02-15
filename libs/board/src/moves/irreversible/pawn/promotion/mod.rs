@@ -6,7 +6,7 @@ pub mod rook;
 
 use super::PawnMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use bishop::BishopPromotionMove;
@@ -53,6 +53,4 @@ impl MoveExt for PromotionMove {
     }
 }
 
-impl PromotionMoveExt for PromotionMove {}
-impl PawnMoveExt for PromotionMove {}
-impl IrreversibleMoveExt for PromotionMove {}
+impl<T: PawnMoveExt> PromotionMoveExt for T {}

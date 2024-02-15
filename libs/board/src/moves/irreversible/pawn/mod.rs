@@ -2,19 +2,17 @@ pub mod enpassant;
 pub mod promotion;
 pub mod push;
 
-use std::error::Error;
-
+use super::IrreversibleMoveExt;
 use crate::{
     moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
-
-use super::IrreversibleMoveExt;
 use api::Square;
 use bitboard::BitboardExt;
 use enpassant::EnPassantMove;
 use promotion::PromotionMove;
 use push::DoublePushMove;
+use std::error::Error;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PawnMove {
@@ -31,9 +29,6 @@ pub trait PawnMoveExt: IrreversibleMoveExt {
         Ok(())
     }
 }
-
-impl PawnMoveExt for PawnMove {}
-impl IrreversibleMoveExt for PawnMove {}
 
 impl MoveExt for PawnMove {
     fn coordinates(&self) -> Coordinates {
@@ -52,3 +47,5 @@ impl MoveExt for PawnMove {
         }
     }
 }
+
+impl<T: IrreversibleMoveExt> PawnMoveExt for T {}

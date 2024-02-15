@@ -4,8 +4,6 @@ pub mod irreversible;
 pub mod list;
 pub mod reversible;
 
-use std::{error::Error, fmt::Display};
-
 use crate::{
     fen::active_color::ActiveColorExt,
     pieces::{piece::Piece, Pawn, PawnExt},
@@ -16,6 +14,7 @@ use bitboard::{Bitboard, BitboardExt};
 use coordinates::Coordinates;
 use irreversible::IrreversibleMove;
 use reversible::ReversibleMove;
+use std::{error::Error, fmt::Display};
 
 pub const QUIET_MOVE: u16 = 0b0000;
 pub const DOUBLE_PAWN_PUSH: u16 = 0b0001;
@@ -45,16 +44,6 @@ pub enum Move {
 pub enum MoveError {
     OpponentsPiece,
 }
-
-impl Display for MoveError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            MoveError::OpponentsPiece => write!(f, "Can not move opponents piece"),
-        }
-    }
-}
-
-impl Error for MoveError {}
 
 pub trait MoveExt {
     fn is_capture(destination: Square, board: Board) -> bool {
@@ -105,8 +94,6 @@ pub trait Encode: MoveExt {
     }
 }
 
-impl<T: MoveExt> Encode for T {}
-
 impl MoveExt for Move {
     fn coordinates(&self) -> Coordinates {
         match *self {
@@ -122,3 +109,15 @@ impl MoveExt for Move {
         }
     }
 }
+
+impl Display for MoveError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MoveError::OpponentsPiece => write!(f, "Can not move opponents piece"),
+        }
+    }
+}
+
+impl Error for MoveError {}
+
+impl<T: MoveExt> Encode for T {}

@@ -1,10 +1,6 @@
 use super::PromotionMoveExt;
 use crate::{
-    moves::{
-        coordinates::Coordinates,
-        irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
-        MoveExt,
-    },
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -56,7 +52,4 @@ impl Debug for BishopPromotionMove {
     }
 }
 
-impl BishopPromotionMoveExt for BishopPromotionMove {}
-impl PromotionMoveExt for BishopPromotionMove {}
-impl PawnMoveExt for BishopPromotionMove {}
-impl IrreversibleMoveExt for BishopPromotionMove {}
+impl<T: PromotionMoveExt> BishopPromotionMoveExt for T {}

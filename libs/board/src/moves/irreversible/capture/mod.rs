@@ -59,7 +59,6 @@ impl Debug for CaptureMove {
 }
 
 impl CaptureMoveExt for CaptureMove {}
-impl IrreversibleMoveExt for CaptureMove {}
 
 #[cfg(test)]
 mod tests {
