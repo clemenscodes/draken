@@ -13,6 +13,9 @@ pub struct WhiteKing {
 }
 
 impl WhiteKing {
+    pub const SYMBOL: char = 'K';
+    pub const UTF_SYMBOL: char = '♔';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl WhiteKing {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'K'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♔'
-    }
 }
 
 impl From<Bitboard> for WhiteKing {
@@ -42,7 +37,7 @@ impl From<Bitboard> for WhiteKing {
 
 impl Display for WhiteKing {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteKing::symbol())
+        write!(f, "{}", WhiteKing::SYMBOL)
     }
 }
 

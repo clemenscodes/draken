@@ -13,6 +13,9 @@ pub struct BlackRook {
 }
 
 impl BlackRook {
+    pub const SYMBOL: char = 'r';
+    pub const UTF_SYMBOL: char = '♜';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl BlackRook {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'r'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♜'
-    }
 }
 
 impl From<Bitboard> for BlackRook {
@@ -39,9 +34,10 @@ impl From<Bitboard> for BlackRook {
         Self::new(value)
     }
 }
+
 impl Display for BlackRook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackRook::symbol())
+        write!(f, "{}", BlackRook::SYMBOL)
     }
 }
 

@@ -13,6 +13,9 @@ pub struct BlackQueen {
 }
 
 impl BlackQueen {
+    pub const SYMBOL: char = 'q';
+    pub const UTF_SYMBOL: char = '♛';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl BlackQueen {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'q'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♛'
-    }
 }
 
 impl From<Bitboard> for BlackQueen {
@@ -42,7 +37,7 @@ impl From<Bitboard> for BlackQueen {
 
 impl Display for BlackQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackQueen::symbol())
+        write!(f, "{}", BlackQueen::SYMBOL)
     }
 }
 

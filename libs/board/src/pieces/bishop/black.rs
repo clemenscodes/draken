@@ -13,6 +13,9 @@ pub struct BlackBishop {
 }
 
 impl BlackBishop {
+    pub const SYMBOL: char = 'b';
+    pub const UTF_SYMBOL: char = '♝';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl BlackBishop {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'b'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♝'
-    }
 }
 
 impl From<Bitboard> for BlackBishop {
@@ -42,7 +37,7 @@ impl From<Bitboard> for BlackBishop {
 
 impl Display for BlackBishop {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackBishop::symbol())
+        write!(f, "{}", BlackBishop::SYMBOL)
     }
 }
 

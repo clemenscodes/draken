@@ -16,6 +16,9 @@ pub struct BlackPawn {
 }
 
 impl BlackPawn {
+    pub const SYMBOL: char = 'p';
+    pub const UTF_SYMBOL: char = '♟';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -27,14 +30,6 @@ impl BlackPawn {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'p'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♟'
-    }
 }
 
 impl From<Bitboard> for BlackPawn {
@@ -45,7 +40,7 @@ impl From<Bitboard> for BlackPawn {
 
 impl Display for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackPawn::symbol())
+        write!(f, "{}", BlackPawn::SYMBOL)
     }
 }
 

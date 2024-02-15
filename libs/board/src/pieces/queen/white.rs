@@ -13,6 +13,9 @@ pub struct WhiteQueen {
 }
 
 impl WhiteQueen {
+    pub const SYMBOL: char = 'Q';
+    pub const UTF_SYMBOL: char = '♕';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl WhiteQueen {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'Q'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♕'
-    }
 }
 
 impl From<Bitboard> for WhiteQueen {
@@ -42,7 +37,7 @@ impl From<Bitboard> for WhiteQueen {
 
 impl Display for WhiteQueen {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteQueen::symbol())
+        write!(f, "{}", WhiteQueen::SYMBOL)
     }
 }
 
