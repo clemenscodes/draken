@@ -6,7 +6,7 @@ use crate::{
             pawn::{promotion::PromotionMoveExt, PawnMoveExt},
             IrreversibleMoveExt,
         },
-        Encode, MoveExt,
+        MoveExt,
     },
     Board,
 };
@@ -59,7 +59,6 @@ impl Debug for RookPromotionCaptureMove {
     }
 }
 
-impl Encode for RookPromotionCaptureMove {}
 impl RookPromotionCaptureMoveExt for RookPromotionCaptureMove {}
 impl PromotionCaptureMoveExt for RookPromotionCaptureMove {}
 impl PromotionMoveExt for RookPromotionCaptureMove {}

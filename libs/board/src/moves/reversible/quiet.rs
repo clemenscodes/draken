@@ -1,6 +1,6 @@
 use super::ReversibleMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -64,7 +64,6 @@ impl Debug for QuietMove {
 
 impl QuietMoveExt for QuietMove {}
 impl ReversibleMoveExt for QuietMove {}
-impl Encode for QuietMove {}
 
 #[cfg(test)]
 mod tests {

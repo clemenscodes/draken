@@ -105,6 +105,8 @@ pub trait Encode: MoveExt {
     }
 }
 
+impl<T: MoveExt> Encode for T {}
+
 impl MoveExt for Move {
     fn coordinates(&self) -> Coordinates {
         match *self {

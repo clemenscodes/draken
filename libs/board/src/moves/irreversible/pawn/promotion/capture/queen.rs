@@ -6,7 +6,7 @@ use crate::{
             pawn::{promotion::PromotionMoveExt, PawnMoveExt},
             IrreversibleMoveExt,
         },
-        Encode, MoveExt,
+        MoveExt,
     },
     Board,
 };
@@ -59,7 +59,6 @@ impl Debug for QueenPromotionCaptureMove {
     }
 }
 
-impl Encode for QueenPromotionCaptureMove {}
 impl QueenPromotionCaptureMoveExt for QueenPromotionCaptureMove {}
 impl PromotionCaptureMoveExt for QueenPromotionCaptureMove {}
 impl PromotionMoveExt for QueenPromotionCaptureMove {}

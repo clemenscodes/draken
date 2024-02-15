@@ -1,6 +1,6 @@
 use super::PawnMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
+    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, MoveExt},
     Board,
 };
 use api::Square;
@@ -52,7 +52,6 @@ impl Debug for DoublePushMove {
     }
 }
 
-impl Encode for DoublePushMove {}
 impl DoublePushMoveExt for DoublePushMove {}
 impl PawnMoveExt for DoublePushMove {}
 impl IrreversibleMoveExt for DoublePushMove {}

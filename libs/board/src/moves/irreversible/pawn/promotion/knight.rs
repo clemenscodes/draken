@@ -3,7 +3,7 @@ use crate::{
     moves::{
         coordinates::Coordinates,
         irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
-        Encode, MoveExt,
+        MoveExt,
     },
     Board,
 };
@@ -56,7 +56,6 @@ impl Debug for KnightPromotionMove {
     }
 }
 
-impl Encode for KnightPromotionMove {}
 impl KnightPromotionMoveExt for KnightPromotionMove {}
 impl PromotionMoveExt for KnightPromotionMove {}
 impl PawnMoveExt for KnightPromotionMove {}
