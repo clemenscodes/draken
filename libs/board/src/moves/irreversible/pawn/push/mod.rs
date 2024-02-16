@@ -1,6 +1,6 @@
 use super::PawnMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -14,6 +14,8 @@ pub struct DoublePushMove {
     coordinates: Coordinates,
 }
 
+pub trait DoublePushMoveExt: PawnMoveExt {}
+
 impl DoublePushMove {
     pub fn new(source: Square, destination: Square) -> Self {
         Self {
@@ -25,8 +27,6 @@ impl DoublePushMove {
         &self.coordinates
     }
 }
-
-pub trait DoublePushMoveExt: PawnMoveExt {}
 
 impl MoveExt for DoublePushMove {
     fn coordinates(&self) -> Coordinates {
@@ -52,7 +52,4 @@ impl Debug for DoublePushMove {
     }
 }
 
-impl Encode for DoublePushMove {}
-impl DoublePushMoveExt for DoublePushMove {}
-impl PawnMoveExt for DoublePushMove {}
-impl IrreversibleMoveExt for DoublePushMove {}
+impl<T: PawnMoveExt> DoublePushMoveExt for T {}

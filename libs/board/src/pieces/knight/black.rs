@@ -13,6 +13,9 @@ pub struct BlackKnight {
 }
 
 impl BlackKnight {
+    pub const SYMBOL: char = 'n';
+    pub const UTF_SYMBOL: char = '♞';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl BlackKnight {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'n'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♞'
-    }
 }
 
 impl From<Bitboard> for BlackKnight {
@@ -42,7 +37,7 @@ impl From<Bitboard> for BlackKnight {
 
 impl Display for BlackKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackKnight::symbol())
+        write!(f, "{}", BlackKnight::SYMBOL)
     }
 }
 
@@ -53,10 +48,6 @@ impl Debug for BlackKnight {
 }
 
 impl PieceExt for BlackKnight {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        Knight::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Knight::from(*self).get_attacks(piece, board)
     }

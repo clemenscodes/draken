@@ -13,8 +13,6 @@ use std::{
     fmt::{Debug, Display},
 };
 
-pub const FEN_PARTS: usize = 6;
-
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct ForsythEdwardsNotation {
     placements: Placements,
@@ -26,6 +24,8 @@ pub struct ForsythEdwardsNotation {
 }
 
 impl ForsythEdwardsNotation {
+    pub const PARTS: usize = 6;
+
     pub fn new(
         placements: Placements,
         active_color: ActiveColor,
@@ -165,7 +165,7 @@ impl TryFrom<&str> for ForsythEdwardsNotation {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let parts: Vec<&str> = value.split(' ').collect();
-        if parts.len() != FEN_PARTS {
+        if parts.len() != Self::PARTS {
             return Err(Self::Error::Invalid);
         }
         let placements = Placements::try_from(parts[0])?;

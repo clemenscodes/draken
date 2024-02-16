@@ -40,5 +40,3 @@ impl MoveExt for CastleMove {
 }
 
 impl CastleMoveExt for CastleMove {}
-
-impl IrreversibleMoveExt for CastleMove {}

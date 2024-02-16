@@ -1,13 +1,12 @@
 pub mod black;
 pub mod white;
 
-use std::error::Error;
-
 use super::PieceExt;
 use crate::{Board, Verify};
 use api::Square;
 use bitboard::Bitboard;
 use black::BlackKing;
+use std::error::Error;
 use white::WhiteKing;
 
 #[derive(Debug)]
@@ -31,10 +30,6 @@ impl From<BlackKing> for King {
 }
 
 impl PieceExt for King {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     fn get_attacks(&self, _piece: Bitboard, _board: Board) -> bitboard::Bitboard {
         todo!()
     }

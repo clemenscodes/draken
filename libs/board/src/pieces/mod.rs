@@ -1,17 +1,15 @@
 mod bishop;
-mod black_pieces;
 mod king;
 mod knight;
 mod pawn;
 pub mod piece;
 mod queen;
 mod rook;
-mod white_pieces;
 
-use self::{piece::*, white_pieces::WhitePieces};
+use self::piece::*;
+use api::Color;
 pub use bishop::{black::*, white::*, Bishop};
 pub use bitboard::{Bitboard, BitboardExt};
-use black_pieces::BlackPieces;
 pub use king::{black::*, white::*, King};
 pub use knight::{black::*, white::*, Knight};
 pub use pawn::{black::*, white::*, Pawn, PawnExt};
@@ -19,54 +17,102 @@ pub use queen::{black::*, white::*, Queen};
 pub use rook::{black::*, white::*, Rook};
 pub use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
 
+macro_rules! generate_pieces_struct {
+    ($pieces:ident, $($field_name:ident : $field_name_mut:ident : $field_type:ty),*) => {
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+        pub struct $pieces {
+            $(
+                $field_name: $field_type,
+            )*
+        }
+        impl $pieces {
+            $(
+                pub fn $field_name(&self) -> $field_type {
+                    self.$field_name
+                }
+                pub fn $field_name_mut(&mut self) -> &mut $field_type {
+                    &mut self.$field_name
+                }
+            )*
+        }
+        impl From<$pieces> for Bitboard {
+            fn from(val: $pieces) -> Self {
+                Bitboard::merge_many(vec![
+                    $(val.$field_name.bitboard(),)*
+                ])
+            }
+        }
+    };
+}
+
+generate_pieces_struct!(
+    WhitePieces,
+    rook: rook_mut: WhiteRook,
+    knight: knight_mut: WhiteKnight,
+    bishop: bishop_mut: WhiteBishop,
+    queen: queen_mut: WhiteQueen,
+    king: king_mut: WhiteKing,
+    pawn: pawn_mut: WhitePawn
+);
+
+generate_pieces_struct!(
+    BlackPieces,
+    rook: rook_mut: BlackRook,
+    knight: knight_mut: BlackKnight,
+    bishop: bishop_mut: BlackBishop,
+    queen: queen_mut: BlackQueen,
+    king: king_mut: BlackKing,
+    pawn: pawn_mut: BlackPawn
+);
+
 pub const NUM_COLOR_PIECES: usize = 6;
 pub const NUM_COLORS: usize = 2;
 pub const NUM_PIECES: usize = NUM_COLORS * NUM_COLOR_PIECES;
 pub const EMPTY_SYMBOL: char = ' ';
 
 pub const PIECE_SYMBOLS: [char; NUM_PIECES] = [
-    BlackRook::symbol(),
-    BlackKnight::symbol(),
-    BlackBishop::symbol(),
-    BlackQueen::symbol(),
-    BlackKing::symbol(),
-    BlackPawn::symbol(),
-    WhiteRook::symbol(),
-    WhiteKnight::symbol(),
-    WhiteBishop::symbol(),
-    WhiteQueen::symbol(),
-    WhiteKing::symbol(),
-    WhitePawn::symbol(),
+    BlackRook::SYMBOL,
+    BlackKnight::SYMBOL,
+    BlackBishop::SYMBOL,
+    BlackQueen::SYMBOL,
+    BlackKing::SYMBOL,
+    BlackPawn::SYMBOL,
+    WhiteRook::SYMBOL,
+    WhiteKnight::SYMBOL,
+    WhiteBishop::SYMBOL,
+    WhiteQueen::SYMBOL,
+    WhiteKing::SYMBOL,
+    WhitePawn::SYMBOL,
 ];
 
 pub const UTF_SYMBOLS: [char; NUM_PIECES] = [
-    BlackRook::utf_symbol(),
-    BlackKnight::utf_symbol(),
-    BlackBishop::utf_symbol(),
-    BlackQueen::utf_symbol(),
-    BlackKing::utf_symbol(),
-    BlackPawn::utf_symbol(),
-    WhiteRook::utf_symbol(),
-    WhiteKnight::utf_symbol(),
-    WhiteBishop::utf_symbol(),
-    WhiteQueen::utf_symbol(),
-    WhiteKing::utf_symbol(),
-    WhitePawn::utf_symbol(),
+    BlackRook::UTF_SYMBOL,
+    BlackKnight::UTF_SYMBOL,
+    BlackBishop::UTF_SYMBOL,
+    BlackQueen::UTF_SYMBOL,
+    BlackKing::UTF_SYMBOL,
+    BlackPawn::UTF_SYMBOL,
+    WhiteRook::UTF_SYMBOL,
+    WhiteKnight::UTF_SYMBOL,
+    WhiteBishop::UTF_SYMBOL,
+    WhiteQueen::UTF_SYMBOL,
+    WhiteKing::UTF_SYMBOL,
+    WhitePawn::UTF_SYMBOL,
 ];
 
 pub const PIECE_BYTES: [u8; NUM_PIECES] = [
-    BlackRook::symbol() as u8,
-    BlackKnight::symbol() as u8,
-    BlackBishop::symbol() as u8,
-    BlackQueen::symbol() as u8,
-    BlackKing::symbol() as u8,
-    BlackPawn::symbol() as u8,
-    WhiteRook::symbol() as u8,
-    WhiteKnight::symbol() as u8,
-    WhiteBishop::symbol() as u8,
-    WhiteQueen::symbol() as u8,
-    WhiteKing::symbol() as u8,
-    WhitePawn::symbol() as u8,
+    BlackRook::SYMBOL as u8,
+    BlackKnight::SYMBOL as u8,
+    BlackBishop::SYMBOL as u8,
+    BlackQueen::SYMBOL as u8,
+    BlackKing::SYMBOL as u8,
+    BlackPawn::SYMBOL as u8,
+    WhiteRook::SYMBOL as u8,
+    WhiteKnight::SYMBOL as u8,
+    WhiteBishop::SYMBOL as u8,
+    WhiteQueen::SYMBOL as u8,
+    WhiteKing::SYMBOL as u8,
+    WhitePawn::SYMBOL as u8,
 ];
 
 pub static PIECE_INDEX_LOOKUP_MAP: LazyLock<HashMap<char, usize>> = LazyLock::new(|| {
@@ -85,9 +131,15 @@ pub struct Pieces {
     empty_squares: Bitboard,
 }
 
-pub trait PiecesExt {}
-
 impl Pieces {
+    pub fn get_pieces(&self, color: Color) -> Bitboard {
+        if color.is_white() {
+            self.white_pieces().into()
+        } else {
+            self.black_pieces().into()
+        }
+    }
+
     pub fn white_pieces(&self) -> WhitePieces {
         self.white_pieces
     }
@@ -192,14 +244,6 @@ impl Pieces {
         };
     }
 
-    pub fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
-        self.occupied_squares = occupied_squares;
-    }
-
-    pub fn set_empty_squares(&mut self, empty_squares: Bitboard) {
-        self.empty_squares = empty_squares;
-    }
-
     pub fn update_occupied_squares(&mut self) {
         self.set_occupied_squares(Bitboard::merge_many(self.get_all_pieces().to_vec()));
     }
@@ -207,6 +251,14 @@ impl Pieces {
     pub fn update_empty_squares(&mut self) {
         let occupied_squares = self.occupied_squares();
         self.set_empty_squares(!occupied_squares);
+    }
+
+    fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
+        self.occupied_squares = occupied_squares;
+    }
+
+    fn set_empty_squares(&mut self, empty_squares: Bitboard) {
+        self.empty_squares = empty_squares;
     }
 }
 
@@ -239,9 +291,7 @@ impl From<[[u8; 8]; 8]> for Pieces {
 }
 
 impl From<Pieces> for Bitboard {
-    fn from(val: Pieces) -> Self {
-        Bitboard::merge_many(vec![val.white_pieces().into(), val.black_pieces().into()])
+    fn from(value: Pieces) -> Self {
+        Bitboard::merge_many(vec![value.white_pieces().into(), value.black_pieces().into()])
     }
 }
-
-impl PiecesExt for Pieces {}

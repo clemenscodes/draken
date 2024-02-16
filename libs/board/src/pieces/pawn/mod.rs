@@ -74,11 +74,8 @@ pub trait PawnExt: PieceExt {
     fn get_single_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
     fn get_double_pushable_pawns(&self, empty_squares: Bitboard) -> Bitboard;
     fn get_promotion_pieces(&self) -> [Piece; 4];
-    fn march(&mut self, source: Square, destination: Square, board: &mut Board) -> Result<(), Box<dyn Error>> {
-        if self.is_illegal_move(source, destination, *board) {
-            return Err(Box::new(PawnError::Illegal));
-        }
-        Ok(())
+    fn march(&mut self, _source: Square, _destination: Square, _board: &mut Board) -> Result<(), Box<dyn Error>> {
+        todo!()
     }
     fn get_push_targets(&self, pawn: Bitboard, empty_squares: Bitboard) -> Bitboard {
         self.get_single_push_targets(pawn, empty_squares) | self.get_double_push_targets(pawn, empty_squares)
@@ -162,13 +159,6 @@ impl Verify for Pawn {
 }
 
 impl PieceExt for Pawn {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        match self {
-            Pawn::Black(pawn) => pawn.is_illegal_move(source, destination, board),
-            Pawn::White(pawn) => pawn.is_illegal_move(source, destination, board),
-        }
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         let enpassant_mask = board.fen().enpassant_mask();
         let west_attacks = self.get_west_attacks(piece);

@@ -1,5 +1,5 @@
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 
@@ -55,5 +55,3 @@ impl Debug for KingCastleMove {
 
 impl KingCastleMoveExt for KingCastleMove {}
 impl CastleMoveExt for KingCastleMove {}
-impl IrreversibleMoveExt for KingCastleMove {}
-impl Encode for KingCastleMove {}

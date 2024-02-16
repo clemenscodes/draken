@@ -30,10 +30,6 @@ impl From<BlackQueen> for Queen {
 }
 
 impl PieceExt for Queen {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     fn get_attacks(&self, _piece: Bitboard, _board: Board) -> bitboard::Bitboard {
         todo!()
     }

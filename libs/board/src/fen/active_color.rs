@@ -1,7 +1,5 @@
+use api::Color;
 use std::fmt::{Debug, Display};
-
-pub const NUM_COLORS: usize = 2;
-pub const COLORS: [u8; NUM_COLORS] = [b'w', b'b'];
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct ActiveColor {
@@ -14,6 +12,9 @@ pub enum ActiveColorError {
 }
 
 impl ActiveColor {
+    pub const COLORS: [u8; Self::NUM_COLORS] = [b'w', b'b'];
+    pub const NUM_COLORS: usize = 2;
+
     pub fn new() -> Self {
         Self::default()
     }
@@ -25,7 +26,7 @@ impl ActiveColor {
 
 impl Default for ActiveColor {
     fn default() -> Self {
-        Self { color: COLORS[0] }
+        Self { color: Self::COLORS[0] }
     }
 }
 
@@ -58,11 +59,15 @@ pub trait ActiveColorExt {
 
 impl ActiveColorExt for ActiveColor {
     fn switch(&mut self) {
-        self.color = if self.color == COLORS[0] { COLORS[1] } else { COLORS[0] }
+        self.color = if self.color == Self::COLORS[0] {
+            Self::COLORS[1]
+        } else {
+            Self::COLORS[0]
+        }
     }
 
     fn is_white(&self) -> bool {
-        self.color == COLORS[0]
+        self.color == Self::COLORS[0]
     }
 }
 
@@ -75,6 +80,16 @@ impl Display for ActiveColor {
 impl Debug for ActiveColor {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         Display::fmt(self, f)
+    }
+}
+
+impl From<Color> for ActiveColor {
+    fn from(value: Color) -> Self {
+        if value.is_white() {
+            Self { color: b'w' }
+        } else {
+            Self { color: b'b' }
+        }
     }
 }
 

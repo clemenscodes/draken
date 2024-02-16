@@ -16,6 +16,9 @@ pub struct BlackPawn {
 }
 
 impl BlackPawn {
+    pub const SYMBOL: char = 'p';
+    pub const UTF_SYMBOL: char = '♟';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -27,14 +30,6 @@ impl BlackPawn {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'p'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♟'
-    }
 }
 
 impl From<Bitboard> for BlackPawn {
@@ -45,7 +40,7 @@ impl From<Bitboard> for BlackPawn {
 
 impl Display for BlackPawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", BlackPawn::symbol())
+        write!(f, "{}", BlackPawn::SYMBOL)
     }
 }
 
@@ -56,10 +51,6 @@ impl Debug for BlackPawn {
 }
 
 impl PieceExt for BlackPawn {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     #[inline(always)]
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)

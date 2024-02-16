@@ -13,6 +13,9 @@ pub struct WhiteKnight {
 }
 
 impl WhiteKnight {
+    pub const SYMBOL: char = 'N';
+    pub const UTF_SYMBOL: char = '♘';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl WhiteKnight {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'N'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♘'
-    }
 }
 
 impl From<Bitboard> for WhiteKnight {
@@ -39,9 +34,10 @@ impl From<Bitboard> for WhiteKnight {
         Self::new(value)
     }
 }
+
 impl Display for WhiteKnight {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteKnight::symbol())
+        write!(f, "{}", WhiteKnight::SYMBOL)
     }
 }
 
@@ -52,10 +48,6 @@ impl Debug for WhiteKnight {
 }
 
 impl PieceExt for WhiteKnight {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        Knight::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Knight::from(*self).get_attacks(piece, board)
     }

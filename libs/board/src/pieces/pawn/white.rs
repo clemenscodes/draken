@@ -16,6 +16,9 @@ pub struct WhitePawn {
 }
 
 impl WhitePawn {
+    pub const SYMBOL: char = 'P';
+    pub const UTF_SYMBOL: char = '♙';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -27,14 +30,6 @@ impl WhitePawn {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'P'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♙'
-    }
 }
 
 impl From<Bitboard> for WhitePawn {
@@ -45,7 +40,7 @@ impl From<Bitboard> for WhitePawn {
 
 impl Display for WhitePawn {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhitePawn::symbol())
+        write!(f, "{}", WhitePawn::SYMBOL)
     }
 }
 
@@ -56,10 +51,6 @@ impl Debug for WhitePawn {
 }
 
 impl PieceExt for WhitePawn {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)
     }

@@ -46,4 +46,4 @@ impl MoveExt for IrreversibleMove {
     }
 }
 
-impl IrreversibleMoveExt for IrreversibleMove {}
+impl<T: MoveExt> IrreversibleMoveExt for T {}

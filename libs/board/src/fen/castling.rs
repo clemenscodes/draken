@@ -1,10 +1,5 @@
 use std::fmt::{Debug, Display};
 
-const WHITE_KING_CASTLE: u8 = 0b1000;
-const WHITE_QUEEN_CASTLE: u8 = 0b0100;
-const BLACK_KING_CASTLE: u8 = 0b0010;
-const BLACK_QUEEN_CASTLE: u8 = 0b0001;
-
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct Castling {
     rights: u8,
@@ -17,11 +12,16 @@ pub enum CastlingError {
 
 impl Default for Castling {
     fn default() -> Self {
-        Self::new(WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE)
+        Self::new(Self::WHITE_KING_CASTLE | Self::WHITE_QUEEN_CASTLE | Self::BLACK_KING_CASTLE | Self::BLACK_QUEEN_CASTLE)
     }
 }
 
 impl Castling {
+    pub const BLACK_KING_CASTLE: u8 = 0b0010;
+    pub const BLACK_QUEEN_CASTLE: u8 = 0b0001;
+    pub const WHITE_KING_CASTLE: u8 = 0b1000;
+    pub const WHITE_QUEEN_CASTLE: u8 = 0b0100;
+
     pub fn new(rights: u8) -> Self {
         Self { rights }
     }
@@ -31,19 +31,19 @@ impl Castling {
     }
 
     pub fn has_white_king_castle(&self) -> bool {
-        self.rights & WHITE_KING_CASTLE != 0
+        self.rights & Self::WHITE_KING_CASTLE != 0
     }
 
     pub fn has_white_queen_castle(&self) -> bool {
-        self.rights & WHITE_QUEEN_CASTLE != 0
+        self.rights & Self::WHITE_QUEEN_CASTLE != 0
     }
 
     pub fn has_black_king_castle(&self) -> bool {
-        self.rights & BLACK_KING_CASTLE != 0
+        self.rights & Self::BLACK_KING_CASTLE != 0
     }
 
     pub fn has_black_queen_castle(&self) -> bool {
-        self.rights & BLACK_QUEEN_CASTLE != 0
+        self.rights & Self::BLACK_QUEEN_CASTLE != 0
     }
 
     pub fn has_no_castle_rights(&self) -> bool {
@@ -61,10 +61,10 @@ impl TryFrom<&str> for Castling {
         }
         for char in value.chars() {
             match char {
-                'K' => rights |= WHITE_KING_CASTLE,
-                'Q' => rights |= WHITE_QUEEN_CASTLE,
-                'k' => rights |= BLACK_KING_CASTLE,
-                'q' => rights |= BLACK_QUEEN_CASTLE,
+                'K' => rights |= Self::WHITE_KING_CASTLE,
+                'Q' => rights |= Self::WHITE_QUEEN_CASTLE,
+                'k' => rights |= Self::BLACK_KING_CASTLE,
+                'q' => rights |= Self::BLACK_QUEEN_CASTLE,
                 '-' => return Ok(Castling::default()),
                 _ => return Err(Self::Error::Invalid),
             }
@@ -117,13 +117,13 @@ mod tests {
         let castling = Castling::default();
         assert_eq!(
             castling.rights(),
-            WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE
+            Castling::WHITE_KING_CASTLE | Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE
         );
     }
 
     #[test]
     fn test_custom_castling_rights() {
-        let custom_rights = WHITE_KING_CASTLE | BLACK_QUEEN_CASTLE;
+        let custom_rights = Castling::WHITE_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE;
         let castling = Castling::new(custom_rights);
         assert_eq!(castling.rights(), custom_rights);
     }
@@ -132,7 +132,8 @@ mod tests {
     fn test_has_white_king_castle() {
         let castling = Castling::default();
         assert!(castling.has_white_king_castle());
-        let castling_without_white_king = Castling::new(WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE);
+        let castling_without_white_king =
+            Castling::new(Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE);
         assert!(!castling_without_white_king.has_white_king_castle());
     }
 
@@ -140,7 +141,8 @@ mod tests {
     fn test_has_white_queen_castle() {
         let castling = Castling::default();
         assert!(castling.has_white_queen_castle());
-        let castling_without_white_queen = Castling::new(WHITE_KING_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE);
+        let castling_without_white_queen =
+            Castling::new(Castling::WHITE_KING_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE);
         assert!(!castling_without_white_queen.has_white_queen_castle());
     }
 
@@ -148,7 +150,8 @@ mod tests {
     fn test_has_black_king_castle() {
         let castling = Castling::default();
         assert!(castling.has_black_king_castle());
-        let castling_without_black_king = Castling::new(WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_QUEEN_CASTLE);
+        let castling_without_black_king =
+            Castling::new(Castling::WHITE_KING_CASTLE | Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_QUEEN_CASTLE);
         assert!(!castling_without_black_king.has_black_king_castle());
     }
 
@@ -156,13 +159,14 @@ mod tests {
     fn test_has_black_queen_castle() {
         let castling = Castling::default();
         assert!(castling.has_black_queen_castle());
-        let castling_without_black_queen = Castling::new(WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE);
+        let castling_without_black_queen =
+            Castling::new(Castling::WHITE_KING_CASTLE | Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_KING_CASTLE);
         assert!(!castling_without_black_queen.has_black_queen_castle());
     }
 
     #[test]
     fn test_display_with_castling_rights() {
-        let castling = Castling::new(WHITE_KING_CASTLE | BLACK_QUEEN_CASTLE);
+        let castling = Castling::new(Castling::WHITE_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE);
         assert_eq!(format!("{castling}"), "Kq");
     }
 
@@ -174,13 +178,13 @@ mod tests {
 
     #[test]
     fn test_individual_castling_rights() {
-        let castling = Castling::new(BLACK_KING_CASTLE);
+        let castling = Castling::new(Castling::BLACK_KING_CASTLE);
         assert_eq!(format!("{castling}"), "k");
     }
 
     #[test]
     fn test_combination_of_castling_rights() {
-        let castling = Castling::new(WHITE_KING_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE);
+        let castling = Castling::new(Castling::WHITE_KING_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE);
         assert_eq!(format!("{castling}"), "Kkq");
     }
 
@@ -202,7 +206,7 @@ mod tests {
         assert_eq!(
             result,
             Ok(Castling::new(
-                WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE
+                Castling::WHITE_KING_CASTLE | Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE
             ))
         );
     }
@@ -225,7 +229,7 @@ mod tests {
         assert_eq!(
             result,
             Ok(Castling::new(
-                WHITE_KING_CASTLE | WHITE_QUEEN_CASTLE | BLACK_KING_CASTLE | BLACK_QUEEN_CASTLE
+                Castling::WHITE_KING_CASTLE | Castling::WHITE_QUEEN_CASTLE | Castling::BLACK_KING_CASTLE | Castling::BLACK_QUEEN_CASTLE
             ))
         );
     }

@@ -1,6 +1,6 @@
 use super::IrreversibleMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -59,8 +59,6 @@ impl Debug for CaptureMove {
 }
 
 impl CaptureMoveExt for CaptureMove {}
-impl IrreversibleMoveExt for CaptureMove {}
-impl Encode for CaptureMove {}
 
 #[cfg(test)]
 mod tests {

@@ -19,8 +19,6 @@ pub trait ReversibleMoveExt: MoveExt {
     }
 }
 
-impl ReversibleMoveExt for ReversibleMove {}
-
 impl MoveExt for ReversibleMove {
     fn coordinates(&self) -> Coordinates {
         match *self {
@@ -34,3 +32,5 @@ impl MoveExt for ReversibleMove {
         }
     }
 }
+
+impl<T: MoveExt> ReversibleMoveExt for T {}

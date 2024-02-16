@@ -31,7 +31,6 @@ const KIND_MASK: u16 = 0b0000000000001111;
 pub struct EncodedMove {
     data: u16,
 }
-
 pub trait EncodedMoveExt {
     fn source(&self) -> Square;
     fn destination(&self) -> Square;
@@ -64,119 +63,91 @@ impl EncodedMove {
 
 impl Default for EncodedMove {
     fn default() -> Self {
-        Self { data: u16::MIN }
+        Self::new(u16::MIN)
     }
 }
 
 impl From<QuietMove> for EncodedMove {
     fn from(value: QuietMove) -> Self {
-        Self {
-            data: value.encode(QUIET_MOVE),
-        }
+        Self::new(value.encode(QUIET_MOVE))
     }
 }
 
 impl From<CaptureMove> for EncodedMove {
     fn from(value: CaptureMove) -> Self {
-        Self {
-            data: value.encode(CAPTURE),
-        }
+        Self::new(value.encode(CAPTURE))
     }
 }
 
 impl From<DoublePushMove> for EncodedMove {
     fn from(value: DoublePushMove) -> Self {
-        Self {
-            data: value.encode(DOUBLE_PAWN_PUSH),
-        }
+        Self::new(value.encode(DOUBLE_PAWN_PUSH))
     }
 }
 
 impl From<KingCastleMove> for EncodedMove {
     fn from(value: KingCastleMove) -> Self {
-        Self {
-            data: value.encode(KING_CASTLE),
-        }
+        Self::new(value.encode(KING_CASTLE))
     }
 }
 
 impl From<QueenCastleMove> for EncodedMove {
     fn from(value: QueenCastleMove) -> Self {
-        Self {
-            data: value.encode(QUEEN_CASTLE),
-        }
+        Self::new(value.encode(QUEEN_CASTLE))
     }
 }
 
 impl From<EnPassantMove> for EncodedMove {
     fn from(value: EnPassantMove) -> Self {
-        Self {
-            data: value.encode(ENPASSANT),
-        }
+        Self::new(value.encode(ENPASSANT))
     }
 }
 
 impl From<KnightPromotionMove> for EncodedMove {
     fn from(value: KnightPromotionMove) -> Self {
-        Self {
-            data: value.encode(KNIGHT_PROMOTION),
-        }
+        Self::new(value.encode(KNIGHT_PROMOTION))
     }
 }
 
 impl From<BishopPromotionMove> for EncodedMove {
     fn from(value: BishopPromotionMove) -> Self {
-        Self {
-            data: value.encode(BISHOP_PROMOTION),
-        }
+        Self::new(value.encode(BISHOP_PROMOTION))
     }
 }
 
 impl From<RookPromotionMove> for EncodedMove {
     fn from(value: RookPromotionMove) -> Self {
-        Self {
-            data: value.encode(ROOK_PROMOTION),
-        }
+        Self::new(value.encode(ROOK_PROMOTION))
     }
 }
 
 impl From<QueenPromotionMove> for EncodedMove {
     fn from(value: QueenPromotionMove) -> Self {
-        Self {
-            data: value.encode(QUEEN_PROMOTION),
-        }
+        Self::new(value.encode(QUEEN_PROMOTION))
     }
 }
 
 impl From<KnightPromotionCaptureMove> for EncodedMove {
     fn from(value: KnightPromotionCaptureMove) -> Self {
-        Self {
-            data: value.encode(KNIGHT_PROMOTION_CAPTURE),
-        }
+        Self::new(value.encode(KNIGHT_PROMOTION_CAPTURE))
     }
 }
 
 impl From<BishopPromotionCaptureMove> for EncodedMove {
     fn from(value: BishopPromotionCaptureMove) -> Self {
-        Self {
-            data: value.encode(BISHOP_PROMOTION_CAPTURE),
-        }
+        Self::new(value.encode(BISHOP_PROMOTION_CAPTURE))
     }
 }
 
 impl From<RookPromotionCaptureMove> for EncodedMove {
     fn from(value: RookPromotionCaptureMove) -> Self {
-        Self {
-            data: value.encode(ROOK_PROMOTION_CAPTURE),
-        }
+        Self::new(value.encode(ROOK_PROMOTION_CAPTURE))
     }
 }
 
 impl From<QueenPromotionCaptureMove> for EncodedMove {
     fn from(value: QueenPromotionCaptureMove) -> Self {
-        Self {
-            data: value.encode(QUEEN_PROMOTION_CAPTURE),
-        }
+        Self::new(value.encode(QUEEN_PROMOTION_CAPTURE))
     }
 }
 

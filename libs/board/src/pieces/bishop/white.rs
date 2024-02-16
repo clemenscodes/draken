@@ -13,6 +13,9 @@ pub struct WhiteBishop {
 }
 
 impl WhiteBishop {
+    pub const SYMBOL: char = 'B';
+    pub const UTF_SYMBOL: char = '♗';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl WhiteBishop {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'B'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♗'
-    }
 }
 
 impl From<Bitboard> for WhiteBishop {
@@ -42,7 +37,7 @@ impl From<Bitboard> for WhiteBishop {
 
 impl Display for WhiteBishop {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteBishop::symbol())
+        write!(f, "{}", WhiteBishop::SYMBOL)
     }
 }
 
@@ -53,10 +48,6 @@ impl Debug for WhiteBishop {
 }
 
 impl PieceExt for WhiteBishop {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        Bishop::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Bishop::from(*self).get_attacks(piece, board)
     }

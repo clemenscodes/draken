@@ -1,10 +1,6 @@
 use super::PromotionMoveExt;
 use crate::{
-    moves::{
-        coordinates::Coordinates,
-        irreversible::{pawn::PawnMoveExt, IrreversibleMoveExt},
-        Encode, MoveExt,
-    },
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -18,6 +14,8 @@ pub struct KnightPromotionMove {
     coordinates: Coordinates,
 }
 
+pub trait KnightPromotionMoveExt: PromotionMoveExt {}
+
 impl KnightPromotionMove {
     pub fn new(source: Square, destination: Square) -> Self {
         Self {
@@ -29,8 +27,6 @@ impl KnightPromotionMove {
         &self.coordinates
     }
 }
-
-pub trait KnightPromotionMoveExt: PromotionMoveExt {}
 
 impl MoveExt for KnightPromotionMove {
     fn coordinates(&self) -> Coordinates {
@@ -56,8 +52,4 @@ impl Debug for KnightPromotionMove {
     }
 }
 
-impl Encode for KnightPromotionMove {}
-impl KnightPromotionMoveExt for KnightPromotionMove {}
-impl PromotionMoveExt for KnightPromotionMove {}
-impl PawnMoveExt for KnightPromotionMove {}
-impl IrreversibleMoveExt for KnightPromotionMove {}
+impl<T: PromotionMoveExt> KnightPromotionMoveExt for T {}

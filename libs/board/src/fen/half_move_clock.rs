@@ -1,8 +1,5 @@
 use std::fmt::{Debug, Display};
 
-pub const MAX_HALF_MOVE_CLOCK: u8 = 150;
-pub const MIN_HALF_MOVE_CLOCK: u8 = 0;
-
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub struct HalfMoveClock {
     clock: u8,
@@ -15,6 +12,9 @@ pub enum HalfMoveClockError {
 }
 
 impl HalfMoveClock {
+    pub const MAX: u8 = 150;
+    pub const MIN: u8 = 0;
+
     pub fn new(clock: u8) -> Self {
         Self { clock }
     }
@@ -26,9 +26,7 @@ impl HalfMoveClock {
 
 impl Default for HalfMoveClock {
     fn default() -> Self {
-        Self {
-            clock: MIN_HALF_MOVE_CLOCK,
-        }
+        Self { clock: Self::MIN }
     }
 }
 
@@ -37,7 +35,7 @@ impl TryFrom<&str> for HalfMoveClock {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         if let Ok(parsed_value) = value.parse::<u8>() {
-            if parsed_value > MAX_HALF_MOVE_CLOCK {
+            if parsed_value > Self::MAX {
                 Err(Self::Error::TooHigh)
             } else {
                 Ok(Self::new(parsed_value))
@@ -63,13 +61,13 @@ pub(crate) trait HalfMoveClockExt {
 
 impl HalfMoveClockExt for HalfMoveClock {
     fn increment(&mut self) {
-        if self.clock < MAX_HALF_MOVE_CLOCK {
+        if self.clock < Self::MAX {
             self.clock += 1;
         }
     }
 
     fn reset(&mut self) {
-        self.clock = MIN_HALF_MOVE_CLOCK;
+        self.clock = Self::MIN;
     }
 }
 
@@ -135,9 +133,9 @@ mod tests {
 
     #[test]
     fn test_increment_at_max() {
-        let mut clock = HalfMoveClock::new(MAX_HALF_MOVE_CLOCK);
+        let mut clock = HalfMoveClock::new(HalfMoveClock::MAX);
         clock.increment();
-        assert_eq!(clock.clock(), MAX_HALF_MOVE_CLOCK);
+        assert_eq!(clock.clock(), HalfMoveClock::MAX);
     }
 
     #[test]

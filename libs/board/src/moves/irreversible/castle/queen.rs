@@ -1,6 +1,6 @@
 use super::CastleMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -54,5 +54,3 @@ impl Debug for QueenCastleMove {
 
 impl QueenCastleMoveExt for QueenCastleMove {}
 impl CastleMoveExt for QueenCastleMove {}
-impl IrreversibleMoveExt for QueenCastleMove {}
-impl Encode for QueenCastleMove {}

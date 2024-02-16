@@ -1,5 +1,6 @@
 #![feature(variant_count)]
 #![feature(lazy_cell)]
+#![feature(concat_idents)]
 pub mod fen;
 pub mod moves;
 pub mod pieces;

@@ -13,6 +13,9 @@ pub struct WhiteRook {
 }
 
 impl WhiteRook {
+    pub const SYMBOL: char = 'R';
+    pub const UTF_SYMBOL: char = '♖';
+
     pub fn new(bitboard: Bitboard) -> Self {
         Self { bitboard }
     }
@@ -24,14 +27,6 @@ impl WhiteRook {
     pub fn bitboard_mut(&mut self) -> &mut Bitboard {
         &mut self.bitboard
     }
-
-    pub const fn symbol() -> char {
-        'R'
-    }
-
-    pub const fn utf_symbol() -> char {
-        '♖'
-    }
 }
 
 impl From<Bitboard> for WhiteRook {
@@ -42,7 +37,7 @@ impl From<Bitboard> for WhiteRook {
 
 impl Display for WhiteRook {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", WhiteRook::symbol())
+        write!(f, "{}", WhiteRook::SYMBOL)
     }
 }
 
@@ -53,10 +48,6 @@ impl Debug for WhiteRook {
 }
 
 impl PieceExt for WhiteRook {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        Rook::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Rook::from(*self).get_attacks(piece, board)
     }

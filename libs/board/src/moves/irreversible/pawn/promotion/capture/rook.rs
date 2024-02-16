@@ -1,13 +1,6 @@
 use super::PromotionCaptureMoveExt;
 use crate::{
-    moves::{
-        coordinates::Coordinates,
-        irreversible::{
-            pawn::{promotion::PromotionMoveExt, PawnMoveExt},
-            IrreversibleMoveExt,
-        },
-        Encode, MoveExt,
-    },
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -21,6 +14,8 @@ pub struct RookPromotionCaptureMove {
     coordinates: Coordinates,
 }
 
+pub trait RookPromotionCaptureMoveExt: PromotionCaptureMoveExt {}
+
 impl RookPromotionCaptureMove {
     pub fn new(source: Square, destination: Square) -> Self {
         Self {
@@ -32,8 +27,6 @@ impl RookPromotionCaptureMove {
         &self.coordinates
     }
 }
-
-pub trait RookPromotionCaptureMoveExt: PromotionCaptureMoveExt {}
 
 impl MoveExt for RookPromotionCaptureMove {
     fn coordinates(&self) -> Coordinates {
@@ -59,9 +52,4 @@ impl Debug for RookPromotionCaptureMove {
     }
 }
 
-impl Encode for RookPromotionCaptureMove {}
-impl RookPromotionCaptureMoveExt for RookPromotionCaptureMove {}
-impl PromotionCaptureMoveExt for RookPromotionCaptureMove {}
-impl PromotionMoveExt for RookPromotionCaptureMove {}
-impl PawnMoveExt for RookPromotionCaptureMove {}
-impl IrreversibleMoveExt for RookPromotionCaptureMove {}
+impl<T: PromotionCaptureMoveExt> RookPromotionCaptureMoveExt for T {}

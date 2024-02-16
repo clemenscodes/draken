@@ -1,6 +1,6 @@
 use super::PawnMoveExt;
 use crate::{
-    moves::{coordinates::Coordinates, irreversible::IrreversibleMoveExt, Encode, MoveExt},
+    moves::{coordinates::Coordinates, MoveExt},
     Board,
 };
 use api::Square;
@@ -56,7 +56,4 @@ impl Debug for EnPassantMove {
     }
 }
 
-impl Encode for EnPassantMove {}
-impl EnPassantMoveExt for EnPassantMove {}
-impl PawnMoveExt for EnPassantMove {}
-impl IrreversibleMoveExt for EnPassantMove {}
+impl<T: PawnMoveExt> EnPassantMoveExt for T {}
