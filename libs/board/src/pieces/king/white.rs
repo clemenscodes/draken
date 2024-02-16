@@ -48,10 +48,6 @@ impl Debug for WhiteKing {
 }
 
 impl PieceExt for WhiteKing {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        King::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         King::from(*self).get_attacks(piece, board)
     }

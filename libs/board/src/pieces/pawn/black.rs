@@ -51,10 +51,6 @@ impl Debug for BlackPawn {
 }
 
 impl PieceExt for BlackPawn {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     #[inline(always)]
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)

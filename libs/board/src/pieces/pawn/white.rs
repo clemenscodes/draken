@@ -51,10 +51,6 @@ impl Debug for WhitePawn {
 }
 
 impl PieceExt for WhitePawn {
-    fn is_illegal_move(&self, _source: Square, _destination: Square, _board: Board) -> bool {
-        todo!()
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Pawn::from(*self).get_attacks(piece, board)
     }

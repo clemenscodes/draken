@@ -20,7 +20,6 @@ pub enum PieceError {
 }
 
 pub trait PieceExt: Verify {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool;
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard;
     fn remove_friendly_pieces(&self, piece: Bitboard, board: Board) -> Bitboard {
         let friendly_pieces: Bitboard = if board.fen().is_white() {
@@ -238,17 +237,6 @@ impl Piece {
 }
 
 impl PieceExt for Piece {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        match self {
-            Piece::Rook(rook) => rook.is_illegal_move(source, destination, board),
-            Piece::Knight(knight) => knight.is_illegal_move(source, destination, board),
-            Piece::Bishop(bishop) => bishop.is_illegal_move(source, destination, board),
-            Piece::Queen(queen) => queen.is_illegal_move(source, destination, board),
-            Piece::King(king) => king.is_illegal_move(source, destination, board),
-            Piece::Pawn(pawn) => pawn.is_illegal_move(source, destination, board),
-        }
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         match self {
             Piece::Rook(rook) => rook.get_attacks(piece, board),

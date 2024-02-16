@@ -1,24 +1,69 @@
 mod bishop;
-mod black_pieces;
 mod king;
 mod knight;
 mod pawn;
 pub mod piece;
 mod queen;
 mod rook;
-mod white_pieces;
 
-use self::{piece::*, white_pieces::WhitePieces};
+use self::piece::*;
 use api::Color;
 pub use bishop::{black::*, white::*, Bishop};
 pub use bitboard::{Bitboard, BitboardExt};
-use black_pieces::BlackPieces;
 pub use king::{black::*, white::*, King};
 pub use knight::{black::*, white::*, Knight};
 pub use pawn::{black::*, white::*, Pawn, PawnExt};
 pub use queen::{black::*, white::*, Queen};
 pub use rook::{black::*, white::*, Rook};
 pub use std::{collections::HashMap, fmt::Debug, sync::LazyLock, vec};
+
+macro_rules! generate_pieces_struct {
+    ($pieces:ident, $($field_name:ident : $field_name_mut:ident : $field_type:ty),*) => {
+        #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+        pub struct $pieces {
+            $(
+                $field_name: $field_type,
+            )*
+        }
+        impl $pieces {
+            $(
+                pub fn $field_name(&self) -> $field_type {
+                    self.$field_name
+                }
+                pub fn $field_name_mut(&mut self) -> &mut $field_type {
+                    &mut self.$field_name
+                }
+            )*
+        }
+        impl From<$pieces> for Bitboard {
+            fn from(val: $pieces) -> Self {
+                Bitboard::merge_many(vec![
+                    $(val.$field_name.bitboard(),)*
+                ])
+            }
+        }
+    };
+}
+
+generate_pieces_struct!(
+    WhitePieces,
+    rook: rook_mut: WhiteRook,
+    knight: knight_mut: WhiteKnight,
+    bishop: bishop_mut: WhiteBishop,
+    queen: queen_mut: WhiteQueen,
+    king: king_mut: WhiteKing,
+    pawn: pawn_mut: WhitePawn
+);
+
+generate_pieces_struct!(
+    BlackPieces,
+    rook: rook_mut: BlackRook,
+    knight: knight_mut: BlackKnight,
+    bishop: bishop_mut: BlackBishop,
+    queen: queen_mut: BlackQueen,
+    king: king_mut: BlackKing,
+    pawn: pawn_mut: BlackPawn
+);
 
 pub const NUM_COLOR_PIECES: usize = 6;
 pub const NUM_COLORS: usize = 2;
@@ -85,8 +130,6 @@ pub struct Pieces {
     occupied_squares: Bitboard,
     empty_squares: Bitboard,
 }
-
-pub trait PiecesExt {}
 
 impl Pieces {
     pub fn get_pieces(&self, color: Color) -> Bitboard {
@@ -201,14 +244,6 @@ impl Pieces {
         };
     }
 
-    pub fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
-        self.occupied_squares = occupied_squares;
-    }
-
-    pub fn set_empty_squares(&mut self, empty_squares: Bitboard) {
-        self.empty_squares = empty_squares;
-    }
-
     pub fn update_occupied_squares(&mut self) {
         self.set_occupied_squares(Bitboard::merge_many(self.get_all_pieces().to_vec()));
     }
@@ -216,6 +251,14 @@ impl Pieces {
     pub fn update_empty_squares(&mut self) {
         let occupied_squares = self.occupied_squares();
         self.set_empty_squares(!occupied_squares);
+    }
+
+    fn set_occupied_squares(&mut self, occupied_squares: Bitboard) {
+        self.occupied_squares = occupied_squares;
+    }
+
+    fn set_empty_squares(&mut self, empty_squares: Bitboard) {
+        self.empty_squares = empty_squares;
     }
 }
 
@@ -252,5 +295,3 @@ impl From<Pieces> for Bitboard {
         Bitboard::merge_many(vec![value.white_pieces().into(), value.black_pieces().into()])
     }
 }
-
-impl PiecesExt for Pieces {}

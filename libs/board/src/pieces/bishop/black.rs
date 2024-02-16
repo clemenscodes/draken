@@ -48,10 +48,6 @@ impl Debug for BlackBishop {
 }
 
 impl PieceExt for BlackBishop {
-    fn is_illegal_move(&self, source: Square, destination: Square, board: Board) -> bool {
-        Bishop::from(*self).is_illegal_move(source, destination, board)
-    }
-
     fn get_attacks(&self, piece: Bitboard, board: Board) -> Bitboard {
         Bishop::from(*self).get_attacks(piece, board)
     }
