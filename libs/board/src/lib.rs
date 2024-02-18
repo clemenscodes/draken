@@ -95,18 +95,6 @@ pub enum BoardError {
     MissingPiece,
 }
 
-impl Display for BoardError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            BoardError::MissingPiece => write!(f, "No piece found on source square"),
-        }
-    }
-}
-
-impl Error for BoardError {}
-
-pub trait BoardExt {}
-
 pub trait Verify {
     fn verify(&self, source: Square, destination: Square, promotion: Option<char>, board: Board) -> Result<u16, Box<dyn Error>>;
 }
@@ -299,7 +287,15 @@ impl Debug for Board {
     }
 }
 
-impl BoardExt for Board {}
+impl Display for BoardError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BoardError::MissingPiece => write!(f, "No piece found on source square"),
+        }
+    }
+}
+
+impl Error for BoardError {}
 
 impl Shift for Bitboard {}
 
